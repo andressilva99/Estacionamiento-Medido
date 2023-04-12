@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NativeBaseProvider, Stack, Button, HStack, Select } from "native-base";
 import InputControlled from "../components/InputControlled";
@@ -8,22 +8,46 @@ import { ScaledSheet } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import constants from "../constants/constants";
 
 const RegisterStep1Screen = () => {
-    const navigation = useNavigation()
+    const [listTypesDocuments, setListTypesDocuments] = useState([]);
+    const [typeDocument, setTypeDocument] = useState();
 
-    const {
-        control,
-        handleSubmit,
-    } = useForm();
+    useEffect(() => {
+        const obtainDocuments = async () => {
+            try {
+                const result = await constants.AXIOS_INST.get('tiposDocumentos');
+                const typesDocuments = result.data.mensaje.map(
+                    ({ idTipoDocumento, nombre }) => ({
+                        value: idTipoDocumento,
+                        label: nombre,
+                    })
+                );
+                setListTypesDocuments(typesDocuments);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        obtainDocuments();
+    }, []);
+
+    const navigation = useNavigation();
+
+    const { control, handleSubmit } = useForm();
 
     const NextStep = (data) => {
         const { numberDocument, name, surname, razonSocial } = data;
         try {
-            navigation.navigate('Register2', {numberDocument, name, surname, razonSocial})
-            
+            navigation.navigate("Register2", {
+                typeDocument,
+                numberDocument,
+                name,
+                surname,
+                razonSocial,
+            });
         } catch (e) {
-            Alert.alert('Error', e.message)
+            Alert.alert("Error", e.message);
         }
     };
 
@@ -63,7 +87,17 @@ const RegisterStep1Screen = () => {
                                 borderTopRightRadius={30}
                                 borderBottomRightRadius={30}
                                 minW="54%"
-                            ></Select>
+                                selectedValue={typeDocument}
+                                onValueChange={setTypeDocument}
+                            >
+                                {listTypesDocuments.map((documen) => (
+                                    <Select.Item
+                                        key={documen.value}
+                                        label={documen.label}
+                                        value={documen.value}
+                                    ></Select.Item>
+                                ))}
+                            </Select>
                         </HStack>
                         <InputControlled
                             keyboardType="numeric"

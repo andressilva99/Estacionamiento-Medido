@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NativeBaseProvider, Stack, Button, HStack, Select } from "native-base";
 import InputControlled from "../components/InputControlled";
@@ -8,22 +8,66 @@ import { ScaledSheet } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
+import constants from "../constants/constants";
+
 const REGEX_EMAIL =
     /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
 
 const RegisterStep2Screen = ({ route, navigation }) => {
-    const {numberDocument, name, surname, razonSocial} = route.params
+    const { typeDocument, numberDocument, name, surname, razonSocial } =
+        route.params;
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-        watch,
-    } = useForm();
+    const [listPhoneCompanies, setListPhoneCompanies] = useState([]);
+    const [phoneCompanie, setPhoneCompanie] = useState();
 
-    const NextStep = (data) => {
-        console.log(numberDocument);
-        console.log("Siguiente paso");
+    useEffect(() => {
+        const obtainCompanies = async () => {
+            try {
+                const result = await constants.AXIOS_INST.get(
+                    "companiasTelefono"
+                );
+                const companies = result.data.mensaje.map(
+                    ({ idCompaniaTelefono, nombre }) => ({
+                        value: idCompaniaTelefono,
+                        label: nombre,
+                    })
+                );
+                setListPhoneCompanies(companies);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        obtainCompanies();
+    }, []);
+
+    const { control, handleSubmit, watch } = useForm();
+
+    const Register = async (data) => {
+        const { user, email, phone } = data;
+        try {
+            const information = {
+                usuario: {
+                    idTipoDocumento: typeDocument,
+                    idCompaniaTelefono: phoneCompanie,
+                    numeroDocumento: numberDocument.toString(),
+                    nombrePersona: name,
+                    apellido: surname,
+                    nombreUsuario: user,
+                    razonSocial: razonSocial,
+                    email: email,
+                    numeroTelefono: phone,
+                    clave: "defecto",
+                },
+            };
+            console.log(information)
+            const result = await constants.AXIOS_INST.post(
+                "usuario/registrar",
+                information
+            );
+            console.log(result.data.mensaje);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const emailRepeat = watch("email");
@@ -105,7 +149,17 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                 borderTopRightRadius={30}
                                 borderBottomRightRadius={30}
                                 minW="54%"
-                            ></Select>
+                                selectedValue={phoneCompanie}
+                                onValueChange={setPhoneCompanie}
+                            >
+                                {listPhoneCompanies.map((companie) => (
+                                    <Select.Item
+                                        key={companie.value}
+                                        label={companie.label}
+                                        value={companie.value}
+                                    ></Select.Item>
+                                ))}
+                            </Select>
                         </HStack>
                         <InputControlled
                             keyboardType="numeric"
@@ -126,7 +180,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                             }}
                         ></InputControlled>
                         <Button
-                            onPress={handleSubmit(NextStep)}
+                            onPress={handleSubmit(Register)}
                             marginTop="15%"
                             style={styles.buttonNextStep}
                             endIcon={
