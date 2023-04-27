@@ -6,6 +6,9 @@ import ProfileScreen from "./src/pages/ProfileScreen";
 import RegisterStep1Screen from "./src/pages/RegisterStep1Screen";
 import RegisterStep2Screen from "./src/pages/RegisterStep2Screen";
 import Navigation from "./src/navigation/Navigation";
+import LogInScreen from "./src/pages/LogInScreen";
+import EnterVehicle from "./src/pages/EnterVehicle";
+import PressableCustom from "./src/components/PressableCustom";
 
 export default function App() {
     return (
@@ -15,6 +18,9 @@ export default function App() {
         // <ProfileScreen></ProfileScreen>
         // <RegisterStep1Screen></RegisterStep1Screen>
         // <RegisterStep2Screen></RegisterStep2Screen>
-        <Navigation></Navigation>
+        // <Navigation></Navigation>
+        // <LogInScreen></LogInScreen>
+        // <EnterVehicle></EnterVehicle>
+        <PressableCustom></PressableCustom>
     );
 }

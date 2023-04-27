@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { NativeBaseProvider, Input } from "native-base";
 import { Controller } from "react-hook-form";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 const InputControlled = ({
     control,
@@ -12,6 +12,8 @@ const InputControlled = ({
     secureTextEntry,
     width,
     keyboardType,
+    style,
+    variant,
 }) => {
     return (
         <NativeBaseProvider>
@@ -23,7 +25,7 @@ const InputControlled = ({
                     field: { value, onChange, onBlur },
                     fieldState: { error },
                 }) => (
-                    <>
+                    <View>
                         <Input
                             keyboardType={keyboardType}
                             value={value}
@@ -32,19 +34,22 @@ const InputControlled = ({
                             placeholder={placeholder}
                             secureTextEntry={secureTextEntry}
                             borderColor={error ? "#f11c22" : "#b9b9bb"}
-                            style={styles.input}
+                            style={style ? style : styles.input}
                             minW={width}
                             borderRadius={30}
+                            variant={variant}
                         ></Input>
                         {error && (
-                            <Text
-                                style={styles.errores}
-                            >
-                                <Ionicons name="warning-outline" size={24} style={styles.errores}/>
+                            <Text style={styles.errores}>
+                                <Ionicons
+                                    name="warning-outline"
+                                    size={24}
+                                    style={styles.errores}
+                                />
                                 {error.message || " Error"}
                             </Text>
                         )}
-                    </>
+                    </View>
                 )}
             ></Controller>
         </NativeBaseProvider>
@@ -54,6 +59,7 @@ const InputControlled = ({
 export default InputControlled;
 
 const styles = StyleSheet.create({
+
     input: {
         minHeight: "7%",
         backgroundColor: "white",
