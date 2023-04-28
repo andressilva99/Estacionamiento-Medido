@@ -1,23 +1,34 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { HStack, Image, NativeBaseProvider } from "native-base";
-import constants from "../constants/constants";
-import { AntDesign } from "@expo/vector-icons";
+import { HStack, Image, NativeBaseProvider, Spacer } from "native-base";
 import { ScaledSheet } from "react-native-size-matters";
 
-const PressableCustom = ({ style, text }) => {
+const PressableCustom = ({ styleTouchable, text, icon, iconRight, styleText, onPress, id }) => {
     return (
         <NativeBaseProvider>
             <View style={styles.container}>
-                <TouchableOpacity style={[styles.touchable, style]}>
-                    <HStack space="md" >
-                        <AntDesign
-                            name="close"
-                            style={styles.icon}
-                        />
-                        <Text style={styles.text}>Cerrar sesión</Text>
-                    </HStack>
+                <TouchableOpacity style={[styles.touchable, styleTouchable]} onPress={() => onPress(id)}>
+                    {iconRight ? (
+                        <HStack space="md" paddingRight="3%">
+                            <Text style={[styles.text, styleText]}>{text}</Text>
+                            <Spacer></Spacer>
+                            <Image
+                                source={icon}
+                                alt={text}
+                                style={styles.icon}
+                            ></Image>
+                        </HStack>
+                    ) : (
+                        <HStack space="md">
+                            <Image
+                                source={icon}
+                                alt={text}
+                                style={styles.icon}
+                            ></Image>
+                            <Text style={[styles.text, styleText]}>{text}</Text>
+                        </HStack>
+                    )}
                 </TouchableOpacity>
             </View>
         </NativeBaseProvider>
@@ -28,25 +39,22 @@ export default PressableCustom;
 
 const styles = ScaledSheet.create({
     container: {
-        flex: 1,
-        justifyContent: "center",
+        alignItems: "center",
     },
     touchable: {
         borderRadius: 30,
-        minHeight: "7%",
+        minHeight: "50@ms",
         justifyContent: "center",
-        maxWidth: "90%",
-        backgroundColor: "blue",
-        paddingLeft: "20@ms"
+        minWidth: "85%",
+        paddingLeft: "20@ms",
     },
     icon: {
-        color: "#04467C",
-        fontSize: "30@ms",
-        backgroundColor: "white",
+        width: "30@ms",
+        height: "30@ms",
         borderRadius: "100@ms",
     },
     text: {
-        fontSize: "20@ms",
+        fontSize: "18@ms",
         color: "white",
     },
 });

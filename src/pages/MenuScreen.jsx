@@ -1,137 +1,181 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { Button, NativeBaseProvider, Spacer, Stack } from "native-base";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { Dimensions, ImageBackground, StatusBar } from "react-native";
+import React, { useState } from "react";
+import {
+    HStack,
+    NativeBaseProvider,
+    Spacer,
+    VStack,
+    Image,
+    ScrollView,
+} from "native-base";
+import PressableCustom from "../components/PressableCustom";
+import constants from "../constants/constants";
+import { ScaledSheet } from "react-native-size-matters";
 
-const MenuScreen = () => {
+const { height } = Dimensions.get("screen");
+
+const MenuScreen = ({ navigation }) => {
+    const [subMenu, setSubMenu] = useState(false);
+
+    const handleButtonPress = (id) => {
+        console.log(`Pressed button ${id}`);
+        navigation.navigate(id);
+        setSubMenu(!subMenu);
+    };
+
     return (
         <NativeBaseProvider>
-            <Stack h="100%" p={5} style={styles.backgroundContainer}>
-                <Stack style={styles.menuContainer}>
-                    <Stack style={styles.buttonBorder} flexDirection="row" alignItems="center">
-                        <Text style={styles.textButton}>Menú</Text>
+            <StatusBar></StatusBar>
+            <ImageBackground
+                source={constants.BACKGROUND_INIT}
+                resizeMode="stretch"
+            >
+                <ScrollView height={height}>
+                    <VStack
+                        // height={height}
+                        style={styles.backgroundContainer}
+                        space="sm"
+                    >
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Menú"}
+                                icon={constants.MENU_ICON}
+                                styleTouchable={{ backgroundColor: "#009FE3" }}
+                                iconRight={true}
+                                styleText={styles.textMenu}
+                                onPress={handleButtonPress}
+                                id={"menu"}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Estacionamiento Medido"}
+                                icon={constants.PARKING_ICON}
+                                styleTouchable={{ backgroundColor: "#086EC1" }}
+                                onPress={handleButtonPress}
+                                id={"Parking"}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Perfil"}
+                                icon={constants.PROFILE_ICON}
+                                styleTouchable={{ backgroundColor: "#05509C" }}
+                                onPress={handleButtonPress}
+                                id={"Profile"}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Historial"}
+                                icon={constants.HISTORY_ICON}
+                                styleTouchable={{ backgroundColor: "#009FE3" }}
+                                onPress={() => setSubMenu(!subMenu)}
+                                id={"History"}
+                            ></PressableCustom>
+                        </HStack>
+                        {subMenu ? (
+                            <>
+                                <HStack style={styles.containerPressable}>
+                                    <PressableCustom
+                                        text={"Estacionamientos"}
+                                        icon={constants.PROFILE_ICON}
+                                        styleTouchable={styles.touchableSubMenu}
+                                        onPress={handleButtonPress}
+                                        id={"Undefined"}
+                                    ></PressableCustom>
+                                </HStack>
+                                <HStack style={styles.containerPressable}>
+                                    <PressableCustom
+                                        text={"Recargas"}
+                                        icon={constants.PROFILE_ICON}
+                                        styleTouchable={styles.touchableSubMenu}
+                                        onPress={handleButtonPress}
+                                        id={"Undefined"}
+                                    ></PressableCustom>
+                                </HStack>
+                                <HStack style={styles.containerPressable}>
+                                    <PressableCustom
+                                        text={"Movimientos"}
+                                        icon={constants.PROFILE_ICON}
+                                        styleTouchable={styles.touchableSubMenu}
+                                        onPress={handleButtonPress}
+                                        id={"Undefined"}
+                                    ></PressableCustom>
+                                </HStack>
+                                <HStack style={styles.containerPressable}>
+                                    <PressableCustom
+                                        text={"Avisos"}
+                                        icon={constants.PROFILE_ICON}
+                                        styleTouchable={styles.touchableSubMenu}
+                                        onPress={handleButtonPress}
+                                        id={"Undefined"}
+                                    ></PressableCustom>
+                                </HStack>
+                            </>
+                        ) : null}
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Pago en línea"}
+                                icon={constants.CREDIT_CARD_ICON}
+                                styleTouchable={{ backgroundColor: "#086EC1" }}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Avisos"}
+                                icon={constants.NOTICE_ICON}
+                                styleTouchable={{ backgroundColor: "#05509C" }}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Mapas"}
+                                icon={constants.MAP_ICON}
+                                styleTouchable={{ backgroundColor: "#009FE3" }}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"A cerca de"}
+                                icon={constants.INFORMATION_ICON}
+                                styleTouchable={{ backgroundColor: "#086EC1" }}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Cerrar sesión"}
+                                icon={constants.CLOSE_ICON}
+                                styleTouchable={{ backgroundColor: "#05509C" }}
+                            ></PressableCustom>
+                        </HStack>
                         <Spacer></Spacer>
-                        <Button variant="ghost" w="20%">
-                            <Feather name="menu" size={30} color="white" />
-                        </Button>
-                    </Stack>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <MaterialIcons
-                                name="local-parking"
-                                size={24}
-                                color="white"
-                            />
-                        }
-                    >
-                        <Text style={styles.textButton}>
-                            Estacionamiento Medido
-                        </Text>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <Ionicons
-                                name="person-circle-outline"
-                                size={24}
-                                color="white"
-                            />
-                        }
-                    >
-                        <Text style={styles.textButton}>Perfil</Text>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <FontAwesome5
-                                name="history"
-                                size={24}
-                                color="white"
-                            />
-                        }
-                    >
-                        <Text style={styles.textButton}>Historial</Text>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <AntDesign
-                                name="creditcard"
-                                size={24}
-                                color="white"
-                            />
-                        }
-                    >
-                        <Text style={styles.textButton}>Pago en línea</Text>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <AntDesign
-                                name="exclamation"
-                                size={24}
-                                color="white"
-                            />
-                        }
-                    >
-                        <Text style={styles.textButton}>Avisos</Text>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <Feather name="map-pin" size={24} color="white" />
-                        }
-                    >
-                        <Text style={styles.textButton}>Mapas</Text>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <Entypo name="info" size={24} color="white" />
-                        }
-                    >
-                        <Text style={styles.textButton}>A cerca de</Text>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        style={styles.buttonBorder}
-                        startIcon={
-                            <AntDesign
-                                name="closecircleo"
-                                size={24}
-                                color="white"
-                            />
-                        }
-                    >
-                        <Text style={styles.textButton}>Cerrar</Text>
-                    </Button>
-                </Stack>
-            </Stack>
+                        <Image
+                            source={constants.LOGO}
+                            alt="logo-app"
+                            // size="40%"
+                            resizeMode="contain"
+                            // maxH="15%"
+                            style={styles.imageLogo}
+                        ></Image>
+                        <Spacer></Spacer>
+                    </VStack>
+                </ScrollView>
+            </ImageBackground>
         </NativeBaseProvider>
     );
 };
 
 export default MenuScreen;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     backgroundContainer: {
-        backgroundColor: "#f2f2f4",
+        alignItems: "center",
+        paddingTop: "4%",
+        paddingBottom: "8%",
     },
-    menuContainer: {
-        backgroundColor: "#3d61ad",
+    containerPressable: {
+        minWidth: "100%",
     },
     buttonBorder: {
         borderWidth: 3,
@@ -145,4 +189,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         paddingLeft: 8,
     },
+    textMenu: {
+        fontWeight: "bold",
+        fontSize: "24@ms",
+    },
+    touchableSubMenu: {
+        backgroundColor: "#949599",
+        paddingLeft: "50@ms",
+    },
+    imageLogo: {
+        width: "200@ms",
+        height: "80@ms",
+        marginBottom: "40@ms",
+        marginTop: "40@ms"
+    }
 });

@@ -18,9 +18,9 @@ export default function App() {
         // <ProfileScreen></ProfileScreen>
         // <RegisterStep1Screen></RegisterStep1Screen>
         // <RegisterStep2Screen></RegisterStep2Screen>
-        // <Navigation></Navigation>
+        <Navigation></Navigation>
         // <LogInScreen></LogInScreen>
         // <EnterVehicle></EnterVehicle>
-        <PressableCustom></PressableCustom>
+        // <PressableCustom></PressableCustom>
     );
 }

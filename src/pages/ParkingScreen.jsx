@@ -39,6 +39,11 @@ const ParkingScreen = ({ route, navigation }) => {
         }
     }, []);
 
+    const handleButtonPressMenu = () => {
+        // console.log(`Pressed button `);
+        navigation.navigate("Menu")
+      };
+
     return (
         <NativeBaseProvider>
             <VStack
@@ -55,7 +60,7 @@ const ParkingScreen = ({ route, navigation }) => {
                         Estacionamiento medido
                     </Text>
                     <Spacer></Spacer>
-                    <Button variant="ghost">
+                    <Button variant="ghost" onPress={handleButtonPressMenu}>
                         <Feather name="menu" size={30} color="white" />
                     </Button>
                 </HStack>
