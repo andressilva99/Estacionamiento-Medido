@@ -18,9 +18,13 @@ const MenuScreen = ({ navigation }) => {
     const [subMenu, setSubMenu] = useState(false);
 
     const handleButtonPress = (id) => {
-        console.log(`Pressed button ${id}`);
-        navigation.navigate(id);
-        setSubMenu(!subMenu);
+        console.log(id);
+        if (id !== "logOut") {
+            navigation.navigate(id);
+            setSubMenu(!subMenu);
+        } else {
+            navigation.popToTop();
+        }
     };
 
     return (
@@ -30,12 +34,11 @@ const MenuScreen = ({ navigation }) => {
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
             >
-                <ScrollView height={height}>
-                    <VStack
-                        // height={height}
-                        style={styles.backgroundContainer}
-                        space="sm"
-                    >
+                <ScrollView
+                    height={height}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <VStack style={styles.backgroundContainer} space="sm">
                         <HStack style={styles.containerPressable}>
                             <PressableCustom
                                 text={"Menú"}
@@ -140,6 +143,8 @@ const MenuScreen = ({ navigation }) => {
                                 text={"A cerca de"}
                                 icon={constants.INFORMATION_ICON}
                                 styleTouchable={{ backgroundColor: "#086EC1" }}
+                                onPress={handleButtonPress}
+                                id={"Information"}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>
@@ -147,15 +152,15 @@ const MenuScreen = ({ navigation }) => {
                                 text={"Cerrar sesión"}
                                 icon={constants.CLOSE_ICON}
                                 styleTouchable={{ backgroundColor: "#05509C" }}
+                                onPress={handleButtonPress}
+                                id={"logOut"}
                             ></PressableCustom>
                         </HStack>
                         <Spacer></Spacer>
                         <Image
                             source={constants.LOGO}
                             alt="logo-app"
-                            // size="40%"
                             resizeMode="contain"
-                            // maxH="15%"
                             style={styles.imageLogo}
                         ></Image>
                         <Spacer></Spacer>
@@ -201,6 +206,6 @@ const styles = ScaledSheet.create({
         width: "200@ms",
         height: "80@ms",
         marginBottom: "40@ms",
-        marginTop: "40@ms"
-    }
+        marginTop: "40@ms",
+    },
 });

@@ -1,9 +1,6 @@
 import {
-    ImageBackground,
     ScrollView,
-    StyleSheet,
     Text,
-    TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -15,34 +12,35 @@ import {
     Spacer,
     Stack,
     VStack,
-    Flex,
-    Center,
+    Image,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import constants from "../constants/constants";
+import { ScaledSheet } from "react-native-size-matters";
+import loggedUser from "../objects/user";
+import PatentCustom from "../components/PatentCustom";
 
-const ParkingScreen = ({ route, navigation }) => {
-    const data = route.params;
+
+const ParkingScreen = ({ navigation }) => {
     const [listPatent, setListPatent] = useState([]);
 
-    useEffect(() => {
-        try {
-            const patents = data.mensaje.vehiculo.map(({ patente }) => ({
-                value: patente,
-                label: patente,
-            }));
-            setListPatent(patents);
-            console.log(listPatent);
-        } catch (error) {
-            console.error(error);
-        }
-    }, []);
+    // useEffect(() => {
+    //     try {
+    //         const patents = data.mensaje.vehiculo.map(({ patente }) => ({
+    //             value: patente,
+    //             label: patente,
+    //         }));
+    //         setListPatent(patents);
+    //         console.log(listPatent);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }, []);
 
     const handleButtonPressMenu = () => {
-        // console.log(`Pressed button `);
-        navigation.navigate("Menu")
-      };
+        navigation.navigate("Menu");
+    };
 
     return (
         <NativeBaseProvider>
@@ -54,7 +52,7 @@ const ParkingScreen = ({ route, navigation }) => {
                 safeAreaTop={true}
             >
                 <HStack style={styles.containerHeader}>
-                    <FontAwesome5 name="parking" size={24} color="white" />
+                    <Image source={constants.PARKING_ICON} alt={"Parking"} style={styles.icon}></Image>
                     <Spacer></Spacer>
                     <Text style={styles.textHeader}>
                         Estacionamiento medido
@@ -65,12 +63,12 @@ const ParkingScreen = ({ route, navigation }) => {
                     </Button>
                 </HStack>
                 <VStack style={styles.containerUser}>
-                    <Text style={styles.textName}>Apellido, nombre</Text>
-                    <Text style={styles.textAccount}>Cuenta Nro: 42534</Text>
+                    <Text style={styles.textName}>{`${loggedUser.user.lastName}, ${loggedUser.user.firstName}`}</Text>
+                    <Text style={styles.textAccount}>Cuenta Nro: {loggedUser.user.idUser}</Text>
                 </VStack>
                 <HStack style={styles.containerBalance}>
                     <AntDesign name="wallet" size={24} color="#17974c" />
-                    <Text style={styles.textBalance}>Saldo: $...</Text>
+                    <Text style={styles.textBalance}>Saldo: $...{}</Text>
                 </HStack>
                 <Stack>
                     <Button
@@ -103,72 +101,13 @@ const ParkingScreen = ({ route, navigation }) => {
                         </Text>
                     </Button>
                 </Stack>
-                <ScrollView>
-                    <Flex mb={4}>
-                        <Flex direction="row" justifyContent="center">
-                            <Stack>
-                                <Button
-                                    height={10}
-                                    minWidth="10%"
-                                    style={styles.button}
-                                    mt={2}
-                                    backgroundColor="#c3c1c4"
-                                    onPress={() =>
-                                        console.log("Boton presionado")
-                                    }
-                                >
-                                    <AntDesign
-                                        name="closecircleo"
-                                        size={20}
-                                        color="red"
-                                    />
-                                </Button>
-                            </Stack>
-                            <Stack minW="75%">
-                                <ImageBackground
-                                    source={require("../image/patente-argentina.png")}
-                                    resizeMode="stretch"
-                                    style={{ flex: 1, minHeight: 90 }}
-                                >
-                                    <Center minH="100%" pt={4}>
-                                        <Text style={styles.textPatent}>
-                                            AE538MQ
-                                        </Text>
-                                    </Center>
-                                </ImageBackground>
-                            </Stack>
-                        </Flex>
-                        <HStack style={styles.containerParking} marginTop={1}>
-                            <FontAwesome
-                                name="volume-up"
-                                size={24}
-                                color="black"
-                            />
-                            <Spacer></Spacer>
-                            <TouchableOpacity style={styles.playButton}>
-                                <Text style={styles.textPlayButton}>
-                                    Iniciar
-                                </Text>
-                                <AntDesign
-                                    name="play"
-                                    size={30}
-                                    color="white"
-                                />
-                            </TouchableOpacity>
-                            <Spacer></Spacer>
-                            <TouchableOpacity
-                                style={styles.stopButton}
-                                onPress={() => console.log("Tocando el stop")}
-                            >
-                                <Text style={styles.textStopButton}>Parar</Text>
-                                <FontAwesome5
-                                    name="stop-circle"
-                                    size={30}
-                                    color="#414141"
-                                />
-                            </TouchableOpacity>
-                        </HStack>
-                    </Flex>
+                <ScrollView >
+                    <PatentCustom></PatentCustom>
+                    <PatentCustom></PatentCustom>
+                    <PatentCustom></PatentCustom>
+                    <PatentCustom></PatentCustom>
+                    <PatentCustom></PatentCustom>
+                    <PatentCustom></PatentCustom>
                 </ScrollView>
             </VStack>
         </NativeBaseProvider>
@@ -177,7 +116,7 @@ const ParkingScreen = ({ route, navigation }) => {
 
 export default ParkingScreen;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     button: {
         borderTopStartRadius: 30,
         borderBottomStartRadius: 30,
@@ -190,7 +129,7 @@ const styles = StyleSheet.create({
         minHeight: "7%",
         minWidth: "90%",
         borderRadius: 5,
-        paddingLeft: 20,
+        paddingLeft: "15@ms",
         backgroundColor: "#3f60af",
         alignItems: "center",
     },
@@ -299,5 +238,10 @@ const styles = StyleSheet.create({
         color: "#473a4b",
         marginLeft: 16,
         marginRight: 20,
+    },
+    icon: {
+        width: "30@ms",
+        height: "30@ms",
+        borderRadius: "100@ms",
     },
 });

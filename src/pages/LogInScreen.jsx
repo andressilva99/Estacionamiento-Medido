@@ -18,6 +18,7 @@ import InputControlled from "../components/InputControlled";
 import { useForm } from "react-hook-form";
 import constants from "../constants/constants";
 import { LinearGradient } from "expo-linear-gradient";
+import loggedUser from "../objects/user";
 
 const { height } = Dimensions.get("screen");
 
@@ -46,8 +47,28 @@ const LogInScreen = ({ navigation }) => {
                 "usuario/logIn",
                 logIn
             );
-            console.log(response.data.mensaje);
-            navigation.navigate("Parking", response.data);
+            const data = response.data.mensaje;
+            loggedUser.user.idUser = data.idUsuario;
+            loggedUser.user.documentNumber = data.numeroDocumento;
+            loggedUser.user.email = data.email;
+            loggedUser.user.firstName = data.nombrePersona;
+            loggedUser.user.lastName = data.apellido;
+            loggedUser.user.numberPhone = data.numeroTelefono;
+            loggedUser.user.phoneCompany.name = data.compania_telefono;
+            loggedUser.user.razonSocial = data.razonSocial;
+            loggedUser.user.typeDocument.name = data.tipo_documento;
+            loggedUser.user.userName = data.nombreUsuario;
+            if (data.vehicle != undefined) {
+                data.vehiculo.forEach((vehicle) => {
+                    loggedUser.user.vehicles.push({
+                        mark: vehicle.marca.nombre,
+                        model: vehicle.modelo.nombre,
+                        patent: vehicle.patente,
+                        color: vehicle.color.nombre,
+                    })
+                })
+            }
+            navigation.navigate("Parking");
         } catch (error) {
             Alert.alert("Error", error.message);
         }
@@ -125,7 +146,10 @@ const LogInScreen = ({ navigation }) => {
                     <Button onPress={Register} style={styles.button}>
                         <Text style={styles.textButton}>Registrarse</Text>
                     </Button>
-                    <Image source={require("../image/logo-app.png")} alt="logo-app" size="40%" resizeMode="contain" maxH="15%"></Image>
+                    <Image source={constants.LOGO}
+                            alt="logo-app"
+                            resizeMode="contain"
+                            style={styles.imageLogo} ></Image>
                 </VStack>
             </ImageBackground>
         </NativeBaseProvider>
@@ -172,4 +196,10 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
         color: "white",
     },
+    imageLogo: {
+        width: "200@ms",
+        height: "80@ms",
+        marginBottom: "40@ms",
+        marginTop: "40@ms"
+    }
 });

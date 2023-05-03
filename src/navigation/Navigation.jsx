@@ -7,6 +7,7 @@ import RegisterStep2Screen from "../pages/RegisterStep2Screen";
 import LogInScreen from "../pages/LogInScreen";
 import ParkingScreen from "../pages/ParkingScreen";
 import MenuScreen from "../pages/MenuScreen";
+import InformationScreen from "../pages/InformationScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const Navigation = () => {
                             component={ProfileScreen}
                         ></Stack.Screen>
                         <Stack.Screen name="Menu" component={MenuScreen}></Stack.Screen>
+                        <Stack.Screen name="Information" component={InformationScreen}></Stack.Screen>
                     </>
                 )}
             </Stack.Navigator>
