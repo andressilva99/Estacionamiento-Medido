@@ -1,7 +1,4 @@
-import {
-    ScrollView,
-    Text,
-} from "react-native";
+import { ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -20,22 +17,12 @@ import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
 import loggedUser from "../objects/user";
 import PatentCustom from "../components/PatentCustom";
-
+import HeaderPage from "../components/HeaderPage";
 
 const ParkingScreen = ({ navigation }) => {
-    const [listPatent, setListPatent] = useState([]);
-
+    const [buttonState, setButtonState] = useState(true);
     // useEffect(() => {
-    //     try {
-    //         const patents = data.mensaje.vehiculo.map(({ patente }) => ({
-    //             value: patente,
-    //             label: patente,
-    //         }));
-    //         setListPatent(patents);
-    //         console.log(listPatent);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
+    //    console.log(loggedUser.user.vehicles)
     // }, []);
 
     const handleButtonPressMenu = () => {
@@ -51,24 +38,20 @@ const ParkingScreen = ({ navigation }) => {
                 style={styles.background}
                 safeAreaTop={true}
             >
-                <HStack style={styles.containerHeader}>
-                    <Image source={constants.PARKING_ICON} alt={"Parking"} style={styles.icon}></Image>
-                    <Spacer></Spacer>
-                    <Text style={styles.textHeader}>
-                        Estacionamiento medido
-                    </Text>
-                    <Spacer></Spacer>
-                    <Button variant="ghost" onPress={handleButtonPressMenu}>
-                        <Feather name="menu" size={30} color="white" />
-                    </Button>
+                <HStack maxW="90%">
+                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <VStack style={styles.containerUser}>
-                    <Text style={styles.textName}>{`${loggedUser.user.lastName}, ${loggedUser.user.firstName}`}</Text>
-                    <Text style={styles.textAccount}>Cuenta Nro: {loggedUser.user.idUser}</Text>
+                    <Text
+                        style={styles.textName}
+                    >{`${loggedUser.user.lastName}, ${loggedUser.user.firstName}`}</Text>
+                    <Text style={styles.textAccount}>
+                        Cuenta Nro: {loggedUser.user.idUser}
+                    </Text>
                 </VStack>
                 <HStack style={styles.containerBalance}>
                     <AntDesign name="wallet" size={24} color="#17974c" />
-                    <Text style={styles.textBalance}>Saldo: $...{}</Text>
+                    <Text style={styles.textBalance}>Saldo: $ {loggedUser.user.balance}</Text>
                 </HStack>
                 <Stack>
                     <Button
@@ -76,6 +59,7 @@ const ParkingScreen = ({ navigation }) => {
                             <FontAwesome5 name="car" size={24} color="white" />
                         }
                         style={styles.enterVehicleButton}
+                        onPress={() => navigation.navigate("EnterVehicle")}
                     >
                         <Text style={styles.textEnterVehicle}>
                             Ingresar Nuevo Vehículo
@@ -101,13 +85,19 @@ const ParkingScreen = ({ navigation }) => {
                         </Text>
                     </Button>
                 </Stack>
-                <ScrollView >
-                    <PatentCustom></PatentCustom>
-                    <PatentCustom></PatentCustom>
-                    <PatentCustom></PatentCustom>
-                    <PatentCustom></PatentCustom>
-                    <PatentCustom></PatentCustom>
-                    <PatentCustom></PatentCustom>
+                <ScrollView>
+                    {loggedUser.user.vehicles
+                        ? loggedUser.user.vehicles.map((vehicle) => (
+                              <PatentCustom
+                                  patent={vehicle.patent}
+                                  idVehicle={vehicle.idVehicle}
+                                  idButtonStart="start"
+                                  idButtonStop="stop"
+                                  key={vehicle.idVehicle}
+                                  idUser={loggedUser.user.idUser}
+                              ></PatentCustom>
+                          ))
+                        : null}
                 </ScrollView>
             </VStack>
         </NativeBaseProvider>

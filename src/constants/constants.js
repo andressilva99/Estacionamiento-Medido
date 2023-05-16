@@ -1,7 +1,7 @@
 import axios from "axios";
 import backgroundInit from "../image/fondo-app.png";
 
-const PATH_INST = "http://192.168.2.119:3000/api/";
+const PATH_INST = "https://sem-v2rs.onrender.com/api/";
 const AXIOS_INST = axios.create({ baseURL: PATH_INST });
 const BACKGROUND_INIT = backgroundInit;
 const CLOSE_ICON = require("../image/Icon/Close-Icon.png");

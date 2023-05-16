@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { NativeBaseProvider, Input } from "native-base";
 import { Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 
 const InputControlled = ({
+    defaultValue,
     control,
     name,
     rules = {},
@@ -14,13 +15,17 @@ const InputControlled = ({
     keyboardType,
     style,
     variant,
+    autoCapitalize,
+    isDisabled,
 }) => {
+    const [changeText, setChangeText] = useState(false);
+    
     return (
         <NativeBaseProvider>
             <Controller
                 control={control}
                 name={name}
-                rules={rules}
+                rules={!changeText && (defaultValue != null) ? null : rules}
                 render={({
                     field: { value, onChange, onBlur },
                     fieldState: { error },
@@ -28,8 +33,8 @@ const InputControlled = ({
                     <View>
                         <Input
                             keyboardType={keyboardType}
-                            value={value}
-                            onChangeText={onChange}
+                            value={changeText ? value : defaultValue}
+                            onChangeText={changeText ? onChange : () => {onChange; setChangeText(true)}}
                             onBlur={onBlur}
                             placeholder={placeholder}
                             secureTextEntry={secureTextEntry}
@@ -38,6 +43,8 @@ const InputControlled = ({
                             minW={width}
                             borderRadius={30}
                             variant={variant}
+                            autoCapitalize={autoCapitalize}
+                            isDisabled={isDisabled}
                         ></Input>
                         {error && (
                             <Text style={styles.errores}>

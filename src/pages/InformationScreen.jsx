@@ -12,6 +12,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import constants from "../constants/constants";
 import { Ionicons } from "@expo/vector-icons";
+import HeaderPage from "../components/HeaderPage";
 
 const { height } = Dimensions.get("screen");
 
@@ -29,20 +30,8 @@ const InformationScreen = ({navigation}) => {
                 style={styles.background}
                 safeAreaTop={true}
             >
-                <HStack style={styles.containerHeader}>
-                    <Image
-                        source={constants.PARKING_ICON}
-                        alt={"Parking"}
-                        style={styles.icon}
-                    ></Image>
-                    <Spacer></Spacer>
-                    <Text style={styles.textHeader}>
-                        Estacionamiento medido
-                    </Text>
-                    <Spacer></Spacer>
-                    <Button variant="ghost" onPress={handleButtonPressMenu}>
-                        <Feather name="menu" size={30} color="white" />
-                    </Button>
+                <HStack maxW="90%">
+                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack justifyItems="flex-start" minW="85%">
                     <Ionicons

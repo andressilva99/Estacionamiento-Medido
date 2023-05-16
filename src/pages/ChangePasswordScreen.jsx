@@ -3,6 +3,7 @@ import React from "react";
 import { Button, HStack, Input, NativeBaseProvider, Spacer, Stack } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import HeaderPage from "../components/HeaderPage";
 
 
 const ChangePasswordScreen = () => {
@@ -15,12 +16,8 @@ const ChangePasswordScreen = () => {
                 alignItems="center"
                 safeAreaTop={true}
             >
-                <HStack style={styles.containerHeader}>
-                    <FontAwesome5 name="parking" size={24} color="white" />
-                    <Spacer></Spacer>
-                    <Text style={styles.textHeader}>
-                        Estacionamiento medido
-                    </Text>
+                <HStack maxW="90%">
+                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <Stack
                     flexDirection="row"

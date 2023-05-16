@@ -14,6 +14,8 @@ const user = {
         name: "",
     },
     vehicles: [],
+    token: "",
+    balance: ""
 };
 
 export default {

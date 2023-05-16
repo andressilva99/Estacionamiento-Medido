@@ -1,35 +1,46 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { HStack, NativeBaseProvider } from "native-base";
+import { HStack, NativeBaseProvider, Spacer, Stack } from "native-base";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { ScaledSheet } from "react-native-size-matters";
 
-const EnterVehicleComboBox = ({ setElement, element, listElement, label, onBlur }) => {
+const EnterVehicleComboBox = ({
+    setElement,
+    element,
+    listElement,
+    label,
+    onBlur,
+}) => {
     const handleSelectItem = () => {
-        console.log(element)
-    }
-    
+        console.log(element);
+    };
+
     return (
         <NativeBaseProvider>
             <HStack style={styles.container}>
-                <Text style={styles.label}>{label}</Text>
-                <Text style={styles.slash}>l</Text>
-                <AutocompleteDropdown
-                    clearOnFocus={false}
-                    closeOnBlur={true}
-                    onSelectItem={setElement}
-                    dataSet={element ? listElement : []}
-                    onChangeText={setElement}
-                    showChevron={false}
-                    onBlur={onBlur}
-                    EmptyResultComponent={<Text>Sin resultados</Text>}
-                    containerStyle={styles.autocompleteDropdown}
-                    suggestionsListContainerStyle={{
-                        maxWidth: "80%",
-                        alignItems: "center",
-                    }}
-                    inputContainerStyle={styles.inputContainer}
-                ></AutocompleteDropdown>
+                <HStack flex={2} alignItems="center">
+                    <Text style={styles.label}>{label}</Text>
+                    <Spacer></Spacer>
+                    <Text style={styles.slash}>l</Text>
+                </HStack>
+                <Stack flex={4}>
+                    <AutocompleteDropdown
+                        clearOnFocus={false}
+                        closeOnBlur={true}
+                        onSelectItem={setElement}
+                        dataSet={element ? listElement : []}
+                        onChangeText={setElement}
+                        showChevron={false}
+                        onBlur={onBlur}
+                        EmptyResultComponent={<Text>Sin resultados</Text>}
+                        containerStyle={styles.autocompleteDropdown}
+                        suggestionsListContainerStyle={{
+                            maxWidth: "80%",
+                            alignItems: "center",
+                        }}
+                        inputContainerStyle={styles.inputContainer}
+                    ></AutocompleteDropdown>
+                </Stack>
             </HStack>
         </NativeBaseProvider>
     );
@@ -40,7 +51,6 @@ export default EnterVehicleComboBox;
 const styles = ScaledSheet.create({
     container: {
         minHeight: "7%",
-        minWidth: "90%",
         alignItems: "center",
         backgroundColor: "#eaeaec",
         borderRadius: 30,
@@ -50,23 +60,21 @@ const styles = ScaledSheet.create({
     label: {
         fontSize: "18@ms",
         color: "#656a6e",
-        marginLeft: "15@ms"
+        marginLeft: "15@ms",
     },
     inputContainer: {
         borderBottomRightRadius: 30,
         borderTopRightRadius: 30,
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
-        backgroundColor: "#fff",
+        backgroundColor: "#eaeaec",
     },
     autocompleteDropdown: {
-        minWidth: "72.5%",
-        alignItems: "center"
+        alignItems: "center",
     },
     slash: {
         fontSize: "30@ms",
         color: "#656a6e",
         fontWeight: "bold",
-        marginHorizontal: "5@ms"
     },
 });

@@ -1,15 +1,11 @@
-import {
-    ImageBackground,
-    Text,
-    Alert,
-    Dimensions,
-} from "react-native";
-import React, { useState } from "react";
+import { ImageBackground, Text, Alert, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     HStack,
     Image,
     NativeBaseProvider,
+    Stack,
     StatusBar,
     VStack,
 } from "native-base";
@@ -22,9 +18,23 @@ import loggedUser from "../objects/user";
 
 const { height } = Dimensions.get("screen");
 
-const LogInScreen = ({ navigation }) => {
+const LogInScreen = ({ navigation, route }) => {
+    // useEffect(() => {
+    //     loggedUser.user.idUser = "";
+    //     loggedUser.user.documentNumber = "";
+    //     loggedUser.user.email = "";
+    //     loggedUser.user.firstName = "";
+    //     loggedUser.user.lastName = "";
+    //     loggedUser.user.numberPhone = "";
+    //     loggedUser.user.phoneCompany.name = "";
+    //     loggedUser.user.razonSocial = "";
+    //     loggedUser.user.typeDocument.name = "";
+    //     loggedUser.user.userName = "";
+    //     loggedUser.user.vehicles = [];
+    // }, []);
     const { control, handleSubmit, watch } = useForm();
     const [loading, setLoading] = useState(false);
+    const { setUser } = route.params;
 
     const LogIn = async (data) => {
         const { user, password } = data;
@@ -42,33 +52,15 @@ const LogInScreen = ({ navigation }) => {
         };
 
         try {
-            console.log(logIn);
             const response = await constants.AXIOS_INST.post(
                 "usuario/logIn",
                 logIn
             );
             const data = response.data.mensaje;
-            loggedUser.user.idUser = data.idUsuario;
-            loggedUser.user.documentNumber = data.numeroDocumento;
-            loggedUser.user.email = data.email;
-            loggedUser.user.firstName = data.nombrePersona;
-            loggedUser.user.lastName = data.apellido;
-            loggedUser.user.numberPhone = data.numeroTelefono;
-            loggedUser.user.phoneCompany.name = data.compania_telefono;
-            loggedUser.user.razonSocial = data.razonSocial;
-            loggedUser.user.typeDocument.name = data.tipo_documento;
-            loggedUser.user.userName = data.nombreUsuario;
-            if (data.vehicle != undefined) {
-                data.vehiculo.forEach((vehicle) => {
-                    loggedUser.user.vehicles.push({
-                        mark: vehicle.marca.nombre,
-                        model: vehicle.modelo.nombre,
-                        patent: vehicle.patente,
-                        color: vehicle.color.nombre,
-                    })
-                })
-            }
-            navigation.navigate("Parking");
+            FillUserData(data);
+            // console.log(loggedUser.user.vehicles)
+            setUser(loggedUser.user);
+            // navigation.navigate("Parking");
         } catch (error) {
             Alert.alert("Error", error.message);
         }
@@ -77,6 +69,35 @@ const LogInScreen = ({ navigation }) => {
 
     const Register = () => {
         navigation.navigate("Register1");
+    };
+
+    const FillUserData = (data) => {
+        const token = data.token;
+        const userData = data.usuario;
+
+        loggedUser.user.idUser = userData.idUsuario;
+        loggedUser.user.documentNumber = userData.numeroDocumento;
+        loggedUser.user.email = userData.email;
+        loggedUser.user.firstName = userData.nombrePersona;
+        loggedUser.user.lastName = userData.apellido;
+        loggedUser.user.numberPhone = userData.numeroTelefono;
+        loggedUser.user.phoneCompany.name = userData.compania_telefono;
+        loggedUser.user.razonSocial = userData.razonSocial;
+        loggedUser.user.typeDocument.name = userData.tipo_documento.nombre;
+        loggedUser.user.userName = userData.nombreUsuario;
+        loggedUser.user.token = token;
+        loggedUser.user.balance = userData.saldo;
+        if (userData.usuario_vehiculo != undefined) {
+            userData.usuario_vehiculo.forEach((vehicle) => {
+                loggedUser.user.vehicles.push({
+                    mark: vehicle.vehiculo.marca.nombre,
+                    model: vehicle.vehiculo.modelo.nombre,
+                    patent: vehicle.vehiculo.patente,
+                    color: vehicle.vehiculo.color.nombre,
+                    idVehicle: vehicle.vehiculo.idVehiculo,
+                });
+            });
+        }
     };
 
     return (
@@ -94,7 +115,12 @@ const LogInScreen = ({ navigation }) => {
                     safeAreaTop={true}
                     justifyContent="center"
                 >
-                    <Image source={require("../image/logIn-icon-start.png")} alt="logIn-icon-start" size="20%" resizeMode="center"></Image>
+                    <Image
+                        source={require("../image/logIn-icon-start.png")}
+                        alt="logIn-icon-start"
+                        size="20%"
+                        resizeMode="center"
+                    ></Image>
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
                         end={{ x: 1, y: 1 }}
@@ -107,13 +133,17 @@ const LogInScreen = ({ navigation }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Text style={styles.text}>Usuario</Text>
-                            <InputControlled
-                                name="user"
-                                control={control}
-                                style={styles.inputUser}
-                                variant="unstiled"
-                            ></InputControlled>
+                            <Stack flex={1}>
+                                <Text style={styles.text}>Usuario</Text>
+                            </Stack>
+                            <HStack flex={2}>
+                                <InputControlled
+                                    name="user"
+                                    control={control}
+                                    style={styles.input}
+                                    variant="unstiled"
+                                ></InputControlled>
+                            </HStack>
                         </HStack>
                     </LinearGradient>
                     <LinearGradient
@@ -128,28 +158,51 @@ const LogInScreen = ({ navigation }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Text style={styles.text}>Contraseña</Text>
-                            <InputControlled
-                                name="password"
-                                control={control}
-                                style={styles.input}
-                                secureTextEntry={true}
-                                variant="unstiled"
-                            ></InputControlled>
+                            <Stack flex={1}>
+                                <Text style={styles.text}>Contraseña</Text>
+                            </Stack>
+                            <HStack flex={2}>
+                                <InputControlled
+                                    name="password"
+                                    control={control}
+                                    style={styles.input}
+                                    secureTextEntry={true}
+                                    variant="unstiled"
+                                ></InputControlled>
+                            </HStack>
                         </HStack>
                     </LinearGradient>
                     <Button variant="link">¿Olvidó su contraseña?</Button>
-                    <Button onPress={handleSubmit(LogIn)} style={styles.button}>
-                        <Text style={styles.textButton}>{loading ? "Ingresando..." : "Ingresar"}</Text>
-                    </Button>
+                    {loading ? (
+                        <Button
+                            isLoading
+                            style={styles.button}
+                            isLoadingText={
+                                <Text style={styles.textButton}>
+                                    Ingresando
+                                </Text>
+                            }
+                            spinnerPlacement="end"
+                        ></Button>
+                    ) : (
+                        <Button
+                            onPress={handleSubmit(LogIn)}
+                            style={styles.button}
+                        >
+                            <Text style={styles.textButton}>Ingresar</Text>
+                        </Button>
+                    )}
+
                     <Text>¿No tienes cuenta?</Text>
                     <Button onPress={Register} style={styles.button}>
                         <Text style={styles.textButton}>Registrarse</Text>
                     </Button>
-                    <Image source={constants.LOGO}
-                            alt="logo-app"
-                            resizeMode="contain"
-                            style={styles.imageLogo} ></Image>
+                    <Image
+                        source={constants.LOGO}
+                        alt="logo-app"
+                        resizeMode="contain"
+                        style={styles.imageLogo}
+                    ></Image>
                 </VStack>
             </ImageBackground>
         </NativeBaseProvider>
@@ -178,10 +231,6 @@ const styles = ScaledSheet.create({
     input: {
         fontSize: "17@ms",
     },
-    inputUser: {
-        fontSize: "17@ms",
-        marginLeft: "27@ms",
-    },
     text: {
         fontSize: "17@ms",
         color: "#565656",
@@ -189,7 +238,7 @@ const styles = ScaledSheet.create({
     button: {
         borderRadius: "30@ms",
         backgroundColor: "#04467C",
-        minWidth: "50%"
+        minWidth: "50%",
     },
     textButton: {
         fontSize: "20@ms",
@@ -200,6 +249,6 @@ const styles = ScaledSheet.create({
         width: "200@ms",
         height: "80@ms",
         marginBottom: "40@ms",
-        marginTop: "40@ms"
-    }
+        marginTop: "40@ms",
+    },
 });

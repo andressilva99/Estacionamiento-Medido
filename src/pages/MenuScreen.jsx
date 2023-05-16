@@ -1,5 +1,5 @@
 import { Dimensions, ImageBackground, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     HStack,
     NativeBaseProvider,
@@ -11,20 +11,43 @@ import {
 import PressableCustom from "../components/PressableCustom";
 import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
+import loggedUser from "../objects/user";
 
 const { height } = Dimensions.get("screen");
 
-const MenuScreen = ({ navigation }) => {
+const MenuScreen = ({ navigation, route }) => {
     const [subMenu, setSubMenu] = useState(false);
+    const { setUser } = route.params;
+
+    useEffect(() => {
+        if (subMenu) {
+            setSubMenu(!subMenu);
+        }
+    }, []);
 
     const handleButtonPress = (id) => {
-        console.log(id);
         if (id !== "logOut") {
             navigation.navigate(id);
-            setSubMenu(!subMenu);
         } else {
-            navigation.popToTop();
+            setUser(undefined);
+            DeleteUserData();
         }
+    };
+
+    const DeleteUserData = () => {
+        loggedUser.user.idUser = "";
+        loggedUser.user.documentNumber = "";
+        loggedUser.user.firstName = "";
+        loggedUser.user.lastName = "";
+        loggedUser.user.razonSocial = "";
+        loggedUser.user.userName = "";
+        loggedUser.user.email = "";
+        loggedUser.user.numberPhone = "";
+        loggedUser.user.phoneCompany.name = "";
+        loggedUser.user.typeDocument.name = "";
+        loggedUser.user.vehicles = [];
+        loggedUser.user.token = "";
+        loggedUser.user.balance = "";
     };
 
     return (
@@ -46,8 +69,7 @@ const MenuScreen = ({ navigation }) => {
                                 styleTouchable={{ backgroundColor: "#009FE3" }}
                                 iconRight={true}
                                 styleText={styles.textMenu}
-                                onPress={handleButtonPress}
-                                id={"menu"}
+                                disabled={true}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>
@@ -85,7 +107,7 @@ const MenuScreen = ({ navigation }) => {
                                         icon={constants.PROFILE_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
-                                        id={"Undefined"}
+                                        id={"ParkingHistory"}
                                     ></PressableCustom>
                                 </HStack>
                                 <HStack style={styles.containerPressable}>
@@ -94,7 +116,7 @@ const MenuScreen = ({ navigation }) => {
                                         icon={constants.PROFILE_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
-                                        id={"Undefined"}
+                                        id={"RechargesHistory"}
                                     ></PressableCustom>
                                 </HStack>
                                 <HStack style={styles.containerPressable}>
@@ -103,7 +125,7 @@ const MenuScreen = ({ navigation }) => {
                                         icon={constants.PROFILE_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
-                                        id={"Undefined"}
+                                        id={"MovementsHistory"}
                                     ></PressableCustom>
                                 </HStack>
                                 <HStack style={styles.containerPressable}>
@@ -112,7 +134,7 @@ const MenuScreen = ({ navigation }) => {
                                         icon={constants.PROFILE_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
-                                        id={"Undefined"}
+                                        id={"AnnouncementsHistory"}
                                     ></PressableCustom>
                                 </HStack>
                             </>

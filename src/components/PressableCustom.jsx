@@ -4,11 +4,11 @@ import { TouchableOpacity } from "react-native";
 import { HStack, Image, NativeBaseProvider, Spacer } from "native-base";
 import { ScaledSheet } from "react-native-size-matters";
 
-const PressableCustom = ({ styleTouchable, text, icon, iconRight, styleText, onPress, id }) => {
+const PressableCustom = ({ styleTouchable, text, icon, iconRight, styleText, onPress, id, disabled }) => {
     return (
         <NativeBaseProvider>
             <View style={styles.container}>
-                <TouchableOpacity style={[styles.touchable, styleTouchable]} onPress={() => onPress(id)}>
+                <TouchableOpacity style={[styles.touchable, styleTouchable]} onPress={() => onPress(id)} disabled={disabled}>
                     {iconRight ? (
                         <HStack space="md" paddingRight="3%">
                             <Text style={[styles.text, styleText]}>{text}</Text>

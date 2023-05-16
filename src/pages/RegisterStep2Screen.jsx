@@ -59,29 +59,28 @@ const RegisterStep2Screen = ({ route, navigation }) => {
 
     const Register = async (data) => {
         const { user, email, phone } = data;
-        try {
-            const information = {
-                usuario: {
-                    idTipoDocumento: typeDocument,
-                    idCompaniaTelefono: phoneCompanie,
-                    numeroDocumento: numberDocument.toString(),
-                    nombrePersona: name,
-                    apellido: surname,
-                    nombreUsuario: user,
-                    razonSocial: razonSocial,
-                    email: email,
-                    numeroTelefono: phone,
-                    clave: "defecto",
-                },
-            };
-            const result = await constants.AXIOS_INST.post(
-                "usuario/registrar",
-                information
-            );
-            console.log(result.data.mensaje);
-        } catch (error) {
-            console.error(error);
-        }
+
+        const information = {
+            usuario: {
+                idTipoDocumento: typeDocument,
+                idCompaniaTelefono: phoneCompanie,
+                numeroDocumento: numberDocument.toString(),
+                nombrePersona: name,
+                apellido: surname,
+                nombreUsuario: user,
+                razonSocial: razonSocial,
+                email: email,
+                numeroTelefono: phone,
+                clave: "defecto",
+            },
+        };
+        await constants.AXIOS_INST.post("usuario/registrar", information)
+            .then((response) => {
+                alert(response.data.mensaje);
+            })
+            .catch((error) => {
+                alert(error.response.data.mensaje);
+            });
     };
 
     const SuccessfulRegistration = async (data) => {
@@ -111,7 +110,6 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 resizeMode="stretch"
             >
                 <Stack
-                    
                     space="sm"
                     height={height}
                     alignItems="center"

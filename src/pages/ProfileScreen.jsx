@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Flex,
@@ -15,9 +15,77 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
-const { width } = Dimensions.get("window");
+import HeaderPage from "../components/HeaderPage";
+import { useForm } from "react-hook-form";
+import InputControlled from "../components/InputControlled";
+import loggedUser from "../objects/user";
+import constants from "../constants/constants";
 
-const ProfileScreen = () => {
+const { width } = Dimensions.get("window");
+const REGEX_EMAIL =
+    /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
+
+const ProfileScreen = ({ navigation }) => {
+    const { control, handleSubmit } = useForm();
+    const [isDisabled, setIsDisabled] = useState(true);
+    const [listTypesDocuments, setListTypesDocuments] = useState([]);
+    const [typeDocument, setTypeDocument] = useState();
+
+    useEffect(() => {
+        console.log(loggedUser.user.typeDocument.name)
+    }, []);
+    
+    const obtainDocuments = async () => {
+        if (listTypesDocuments != []) {
+            try {
+                const result = await constants.AXIOS_INST.get(
+                    "tiposDocumentos"
+                );
+                const typesDocuments = result.data.mensaje.map(
+                    ({ idTipoDocumento, nombre }) => ({
+                        value: idTipoDocumento,
+                        label: nombre,
+                    })
+                );
+                setListTypesDocuments(typesDocuments);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+
+    const handleButtonPressMenu = () => {
+        navigation.navigate("Menu");
+    };
+
+    const ModifyUser = async (data) => {
+        const { name, surname, numberDocument, razonSocial, email, phone } =
+            data;
+
+        const modifyUser = {
+            usuario: {
+                idUsuario: loggedUser.user.idUser,
+                idTipoDocumento: 1,
+                idCompaniaTelefono: 1,
+                numeroDocumento: numberDocument
+                    ? numberDocument
+                    : loggedUser.user.documentNumber,
+                nombrePersona: name ? name : loggedUser.user.firstName,
+                apellido: surname ? surname : loggedUser.user.lastName,
+                nombreUsuario: loggedUser.user.userName,
+                razonSocial: razonSocial,
+                email: email ? email : loggedUser.user.email,
+                numeroTelefono: phone ? phone : loggedUser.user.numberPhone,
+            },
+        };
+
+        console.log(modifyUser.usuario);
+        await constants.AXIOS_INST.put("usuario/modificarUsuario", modifyUser)
+            .then((response) => alert(response.data.mensaje))
+            .catch((error) => alert(error.response.data.mensaje));
+        setIsDisabled(!isDisabled);
+    };
+
     return (
         <NativeBaseProvider>
             <Stack
@@ -27,16 +95,8 @@ const ProfileScreen = () => {
                 alignItems="center"
                 safeAreaTop={true}
             >
-                <HStack style={styles.containerHeader}>
-                    <FontAwesome5 name="parking" size={24} color="white" />
-                    <Spacer></Spacer>
-                    <Text style={styles.textHeader}>
-                        Estacionamiento medido
-                    </Text>
-                    <Spacer></Spacer>
-                    <Button variant="ghost">
-                        <Feather name="menu" size={30} color="white" />
-                    </Button>
+                <HStack maxW="90%">
+                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>
                     <Ionicons
@@ -46,21 +106,35 @@ const ProfileScreen = () => {
                     />
                     <Text style={styles.textProfile}>Perfil</Text>
                 </Stack>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <Stack space="sm" minW="85%">
-                        <Input
-                            style={styles.inputProfile}
-                            placeholder="Nombres"
-                            borderRadius={30}
-                        ></Input>
-                        <Input
-                            style={styles.inputProfile}
-                            placeholder="Apellido"
-                            borderRadius={30}
-                        ></Input>
-                        <HStack flex={1} maxW="82%">
+                        <HStack>
+                            <InputControlled
+                                name="name"
+                                placeholder="Nombre"
+                                control={control}
+                                width="85%"
+                                rules={{ required: " Nombre requerido" }}
+                                defaultValue={loggedUser.user.firstName}
+                                isDisabled={isDisabled}
+                            ></InputControlled>
+                        </HStack>
+                        <HStack>
+                            <InputControlled
+                                name="surname"
+                                placeholder="Apellido"
+                                control={control}
+                                width="85%"
+                                rules={{ required: " Apellido requerido" }}
+                                defaultValue={loggedUser.user.lastName}
+                                isDisabled={isDisabled}
+                            ></InputControlled>
+                        </HStack>
+                        <HStack flex={1} isDisabled={isDisabled}>
                             <Stack style={styles.containerTypeDocument}>
-                                <Text style={styles.textTypeDocument}>Tipo de Documento</Text>
+                                <Text style={styles.textTypeDocument}>
+                                    Tipo de Documento
+                                </Text>
                             </Stack>
                             <Select
                                 backgroundColor="white"
@@ -68,29 +142,136 @@ const ProfileScreen = () => {
                                 borderTopLeftRadius={0}
                                 borderTopRightRadius={30}
                                 borderBottomRightRadius={30}
-                                minW="54%"
-                            ></Select>
+                                flex={1}
+                                isDisabled={isDisabled}
+                                placeholder={loggedUser.user.typeDocument.name}
+                            >
+                                {listTypesDocuments.map((documen) => (
+                                    <Select.Item
+                                        key={documen.value}
+                                        label={documen.label}
+                                        value={documen.value}
+                                    ></Select.Item>
+                                ))}
+                            </Select>
                         </HStack>
-                        <Input
-                            style={styles.inputProfile}
-                            placeholder="Nro."
-                            borderRadius={30}
-                        ></Input>
-                        <Input
-                            style={styles.inputProfile}
-                            placeholder="Razón Social"
-                            borderRadius={30}
-                        ></Input>
-                        <Input
-                            style={styles.inputProfile}
-                            placeholder="e-mail"
-                            borderRadius={30}
-                        ></Input>
-                        <Input
-                            style={styles.inputProfile}
-                            placeholder="Nro. de celular"
-                            borderRadius={30}
-                        ></Input>
+                        <HStack>
+                            <InputControlled
+                                keyboardType="numeric"
+                                name="numberDocument"
+                                placeholder="Número de Documento"
+                                control={control}
+                                width="85%"
+                                rules={{
+                                    required: " Número de Documento requerido",
+                                }}
+                                defaultValue={loggedUser.user.documentNumber}
+                                isDisabled={isDisabled}
+                            ></InputControlled>
+                        </HStack>
+                        <HStack>
+                            <InputControlled
+                                name="razonSocial"
+                                placeholder="Razón social"
+                                control={control}
+                                width="85%"
+                                rules={{}}
+                                defaultValue={loggedUser.user.razonSocial}
+                                isDisabled={isDisabled}
+                            ></InputControlled>
+                        </HStack>
+                        <HStack>
+                            <InputControlled
+                                name="email"
+                                placeholder="Correo electrónico"
+                                control={control}
+                                width="85%"
+                                rules={{
+                                    required: " Correo electrónico requerido",
+                                    pattern: {
+                                        value: REGEX_EMAIL,
+                                        message: " Correo electrónico inválido",
+                                    },
+                                }}
+                                defaultValue={loggedUser.user.email}
+                                isDisabled={isDisabled}
+                            ></InputControlled>
+                        </HStack>
+                        <HStack>
+                            <InputControlled
+                                keyboardType="numeric"
+                                name="phone"
+                                placeholder="Número teléfono"
+                                control={control}
+                                width="85%"
+                                rules={{
+                                    required: " Número de teléfono requerido",
+                                    minLength: {
+                                        value: 10,
+                                        message: " Número de teléfono inválido",
+                                    },
+                                    maxLength: {
+                                        value: 10,
+                                        message: " Número de teléfono inválido",
+                                    },
+                                }}
+                                defaultValue={loggedUser.user.numberPhone}
+                                isDisabled={isDisabled}
+                            ></InputControlled>
+                        </HStack>
+                        {isDisabled ? (
+                            <Button
+                                startIcon={
+                                    <SimpleLineIcons
+                                        name="lock"
+                                        size={24}
+                                        color="white"
+                                    />
+                                }
+                                style={styles.buttonChangePassword}
+                                onPress={() => {
+                                    obtainDocuments();
+                                    setIsDisabled(!isDisabled);
+                                }}
+                            >
+                                <Text style={styles.textChangePassword}>
+                                    Editar Datos
+                                </Text>
+                            </Button>
+                        ) : (
+                            <HStack space={1} flex={1}>
+                                <Button
+                                    startIcon={
+                                        <SimpleLineIcons
+                                            name="close"
+                                            size={16}
+                                            color="white"
+                                        />
+                                    }
+                                    style={styles.buttonCancel}
+                                    onPress={() => setIsDisabled(!isDisabled)}
+                                >
+                                    <Text style={styles.textButtonsEnd}>
+                                        Cancelar
+                                    </Text>
+                                </Button>
+                                <Button
+                                    startIcon={
+                                        <SimpleLineIcons
+                                            name="check"
+                                            size={16}
+                                            color="white"
+                                        />
+                                    }
+                                    style={styles.buttonSave}
+                                    onPress={handleSubmit(ModifyUser)}
+                                >
+                                    <Text style={styles.textButtonsEnd}>
+                                        Guardar Cambios
+                                    </Text>
+                                </Button>
+                            </HStack>
+                        )}
                         <Button
                             startIcon={
                                 <SimpleLineIcons
@@ -105,36 +286,6 @@ const ProfileScreen = () => {
                                 Cambiar Clave
                             </Text>
                         </Button>
-                        <HStack space={1} maxW="85%">
-                            <Button
-                                startIcon={
-                                    <SimpleLineIcons
-                                        name="check"
-                                        size={16}
-                                        color="white"
-                                    />
-                                }
-                                style={styles.buttonSave}
-                            >
-                                <Text style={styles.textButtonsEnd}>
-                                    Guardar Cambios
-                                </Text>
-                            </Button>
-                            <Button
-                                startIcon={
-                                    <SimpleLineIcons
-                                        name="close"
-                                        size={16}
-                                        color="white"
-                                    />
-                                }
-                                style={styles.buttonCancel}
-                            >
-                                <Text style={styles.textButtonsEnd}>
-                                    Cancelar
-                                </Text>
-                            </Button>
-                        </HStack>
                     </Stack>
                 </ScrollView>
             </Stack>
@@ -184,10 +335,10 @@ const styles = ScaledSheet.create({
         minHeight: "7%",
         borderColor: "#d3d3d5",
         borderWidth: "1@ms",
-        minWidth: "55%",
+        flex: 1,
         borderTopLeftRadius: "30@ms",
         borderBottomLeftRadius: "30@ms",
-        paddingLeft: "8.5%",
+        paddingLeft: "20@ms",
         borderEndWidth: 0,
     },
     textTypeDocument: {
@@ -207,13 +358,13 @@ const styles = ScaledSheet.create({
         justifyContent: "flex-start",
         borderRadius: "30@ms",
         backgroundColor: "#02a44e",
-        minWidth: "49%",
+        flex: 1.2,
     },
     buttonCancel: {
         justifyContent: "flex-start",
         borderRadius: "30@ms",
         backgroundColor: "#ee1d23",
-        minWidth: "49%",
+        flex: 1,
     },
     textButtonsEnd: {
         color: "white",
