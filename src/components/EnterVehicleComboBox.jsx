@@ -10,6 +10,8 @@ const EnterVehicleComboBox = ({
     listElement,
     label,
     onBlur,
+    enable,
+    onChangeText,
 }) => {
     const handleSelectItem = () => {
         console.log(element);
@@ -17,31 +19,41 @@ const EnterVehicleComboBox = ({
 
     return (
         <NativeBaseProvider>
-            <HStack style={styles.container}>
-                <HStack flex={2} alignItems="center">
-                    <Text style={styles.label}>{label}</Text>
-                    <Spacer></Spacer>
-                    <Text style={styles.slash}>l</Text>
+            {enable ? (
+                <HStack style={styles.containerEnabled}>
+                    <HStack flex={2} alignItems="center">
+                        <Text style={styles.label}>{label}</Text>
+                        <Spacer></Spacer>
+                        <Text style={styles.slash}>l</Text>
+                    </HStack>
+                    <Stack flex={4}>
+                        <AutocompleteDropdown
+                            clearOnFocus={false}
+                            closeOnBlur={true}
+                            onSelectItem={setElement}
+                            dataSet={element ? listElement : []}
+                            onChangeText={setElement}
+                            showChevron={false}
+                            onBlur={onBlur}
+                            EmptyResultComponent={<Text>Sin resultados</Text>}
+                            containerStyle={styles.autocompleteDropdown}
+                            suggestionsListContainerStyle={{
+                                maxWidth: "80%",
+                                alignItems: "center",
+                            }}
+                            inputContainerStyle={styles.inputContainer}
+                        ></AutocompleteDropdown>
+                    </Stack>
                 </HStack>
-                <Stack flex={4}>
-                    <AutocompleteDropdown
-                        clearOnFocus={false}
-                        closeOnBlur={true}
-                        onSelectItem={setElement}
-                        dataSet={element ? listElement : []}
-                        onChangeText={setElement}
-                        showChevron={false}
-                        onBlur={onBlur}
-                        EmptyResultComponent={<Text>Sin resultados</Text>}
-                        containerStyle={styles.autocompleteDropdown}
-                        suggestionsListContainerStyle={{
-                            maxWidth: "80%",
-                            alignItems: "center",
-                        }}
-                        inputContainerStyle={styles.inputContainer}
-                    ></AutocompleteDropdown>
-                </Stack>
-            </HStack>
+            ) : <HStack style={styles.containerDisabled}>
+                    <HStack flex={2} alignItems="center">
+                        <Text style={styles.label}>{label}</Text>
+                        <Spacer></Spacer>
+                        <Text style={styles.slash}>l</Text>
+                    </HStack>
+                    <Stack flex={4}>
+                    </Stack>
+                </HStack>}
         </NativeBaseProvider>
     );
 };
@@ -49,10 +61,18 @@ const EnterVehicleComboBox = ({
 export default EnterVehicleComboBox;
 
 const styles = ScaledSheet.create({
-    container: {
+    containerDisabled: {
         minHeight: "7%",
         alignItems: "center",
         backgroundColor: "#eaeaec",
+        borderRadius: 30,
+        borderColor: "#9d9ca1",
+        borderWidth: "1@ms",
+    },
+    containerEnabled: {
+        minHeight: "7%",
+        alignItems: "center",
+        backgroundColor: "white",
         borderRadius: 30,
         borderColor: "#9d9ca1",
         borderWidth: "1@ms",
@@ -67,7 +87,7 @@ const styles = ScaledSheet.create({
         borderTopRightRadius: 30,
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
-        backgroundColor: "#eaeaec",
+        backgroundColor: "white",
     },
     autocompleteDropdown: {
         alignItems: "center",

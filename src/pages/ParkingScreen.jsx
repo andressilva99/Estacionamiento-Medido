@@ -1,7 +1,6 @@
 import { ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 import {
     Button,
     HStack,
@@ -13,17 +12,23 @@ import {
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
 import loggedUser from "../objects/user";
 import PatentCustom from "../components/PatentCustom";
 import HeaderPage from "../components/HeaderPage";
 
 const ParkingScreen = ({ navigation }) => {
-    const [buttonState, setButtonState] = useState(true);
-    // useEffect(() => {
-    //    console.log(loggedUser.user.vehicles)
-    // }, []);
+    const [isBalanceNegative, setIsBalanceNegative] = useState(false);
+    
+    useEffect(() => {
+       const verifyBalanceNegative = () => {
+        balance = parseFloat(loggedUser.user.balance);
+        if (balance < 0) {
+            setIsBalanceNegative(true);
+        }
+       }
+       verifyBalanceNegative();
+    }, []);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
@@ -50,13 +55,15 @@ const ParkingScreen = ({ navigation }) => {
                     </Text>
                 </VStack>
                 <HStack style={styles.containerBalance}>
-                    <AntDesign name="wallet" size={24} color="#17974c" />
-                    <Text style={styles.textBalance}>Saldo: $ {loggedUser.user.balance}</Text>
+                    <AntDesign name="wallet" style={[styles.icon, {color: "#17974c"}, isBalanceNegative ? styles.textBalanceNegative : null]} />
+                    <Text style={[styles.textBalance, isBalanceNegative ? styles.textBalanceNegative : null]}>
+                        Saldo: $ {loggedUser.user.balance}
+                    </Text>
                 </HStack>
                 <Stack>
                     <Button
                         startIcon={
-                            <FontAwesome5 name="car" size={24} color="white" />
+                            <FontAwesome5 name="car" style={styles.icon} />
                         }
                         style={styles.enterVehicleButton}
                         onPress={() => navigation.navigate("EnterVehicle")}
@@ -66,28 +73,15 @@ const ParkingScreen = ({ navigation }) => {
                         </Text>
                     </Button>
                 </Stack>
-                <Stack>
-                    <Button
-                        startIcon={
-                            <FontAwesome5 name="car" size={24} color="white" />
-                        }
-                        style={styles.parkingButton}
-                        endIcon={
-                            <FontAwesome
-                                name="chevron-down"
-                                size={24}
-                                color="white"
-                            />
-                        }
-                    >
-                        <Text style={styles.textParkingVehicle}>
-                            Estacionar
-                        </Text>
-                    </Button>
-                </Stack>
+                <HStack style={styles.parking}>
+                    <FontAwesome5 name="car" style={styles.icon} />
+                    <Text style={styles.textParkingVehicle}>Estacionar</Text>
+                    <Spacer></Spacer>
+                    <FontAwesome name="chevron-down" style={[styles.icon, {paddingRight: "6%"}]}/>
+                </HStack>
                 <ScrollView>
                     {loggedUser.user.vehicles
-                        ? loggedUser.user.vehicles.map((vehicle) => (
+                        ? loggedUser.user.vehicles.map((vehicle, index) => (
                               <PatentCustom
                                   patent={vehicle.patent}
                                   idVehicle={vehicle.idVehicle}
@@ -95,6 +89,8 @@ const ParkingScreen = ({ navigation }) => {
                                   idButtonStop="stop"
                                   key={vehicle.idVehicle}
                                   idUser={loggedUser.user.idUser}
+                                  parked={vehicle.parked}
+                                  position={index}
                               ></PatentCustom>
                           ))
                         : null}
@@ -107,63 +103,46 @@ const ParkingScreen = ({ navigation }) => {
 export default ParkingScreen;
 
 const styles = ScaledSheet.create({
-    button: {
-        borderTopStartRadius: 30,
-        borderBottomStartRadius: 30,
-    },
     textPatent: {
-        fontSize: 30,
+        fontSize: "30@ms",
         fontWeight: "bold",
-    },
-    containerHeader: {
-        minHeight: "7%",
-        minWidth: "90%",
-        borderRadius: 5,
-        paddingLeft: "15@ms",
-        backgroundColor: "#3f60af",
-        alignItems: "center",
-    },
-    textHeader: {
-        fontSize: 19,
-        fontWeight: "bold",
-        color: "white",
     },
     containerUser: {
         minHeight: "7%",
         minWidth: "85%",
-        borderRadius: 30,
-        paddingLeft: 20,
+        borderRadius: "30@ms",
+        paddingLeft: "20@ms",
         backgroundColor: "#c4e5f8",
     },
     containerBalance: {
         minHeight: "7%",
         minWidth: "85%",
-        borderRadius: 30,
-        paddingLeft: 20,
+        borderRadius: "30@ms",
+        paddingLeft: "20@ms",
         backgroundColor: "#f8f8f8",
         alignItems: "center",
     },
     containerParking: {
-        minHeight: 50,
+        minHeight: "50@ms",
         minWidth: "85%",
-        borderRadius: 30,
-        paddingHorizontal: 20,
+        borderRadius: "30@ms",
+        paddingHorizontal: "20@ms",
         backgroundColor: "#dbdcde",
         alignItems: "center",
     },
     textName: {
         fontWeight: "bold",
-        fontSize: 21,
+        fontSize: "21@ms",
         color: "#4c75a1",
     },
     textAccount: {
-        fontSize: 15,
+        fontSize: "15@ms",
         fontWeight: "bold",
         color: "#5a7485",
     },
     textBalance: {
         fontWeight: "bold",
-        fontSize: 25,
+        fontSize: "25@ms",
         color: "#17974c",
         marginLeft: 15,
     },
@@ -173,65 +152,37 @@ const styles = ScaledSheet.create({
     enterVehicleButton: {
         minHeight: "7%",
         minWidth: "85%",
-        borderRadius: 30,
-        paddingLeft: 20,
+        borderRadius: "30@ms",
+        paddingLeft: "20@ms",
         backgroundColor: "#77b5dc",
         justifyContent: "flex-start",
     },
-    parkingButton: {
+    parking: {
         minHeight: "7%",
         minWidth: "85%",
-        borderRadius: 30,
-        paddingLeft: 20,
+        borderRadius: "30@ms",
+        paddingLeft: "20@ms",
         backgroundColor: "#53be88",
         justifyContent: "flex-start",
+        alignItems: "center",
     },
     textEnterVehicle: {
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: "20@ms",
         color: "white",
-        marginLeft: 8,
+        marginLeft: "8@ms",
     },
     textParkingVehicle: {
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: "20@ms",
         color: "white",
-        marginLeft: 8,
-        marginRight: 100,
-    },
-    playButton: {
-        height: "60%",
-        borderRadius: 100,
-        flexDirection: "row",
-        backgroundColor: "#01a254",
-        alignItems: "center",
-        minWidth: "20%",
-    },
-    stopButton: {
-        height: "60%",
-        borderRadius: 100,
-        flexDirection: "row",
-        backgroundColor: "#f4f3f1",
-        alignItems: "center",
-        minWidth: "20%",
-    },
-    textPlayButton: {
-        fontSize: 17,
-        fontWeight: "bold",
-        color: "white",
-        marginLeft: 16,
-        marginRight: 20,
-    },
-    textStopButton: {
-        fontSize: 17,
-        fontWeight: "bold",
-        color: "#473a4b",
-        marginLeft: 16,
-        marginRight: 20,
+        marginLeft: "15@ms",
     },
     icon: {
-        width: "30@ms",
-        height: "30@ms",
-        borderRadius: "100@ms",
+        color: "white",
+        fontSize: "24@ms",
     },
+    textBalanceNegative: {
+        color: "red",
+    }
 });

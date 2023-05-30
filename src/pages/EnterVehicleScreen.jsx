@@ -35,6 +35,9 @@ const { height, width } = Dimensions.get("screen");
 const EnterVehicleScreen = () => {
     const { control, handleSubmit, watch } = useForm();
 
+    const [enableModel, setEnableModel] = useState(false);
+    const [enableColor, setEnableColor] = useState(false);
+
     const [listMark, setListMark] = useState([]);
     const [mark, setMark] = useState();
     const [listModel, setListModel] = useState([]);
@@ -42,13 +45,19 @@ const EnterVehicleScreen = () => {
     const [listColor, setListColor] = useState([]);
     const [color, setColor] = useState();
 
+    const config = {
+        headers: {
+            Authorization: `bearer ${loggedUser.user.token}`,
+        },
+    };
+
     useEffect(() => {
         obtainMarks();
     }, []);
 
     const obtainMarks = async () => {
         try {
-            const result = await constants.AXIOS_INST.get("marcas");
+            const result = await constants.AXIOS_INST.get("marcas", config);
             const marks = result.data.mensaje.map(({ idMarca, nombre }) => ({
                 id: idMarca,
                 title: nombre,
@@ -63,7 +72,8 @@ const EnterVehicleScreen = () => {
         try {
             if (mark.id !== null) {
                 const result = await constants.AXIOS_INST.get(
-                    `modelos/${mark.id}`
+                    `modelos/${mark.id}`,
+                    config
                 );
                 const models = result.data.mensaje.map(
                     ({ idModelo, nombre }) => ({
@@ -80,7 +90,7 @@ const EnterVehicleScreen = () => {
 
     const obtainColors = async () => {
         try {
-            const result = await constants.AXIOS_INST.get("colores");
+            const result = await constants.AXIOS_INST.get("colores", config);
             const colors = result.data.mensaje.map(({ idColor, nombre }) => ({
                 id: idColor,
                 title: nombre,
@@ -89,6 +99,21 @@ const EnterVehicleScreen = () => {
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const EnableModel = () => {
+        setEnableModel(true);
+        obtainModels();
+    };
+
+    const EnableColor = () => {
+        setEnableColor(true);
+        obtainColors();
+    };
+
+    const OnChangeTextMark = () => {
+        setEnableModel(false);
+        setEnableColor(false);
     };
 
     const RegisterVehicle = async (data) => {
@@ -103,7 +128,11 @@ const EnterVehicleScreen = () => {
             },
         };
 
-        await constants.AXIOS_INST.post("vehiculo/registrar", vehicleRegister)
+        await constants.AXIOS_INST.post(
+            "vehiculo/registrar",
+            vehicleRegister,
+            config
+        )
             .then((response) => {
                 alert(response.data.mensaje);
             })
@@ -116,67 +145,70 @@ const EnterVehicleScreen = () => {
         <NativeBaseProvider>
             <KeyboardAvoidingView>
                 {/* <ScrollView> */}
-                    <Stack
-                        style={styles.backgroundContainer}
-                        space="sm"
-                        height={height}
-                        alignItems="center"
-                        safeAreaTop={true}
-                    >
-                        <HStack maxW="90%">
-                            {/* onPress={handleButtonPressMenu} */}
-                            <HeaderPage></HeaderPage>
-                        </HStack>
-                        <Stack
-                            flexDirection="row"
-                            style={styles.containerProfile}
-                        >
-                            <FontAwesome5
-                                name="car"
-                                size={24}
-                                color="#3f60af"
-                            />
-                            <Text style={styles.textProfile}>
-                                Ingresar Nuevo Vehículo
-                            </Text>
-                        </Stack>
-                        <HStack maxW="85%">
-                            <InputControlled
-                                name="patent"
-                                control={control}
-                                autoCapitalize="characters"
-                            ></InputControlled>
-                        </HStack>
-                        <HStack zIndex={999} marginX="5%" maxW="85%">
-                            <EnterVehicleComboBox
-                                setElement={setMark}
-                                element={mark}
-                                listElement={listMark}
-                                label="Marca"
-                                onBlur={obtainModels}
-                            ></EnterVehicleComboBox>
-                        </HStack>
-                        <HStack zIndex={998} marginX="5%" maxW="85%">
-                            <EnterVehicleComboBox
-                                setElement={setModel}
-                                element={model}
-                                listElement={listModel}
-                                onBlur={obtainColors}
-                                label="Modelo"
-                            ></EnterVehicleComboBox>
-                        </HStack>
-                        <HStack zIndex={997} marginX="5%" maxW="85%">
-                            <EnterVehicleComboBox
-                                setElement={setColor}
-                                element={color}
-                                listElement={listColor}
-                                label="Color"
-                            ></EnterVehicleComboBox>
-                        </HStack>
-                        <Button onPress={handleSubmit(RegisterVehicle)} style={styles.button}>
-                            <Text style={styles.textButton}>Ingresar vehículo</Text>
-                        </Button>
+                <Stack
+                    style={styles.backgroundContainer}
+                    space="sm"
+                    height={height}
+                    alignItems="center"
+                    safeAreaTop={true}
+                >
+                    <HStack maxW="90%">
+                        {/* onPress={handleButtonPressMenu} */}
+                        <HeaderPage></HeaderPage>
+                    </HStack>
+                    <Stack flexDirection="row" style={styles.containerProfile}>
+                        <FontAwesome5 name="car" size={24} color="#3f60af" />
+                        <Text style={styles.textProfile}>
+                            Ingresar Nuevo Vehículo
+                        </Text>
                     </Stack>
+                    <HStack maxW="85%">
+                        <InputControlled
+                            name="patent"
+                            control={control}
+                            autoCapitalize="characters"
+                        ></InputControlled>
+                    </HStack>
+                    <HStack zIndex={999} marginX="5%" maxW="85%">
+                        <EnterVehicleComboBox
+                            setElement={setMark}
+                            element={mark}
+                            listElement={listMark}
+                            label="Marca"
+                            onBlur={() => {
+                                mark ? EnableModel() : null;
+                            }}
+                            enable={true}
+                        ></EnterVehicleComboBox>
+                    </HStack>
+                    <HStack zIndex={998} marginX="5%" maxW="85%">
+                        <EnterVehicleComboBox
+                            setElement={setModel}
+                            element={model}
+                            listElement={listModel}
+                            onBlur={() => {
+                                model ? EnableColor() : null;
+                            }}
+                            label="Modelo"
+                            enable={enableModel}
+                        ></EnterVehicleComboBox>
+                    </HStack>
+                    <HStack zIndex={997} marginX="5%" maxW="85%">
+                        <EnterVehicleComboBox
+                            setElement={setColor}
+                            element={color}
+                            listElement={listColor}
+                            label="Color"
+                            enable={enableColor}
+                        ></EnterVehicleComboBox>
+                    </HStack>
+                    <Button
+                        onPress={handleSubmit(RegisterVehicle)}
+                        style={styles.button}
+                    >
+                        <Text style={styles.textButton}>Ingresar vehículo</Text>
+                    </Button>
+                </Stack>
                 {/* </ScrollView> */}
             </KeyboardAvoidingView>
         </NativeBaseProvider>

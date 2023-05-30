@@ -11,13 +11,13 @@ import {
 import PressableCustom from "../components/PressableCustom";
 import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
-import loggedUser from "../objects/user";
+import { deleteUserData } from "../functions/deleteUserData";
 
 const { height } = Dimensions.get("screen");
 
 const MenuScreen = ({ navigation, route }) => {
     const [subMenu, setSubMenu] = useState(false);
-    const { setUser } = route.params;
+    const { setLogged } = route.params;
 
     useEffect(() => {
         if (subMenu) {
@@ -29,25 +29,10 @@ const MenuScreen = ({ navigation, route }) => {
         if (id !== "logOut") {
             navigation.navigate(id);
         } else {
-            setUser(undefined);
-            DeleteUserData();
+            deleteUserData();
+            setLogged(false);
+            
         }
-    };
-
-    const DeleteUserData = () => {
-        loggedUser.user.idUser = "";
-        loggedUser.user.documentNumber = "";
-        loggedUser.user.firstName = "";
-        loggedUser.user.lastName = "";
-        loggedUser.user.razonSocial = "";
-        loggedUser.user.userName = "";
-        loggedUser.user.email = "";
-        loggedUser.user.numberPhone = "";
-        loggedUser.user.phoneCompany.name = "";
-        loggedUser.user.typeDocument.name = "";
-        loggedUser.user.vehicles = [];
-        loggedUser.user.token = "";
-        loggedUser.user.balance = "";
     };
 
     return (
@@ -144,6 +129,8 @@ const MenuScreen = ({ navigation, route }) => {
                                 text={"Pago en línea"}
                                 icon={constants.CREDIT_CARD_ICON}
                                 styleTouchable={{ backgroundColor: "#086EC1" }}
+                                //En desarrollo
+                                disabled={true}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>
@@ -151,6 +138,8 @@ const MenuScreen = ({ navigation, route }) => {
                                 text={"Avisos"}
                                 icon={constants.NOTICE_ICON}
                                 styleTouchable={{ backgroundColor: "#05509C" }}
+                                //En desarrollo
+                                disabled={true}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>
@@ -158,6 +147,8 @@ const MenuScreen = ({ navigation, route }) => {
                                 text={"Mapas"}
                                 icon={constants.MAP_ICON}
                                 styleTouchable={{ backgroundColor: "#009FE3" }}
+                                //En desarrollo
+                                disabled={true}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>
@@ -167,6 +158,15 @@ const MenuScreen = ({ navigation, route }) => {
                                 styleTouchable={{ backgroundColor: "#086EC1" }}
                                 onPress={handleButtonPress}
                                 id={"Information"}
+                            ></PressableCustom>
+                        </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Eliminar patente"}
+                                icon={constants.INFORMATION_ICON}
+                                styleTouchable={{ backgroundColor: "#086EC1" }}
+                                onPress={handleButtonPress}
+                                id={"DeletePatent"}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>

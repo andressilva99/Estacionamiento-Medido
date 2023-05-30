@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
     Center,
@@ -20,6 +20,10 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
 import constants from "../constants/constants";
+import loggedUser from "../objects/user";
+import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
+import AlertNotice from "./Alerts/AlertNotice";
+import { saveUserInformation } from "../functions/saveUserInformation";
 
 const PatentCustom = ({
     patent,
@@ -27,15 +31,42 @@ const PatentCustom = ({
     idButtonStart,
     idButtonStop,
     idUser,
+    parked,
+    position,
 }) => {
     const [buttonStart, setButtonStart] = useState(true);
     const [buttonStop, setButtonStop] = useState(false);
 
-    // useEffect(() => {
-    //    console.log(idVehicle)
-    // }, []);
+    useEffect(() => {
+        setButtonStart(!parked);
+        setButtonStop(parked);
+    }, []);
+
+    const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
+        useState(false);
+    const cancelRefAlertNoticeFunction = useRef(null);
+    const onCloseAlertNoticeFunction = () =>
+        setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
+
+    const [isOpenAlertNotice, setIsOpenAlertNotice] =
+        useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () =>
+        setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+
+    const config = {
+        headers: {
+            Authorization: `bearer ${loggedUser.user.token}`,
+        },
+    };
 
     const Parking = async (idButton) => {
+        onCloseAlertNoticeFunction();
         const parking = {
             estacionamiento: {
                 idVehiculo: idVehicle,
@@ -43,11 +74,17 @@ const PatentCustom = ({
             },
         };
         if (idButton == "start") {
-            await constants.AXIOS_INST.post("estacionamiento/activar", parking)
+            await constants.AXIOS_INST.post(
+                "estacionamiento/activar",
+                parking,
+                config
+            )
                 .then((response) => {
-                    alert(response.data.mensaje);
+                    setMessageAlertNotice(response.data.mensaje);
+                    setIsOpenAlertNotice(true);
                     setButtonStart(false);
                     setButtonStop(true);
+                    loggedUser.user.vehicles[position].parked = buttonStart;
                 })
                 .catch((error) => {
                     alert(error.response.data.mensaje);
@@ -55,39 +92,27 @@ const PatentCustom = ({
         } else {
             await constants.AXIOS_INST.put(
                 "estacionamiento/desactivar",
-                parking
+                parking,
+                config
             )
                 .then((response) => {
-                    alert(response.data.mensaje);
+                    setMessageAlertNotice(response.data.mensaje);
+                    setIsOpenAlertNotice(true);
                     setButtonStart(true);
                     setButtonStop(false);
+                    loggedUser.user.vehicles[position].parked = buttonStart;
                 })
                 .catch((error) => {
                     alert(error.response.data.mensaje);
                 });
         }
+        saveUserInformation();
     };
 
     return (
         <NativeBaseProvider key={idVehicle}>
             <Flex mb={4}>
                 <Flex direction="row" justifyContent="center">
-                    <Stack>
-                        <Button
-                            height={10}
-                            minWidth="10%"
-                            style={styles.button}
-                            mt={2}
-                            backgroundColor="#c3c1c4"
-                            onPress={() => console.log(idVehicle)}
-                        >
-                            <AntDesign
-                                name="closecircleo"
-                                size={20}
-                                color="red"
-                            />
-                        </Button>
-                    </Stack>
                     <Stack minW="75%">
                         <ImageBackground
                             source={require("../image/patente-argentina.png")}
@@ -110,7 +135,7 @@ const PatentCustom = ({
                                 : styles.buttonDesactivate
                         }
                         onPress={() => {
-                            Parking(idButtonStart);
+                            setIsOpenAlertNoticeFunction(true);
                         }}
                         disabled={!buttonStart}
                     >
@@ -140,7 +165,7 @@ const PatentCustom = ({
                                 : styles.buttonDesactivate
                         }
                         onPress={() => {
-                            Parking(idButtonStop);
+                            setIsOpenAlertNoticeFunction(true);
                         }}
                         disabled={!buttonStop}
                     >
@@ -164,6 +189,29 @@ const PatentCustom = ({
                     </TouchableOpacity>
                 </HStack>
             </Flex>
+            {buttonStart ? (
+                <AlertNoticeFunction
+                    isOpen={isOpenAlertNoticeFunction}
+                    cancelRef={cancelRefAlertNoticeFunction}
+                    onClose={onCloseAlertNoticeFunction}
+                    buttonColorAcept={{ backgroundColor: "green" }}
+                    onPressAccept={() => Parking(idButtonStart)}
+                    message={`¿Está seguro de que quiere iniciar el estacionamiento para la patente ${patent}?`}
+                ></AlertNoticeFunction>
+            ) : (
+                <AlertNoticeFunction
+                    isOpen={isOpenAlertNoticeFunction}
+                    cancelRef={cancelRefAlertNoticeFunction}
+                    onClose={onCloseAlertNoticeFunction}
+                    onPressAccept={() => Parking(idButtonStop)}
+                    message={`¿Está seguro de que quiere detener el estacionamiento para la patente ${patent}?`}
+                ></AlertNoticeFunction>
+            )}
+            <AlertNotice
+                isOpen={isOpenAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}></AlertNotice>
         </NativeBaseProvider>
     );
 };

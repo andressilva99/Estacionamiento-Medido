@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import InputControlled from "../components/InputControlled";
 import loggedUser from "../objects/user";
 import constants from "../constants/constants";
+import { saveUserInformation } from "../functions/saveUserInformation";
 
 const { width } = Dimensions.get("window");
 const REGEX_EMAIL =
@@ -32,9 +33,9 @@ const ProfileScreen = ({ navigation }) => {
     const [typeDocument, setTypeDocument] = useState();
 
     useEffect(() => {
-        console.log(loggedUser.user.typeDocument.name)
+        console.log(loggedUser.user.typeDocument.name);
     }, []);
-    
+
     const obtainDocuments = async () => {
         if (listTypesDocuments != []) {
             try {
@@ -58,6 +59,16 @@ const ProfileScreen = ({ navigation }) => {
         navigation.navigate("Menu");
     };
 
+    const modifyUserData = (modifyUser) => {
+        loggedUser.user.documentNumber = modifyUser.usuario.numeroDocumento;
+        loggedUser.user.email = modifyUser.usuario.email;
+        loggedUser.user.firstName = modifyUser.usuario.nombrePersona;
+        loggedUser.user.lastName = modifyUser.usuario.apellido;
+        loggedUser.user.numberPhone = modifyUser.usuario.numeroTelefono;
+        loggedUser.user.razonSocial = modifyUser.usuario.razonSocial;
+        saveUserInformation();
+    };
+
     const ModifyUser = async (data) => {
         const { name, surname, numberDocument, razonSocial, email, phone } =
             data;
@@ -79,10 +90,22 @@ const ProfileScreen = ({ navigation }) => {
             },
         };
 
-        console.log(modifyUser.usuario);
-        await constants.AXIOS_INST.put("usuario/modificarUsuario", modifyUser)
+        const config = {
+            headers: {
+                Authorization: `bearer ${loggedUser.user.token}`,
+            },
+        };
+
+        await constants.AXIOS_INST.put(
+            "usuario/modificarUsuario",
+            modifyUser,
+            config
+        )
             .then((response) => alert(response.data.mensaje))
             .catch((error) => alert(error.response.data.mensaje));
+
+        modifyUserData(modifyUser);
+
         setIsDisabled(!isDisabled);
     };
 

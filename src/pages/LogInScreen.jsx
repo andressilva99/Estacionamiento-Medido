@@ -1,5 +1,5 @@
 import { ImageBackground, Text, Alert, Dimensions } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
     HStack,
@@ -15,26 +15,21 @@ import { useForm } from "react-hook-form";
 import constants from "../constants/constants";
 import { LinearGradient } from "expo-linear-gradient";
 import loggedUser from "../objects/user";
+import AlertError from "../components/Alerts/AlertError";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { saveUserInformation } from "../functions/saveUserInformation";
 
 const { height } = Dimensions.get("screen");
 
 const LogInScreen = ({ navigation, route }) => {
-    // useEffect(() => {
-    //     loggedUser.user.idUser = "";
-    //     loggedUser.user.documentNumber = "";
-    //     loggedUser.user.email = "";
-    //     loggedUser.user.firstName = "";
-    //     loggedUser.user.lastName = "";
-    //     loggedUser.user.numberPhone = "";
-    //     loggedUser.user.phoneCompany.name = "";
-    //     loggedUser.user.razonSocial = "";
-    //     loggedUser.user.typeDocument.name = "";
-    //     loggedUser.user.userName = "";
-    //     loggedUser.user.vehicles = [];
-    // }, []);
-    const { control, handleSubmit, watch } = useForm();
+    const { control, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
-    const { setUser } = route.params;
+    const { setLogged } = route.params;
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
+    const cancelRef = useRef(null);
+    const onClose = () => setIsOpen(!isOpen);
 
     const LogIn = async (data) => {
         const { user, password } = data;
@@ -51,20 +46,19 @@ const LogInScreen = ({ navigation, route }) => {
             },
         };
 
-        try {
-            const response = await constants.AXIOS_INST.post(
-                "usuario/logIn",
-                logIn
-            );
-            const data = response.data.mensaje;
-            FillUserData(data);
-            // console.log(loggedUser.user.vehicles)
-            setUser(loggedUser.user);
-            // navigation.navigate("Parking");
-        } catch (error) {
-            Alert.alert("Error", error.message);
-        }
+        await constants.AXIOS_INST.post("usuario/logIn", logIn)
+            .then((response) => {
+                const data = response.data.mensaje;
+                FillUserData(data);
+            })
+            .catch((error) => {
+                setErrorMessage(error.response.data.mensaje);
+                setIsOpen(true);
+            });
+        const logged = true
+        AsyncStorage.setItem('loggedUser', JSON.stringify(logged))
         setLoading(false);
+
     };
 
     const Register = () => {
@@ -74,6 +68,8 @@ const LogInScreen = ({ navigation, route }) => {
     const FillUserData = (data) => {
         const token = data.token;
         const userData = data.usuario;
+
+        console.log(userData)
 
         loggedUser.user.idUser = userData.idUsuario;
         loggedUser.user.documentNumber = userData.numeroDocumento;
@@ -95,9 +91,12 @@ const LogInScreen = ({ navigation, route }) => {
                     patent: vehicle.vehiculo.patente,
                     color: vehicle.vehiculo.color.nombre,
                     idVehicle: vehicle.vehiculo.idVehiculo,
+                    parked: false,
                 });
             });
         }
+        saveUserInformation();
+        setLogged(true);
     };
 
     return (
@@ -205,6 +204,12 @@ const LogInScreen = ({ navigation, route }) => {
                     ></Image>
                 </VStack>
             </ImageBackground>
+            <AlertError
+                isOpen={isOpen}
+                cancelRef={cancelRef}
+                onClose={onClose}
+                message={errorMessage}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };
