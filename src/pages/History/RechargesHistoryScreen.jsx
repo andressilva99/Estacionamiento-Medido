@@ -44,6 +44,12 @@ const RechargesHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
+        const config = {
+            headers: {
+                Authorization: `bearer ${loggedUser.user.token}`,
+            },
+        };
+
         const see = {
             estacionamiento: {
                 fechaInicio: formattedDateInitial,
@@ -51,12 +57,14 @@ const RechargesHistoryScreen = ({ navigation }) => {
                 idUsuario: loggedUser.user.idUser,
             },
         };
-        setConsult(!consult);
-        // await constants.AXIOS_INST.get("historial/recargas", see)
-        //     .then((response) => {})
-        //     .catch((error) => {
-        //         alert(error.response.data.mensaje);
-        //     });
+        await constants.AXIOS_INST.get("historial/recargas", see, config)
+            .then((response) => {
+                console.log(response.data.mensaje);
+                setConsult(!consult);
+            })
+            .catch((error) => {
+                alert(error.response.data);
+            });
     };
 
     return (

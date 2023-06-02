@@ -83,7 +83,7 @@ export default DeletePatentModule;
 
 const styles = ScaledSheet.create({
     containerPatent: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "85%",
         backgroundColor: "#eaeaec",
         borderColor: "#9d9ca1",
@@ -96,6 +96,7 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
     },
     button: {
+        minHeight: "45@ms",
         backgroundColor: "red",
         borderRadius: "30@ms",
     },

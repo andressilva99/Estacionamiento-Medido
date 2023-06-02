@@ -62,18 +62,18 @@ export default EnterVehicleComboBox;
 
 const styles = ScaledSheet.create({
     containerDisabled: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         alignItems: "center",
         backgroundColor: "#eaeaec",
-        borderRadius: 30,
+        borderRadius: "30@ms",
         borderColor: "#9d9ca1",
         borderWidth: "1@ms",
     },
     containerEnabled: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         alignItems: "center",
         backgroundColor: "white",
-        borderRadius: 30,
+        borderRadius: "30@ms",
         borderColor: "#9d9ca1",
         borderWidth: "1@ms",
     },
@@ -83,8 +83,8 @@ const styles = ScaledSheet.create({
         marginLeft: "15@ms",
     },
     inputContainer: {
-        borderBottomRightRadius: 30,
-        borderTopRightRadius: 30,
+        borderBottomRightRadius: "30@ms",
+        borderTopRightRadius: "30@ms",
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
         backgroundColor: "white",

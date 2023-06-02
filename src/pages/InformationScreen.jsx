@@ -2,15 +2,11 @@ import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import {
-    Button,
     HStack,
     NativeBaseProvider,
-    Spacer,
     Stack,
     VStack,
 } from "native-base";
-import { Feather } from "@expo/vector-icons";
-import constants from "../constants/constants";
 import { Ionicons } from "@expo/vector-icons";
 import HeaderPage from "../components/HeaderPage";
 
@@ -18,7 +14,6 @@ const { height } = Dimensions.get("screen");
 
 const InformationScreen = ({navigation}) => {
     const handleButtonPressMenu = () => {
-        // console.log(`Pressed button `);
         navigation.navigate("Menu");
     };
     return (
@@ -69,24 +64,6 @@ export default InformationScreen;
 const styles = ScaledSheet.create({
     background: {
         backgroundColor: "#f2f2f4",
-    },
-    containerHeader: {
-        minHeight: "7%",
-        minWidth: "90%",
-        borderRadius: 5,
-        paddingLeft: "15@ms",
-        backgroundColor: "#3f60af",
-        alignItems: "center",
-    },
-    icon: {
-        width: "30@ms",
-        height: "30@ms",
-        borderRadius: "100@ms",
-    },
-    textHeader: {
-        fontSize: 19,
-        fontWeight: "bold",
-        color: "white",
     },
     iconInformation:{
         fontWeight: "bold",

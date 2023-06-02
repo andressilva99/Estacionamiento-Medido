@@ -1,36 +1,23 @@
-import {
-    StyleSheet,
-    Text,
-    View,
-    Picker,
-    Dimensions,
-    ScrollView,
-} from "react-native";
+import { Text, Dimensions, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
     Button,
-    Center,
     HStack,
-    Input,
     KeyboardAvoidingView,
     NativeBaseProvider,
-    Select,
-    Spacer,
     Stack,
-    VStack,
 } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
-import { Feather } from "@expo/vector-icons";
 import constants from "../constants/constants";
-import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import EnterVehicleComboBox from "../components/EnterVehicleComboBox";
 import InputControlled from "../components/InputControlled";
 import { useForm } from "react-hook-form";
 import loggedUser from "../objects/user";
 import HeaderPage from "../components/HeaderPage";
+import { saveUserInformation } from "../functions/saveUserInformation";
 
-const { height, width } = Dimensions.get("screen");
+const { height } = Dimensions.get("screen");
 
 const EnterVehicleScreen = () => {
     const { control, handleSubmit, watch } = useForm();
@@ -111,11 +98,6 @@ const EnterVehicleScreen = () => {
         obtainColors();
     };
 
-    const OnChangeTextMark = () => {
-        setEnableModel(false);
-        setEnableColor(false);
-    };
-
     const RegisterVehicle = async (data) => {
         const { patent } = data;
         const vehicleRegister = {
@@ -135,10 +117,27 @@ const EnterVehicleScreen = () => {
         )
             .then((response) => {
                 alert(response.data.mensaje);
+                console.log(response.data.mensaje);
+                saveVehicle(response.data.mensaje)
             })
             .catch((error) => {
                 alert(error.response.data.mensaje);
             });
+    };
+
+    const saveVehicle = (vehicle) => {
+        vehicle.forEach((veh) => {
+            loggedUser.user.vehicles.push({
+                mark: veh.idMarca,
+                model: veh.idModelo,
+                patent: veh.patente,
+                color: veh.idColor,
+                idVehicle: veh.idVehiculo,
+                parked: false,
+            });
+        });
+        console.log(loggedUser.user.vehicles)
+        saveUserInformation();
     };
 
     return (
@@ -221,21 +220,8 @@ const styles = ScaledSheet.create({
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
     },
-    containerHeader: {
-        minHeight: "7%",
-        minWidth: "90%",
-        borderRadius: "5@ms",
-        paddingLeft: "20@ms",
-        backgroundColor: "#3f60af",
-        alignItems: "center",
-    },
-    textHeader: {
-        fontSize: "18@ms",
-        fontWeight: "bold",
-        color: "white",
-    },
     containerProfile: {
-        minHeight: "5%",
+        minHeight: "45@ms",
         minWidth: "85%",
         alignItems: "center",
         paddingLeft: "3%",
@@ -249,7 +235,7 @@ const styles = ScaledSheet.create({
     button: {
         backgroundColor: "#51be85",
         borderRadius: "30@ms",
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "85%",
     },
     textButton: {

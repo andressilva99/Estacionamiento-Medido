@@ -170,7 +170,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                         " El correo electrónico no es el mismo",
                                 }}
                             ></InputControlled>
-                            <HStack flex={1} maxW="82%">
+                            <HStack flex={1} minW="85%">
                                 <Stack style={styles.containerTypeDocument}>
                                     <Text style={styles.textTypeDocument}>
                                         Compañia teléfono
@@ -182,7 +182,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                     borderTopLeftRadius={0}
                                     borderTopRightRadius={30}
                                     borderBottomRightRadius={30}
-                                    minW="54%"
+                                    flex={1}
                                     selectedValue={phoneCompanie}
                                     onValueChange={setPhoneCompanie}
                                 >
@@ -252,9 +252,11 @@ const styles = ScaledSheet.create({
     textHeaderRegister: {
         fontSize: "30@ms",
         fontWeight: "bold",
+        color: "#04467C",
     },
     icon: {
         fontSize: "30@ms",
+        color: "#04467C",
     },
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
@@ -262,10 +264,10 @@ const styles = ScaledSheet.create({
     containerTypeDocument: {
         justifyContent: "center",
         backgroundColor: "white",
-        minHeight: "7%",
+        minHeight: "45@ms",
         borderColor: "#d3d3d5",
         borderWidth: "1@ms",
-        minWidth: "55%",
+        flex: 1,
         borderTopLeftRadius: "30@ms",
         borderBottomLeftRadius: "30@ms",
         paddingLeft: "8.5%",
@@ -276,7 +278,7 @@ const styles = ScaledSheet.create({
     },
     buttonNextStep: {
         borderRadius: "30@ms",
-        backgroundColor: "#fb9b20",
+        backgroundColor: "#04467C",
     },
     textNextStep: {
         fontSize: "20@ms",

@@ -16,6 +16,7 @@ import AnnouncementsHistoryScreen from "../pages/History/AnnouncementsHistoryScr
 import DeletePatentScreen from "../pages/DeletePatentScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import loggedUser from "../objects/user";
+import ChangePasswordScreen from "../pages/ChangePasswordScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -95,6 +96,7 @@ const Navigation = () => {
                             name="DeletePatent"
                             component={DeletePatentScreen}
                         ></Stack.Screen>
+                        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}></Stack.Screen>
                     </>
                 ) : (
                     <>

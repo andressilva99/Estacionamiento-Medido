@@ -1,4 +1,4 @@
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
     Button,
@@ -22,7 +22,7 @@ import loggedUser from "../objects/user";
 import constants from "../constants/constants";
 import { saveUserInformation } from "../functions/saveUserInformation";
 
-const { width } = Dimensions.get("window");
+
 const REGEX_EMAIL =
     /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
 
@@ -58,6 +58,10 @@ const ProfileScreen = ({ navigation }) => {
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
+
+    const handleChangePasswordPress = () => {
+        navigation.navigate("ChangePassword")
+    }
 
     const modifyUserData = (modifyUser) => {
         loggedUser.user.documentNumber = modifyUser.usuario.numeroDocumento;
@@ -124,7 +128,7 @@ const ProfileScreen = ({ navigation }) => {
                 <Stack flexDirection="row" style={styles.containerProfile}>
                     <Ionicons
                         name="person-add-sharp"
-                        size={24}
+                        style={styles.icon}
                         color="#3f60af"
                     />
                     <Text style={styles.textProfile}>Perfil</Text>
@@ -247,7 +251,7 @@ const ProfileScreen = ({ navigation }) => {
                                 startIcon={
                                     <SimpleLineIcons
                                         name="lock"
-                                        size={24}
+                                        style={styles.icon}
                                         color="white"
                                     />
                                 }
@@ -267,7 +271,7 @@ const ProfileScreen = ({ navigation }) => {
                                     startIcon={
                                         <SimpleLineIcons
                                             name="close"
-                                            size={16}
+                                            style={styles.iconSubButtons}
                                             color="white"
                                         />
                                     }
@@ -282,7 +286,7 @@ const ProfileScreen = ({ navigation }) => {
                                     startIcon={
                                         <SimpleLineIcons
                                             name="check"
-                                            size={16}
+                                            style={styles.iconSubButtons}
                                             color="white"
                                         />
                                     }
@@ -299,11 +303,12 @@ const ProfileScreen = ({ navigation }) => {
                             startIcon={
                                 <SimpleLineIcons
                                     name="lock"
-                                    size={24}
+                                    style={styles.icon}
                                     color="white"
                                 />
                             }
                             style={styles.buttonChangePassword}
+                            onPress={handleChangePasswordPress}
                         >
                             <Text style={styles.textChangePassword}>
                                 Cambiar Clave
@@ -319,24 +324,11 @@ const ProfileScreen = ({ navigation }) => {
 export default ProfileScreen;
 
 const styles = ScaledSheet.create({
-    containerHeader: {
-        minHeight: "7%",
-        minWidth: "90%",
-        borderRadius: "5@ms",
-        paddingLeft: "20@ms",
-        backgroundColor: "#3f60af",
-        alignItems: "center",
-    },
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
     },
-    textHeader: {
-        fontSize: "18@ms",
-        fontWeight: "bold",
-        color: "white",
-    },
     containerProfile: {
-        minHeight: "5%",
+        minHeight: "45@ms",
         minWidth: "85%",
         alignItems: "center",
         paddingLeft: "3%",
@@ -348,14 +340,14 @@ const styles = ScaledSheet.create({
         paddingLeft: "3%",
     },
     inputProfile: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         backgroundColor: "white",
         paddingLeft: "8.5%",
     },
     containerTypeDocument: {
         justifyContent: "center",
         backgroundColor: "white",
-        minHeight: "7%",
+        minHeight: "45@ms",
         borderColor: "#d3d3d5",
         borderWidth: "1@ms",
         flex: 1,
@@ -392,5 +384,11 @@ const styles = ScaledSheet.create({
     textButtonsEnd: {
         color: "white",
         fontSize: "13@ms",
+    },
+    icon: {
+        fontSize: "25@ms",
+    },
+    iconSubButtons: {
+        fontSize: "16@ms"
     },
 });

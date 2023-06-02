@@ -108,26 +108,18 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
     },
     containerUser: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "85%",
         borderRadius: "30@ms",
         paddingLeft: "20@ms",
         backgroundColor: "#c4e5f8",
     },
     containerBalance: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "85%",
         borderRadius: "30@ms",
         paddingLeft: "20@ms",
         backgroundColor: "#f8f8f8",
-        alignItems: "center",
-    },
-    containerParking: {
-        minHeight: "50@ms",
-        minWidth: "85%",
-        borderRadius: "30@ms",
-        paddingHorizontal: "20@ms",
-        backgroundColor: "#dbdcde",
         alignItems: "center",
     },
     textName: {
@@ -150,7 +142,7 @@ const styles = ScaledSheet.create({
         backgroundColor: "#f2f2f4",
     },
     enterVehicleButton: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "85%",
         borderRadius: "30@ms",
         paddingLeft: "20@ms",
@@ -158,7 +150,7 @@ const styles = ScaledSheet.create({
         justifyContent: "flex-start",
     },
     parking: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "85%",
         borderRadius: "30@ms",
         paddingLeft: "20@ms",

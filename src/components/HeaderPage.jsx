@@ -29,15 +29,15 @@ export default HeaderPage;
 
 const styles = ScaledSheet.create({
     containerHeader: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "90%",
-        borderRadius: 5,
+        borderRadius: "5@ms",
         paddingLeft: "15@ms",
         backgroundColor: "#3f60af",
         alignItems: "center",
     },
     textHeader: {
-        fontSize: 19,
+        fontSize: "19@ms",
         fontWeight: "bold",
         color: "white",
     },

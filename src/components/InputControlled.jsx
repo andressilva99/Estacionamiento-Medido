@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { NativeBaseProvider, Input } from "native-base";
 import { Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
+import { ScaledSheet } from "react-native-size-matters";
 
 const InputControlled = ({
     defaultValue,
@@ -65,10 +66,10 @@ const InputControlled = ({
 
 export default InputControlled;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
 
     input: {
-        minHeight: "7%",
+        minHeight: "45@ms",
         backgroundColor: "white",
         paddingLeft: "6%",
     },

@@ -1,7 +1,8 @@
 import axios from "axios";
 import backgroundInit from "../image/fondo-app.png";
+import loggedUser from "../objects/user"
 
-const PATH_INST = "https://sem-v2rs.onrender.com/api/";
+const PATH_INST = "https://sem1.onrender.com/api/";
 const AXIOS_INST = axios.create({ baseURL: PATH_INST });
 const BACKGROUND_INIT = backgroundInit;
 const CLOSE_ICON = require("../image/Icon/Close-Icon.png");
@@ -14,6 +15,11 @@ const NOTICE_ICON = require("../image/Icon/Notice-Icon.png");
 const PARKING_ICON = require("../image/Icon/Parking-Icon.png");
 const PROFILE_ICON = require("../image/Icon/Profile-Icon.png");
 const LOGO = require("../image/logo-app.png");
+const CONFIG = {
+    headers: {
+        Authorization: `bearer ${loggedUser.user.token}`,
+    },
+};
 
 export default {
     AXIOS_INST,
@@ -28,4 +34,5 @@ export default {
     PARKING_ICON,
     PROFILE_ICON,
     LOGO,
+    CONFIG,
 };

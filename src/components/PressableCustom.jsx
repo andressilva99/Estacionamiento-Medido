@@ -42,7 +42,7 @@ const styles = ScaledSheet.create({
         alignItems: "center",
     },
     touchable: {
-        borderRadius: 30,
+        borderRadius: "30@ms",
         minHeight: "50@ms",
         justifyContent: "center",
         minWidth: "85%",

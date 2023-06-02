@@ -27,6 +27,13 @@ const ParkingHistoryScreen = ({ navigation }) => {
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
 
+
+    const config = {
+        headers: {
+            Authorization: `bearer ${loggedUser.user.token}`,
+        },
+    };
+
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
@@ -53,14 +60,16 @@ const ParkingHistoryScreen = ({ navigation }) => {
                 idUsuario: loggedUser.user.idUser,
             },
         };
-        await constants.AXIOS_INST.get("historial/estacionamiento", see)
+        console.log(see)
+        await constants.AXIOS_INST.get("historial/estacionamiento", see, config)
             .then((response) => {
                 console.log(response.data.mensaje);
+                setConsult(!consult);
             })
             .catch((error) => {
                 alert(error.response.data.mensaje);
+                console.error(error.response.data)
             });
-        setConsult(!consult);
     };
 
     return (
@@ -189,7 +198,7 @@ const ParkingHistoryScreen = ({ navigation }) => {
                             </ScrollView>
                             <Button
                                 style={styles.button}
-                                onPress={SearchHistory}
+                                onPress={() => setConsult(!consult)}
                             >
                                 <Text style={styles.textButton}>
                                     Volver a consultar

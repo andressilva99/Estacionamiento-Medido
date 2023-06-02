@@ -69,7 +69,7 @@ const LogInScreen = ({ navigation, route }) => {
         const token = data.token;
         const userData = data.usuario;
 
-        console.log(userData)
+        console.log(userData.usuario_vehiculo)
 
         loggedUser.user.idUser = userData.idUsuario;
         loggedUser.user.documentNumber = userData.numeroDocumento;

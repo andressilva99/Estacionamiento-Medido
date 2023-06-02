@@ -1,18 +1,28 @@
-import { StyleSheet, Text} from "react-native";
+import { StyleSheet, Text, Dimensions} from "react-native";
 import React from "react";
-import { Button, HStack, Input, NativeBaseProvider, Spacer, Stack } from "native-base";
+import { Button, HStack, Input, NativeBaseProvider, Spacer, Stack, StatusBar } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import HeaderPage from "../components/HeaderPage";
+import { ScaledSheet } from "react-native-size-matters";
+import InputControlled from "../components/InputControlled";
+import { useForm } from "react-hook-form";
 
+const {height} = Dimensions.get("screen")
 
 const ChangePasswordScreen = () => {
+    const { control, handleSubmit, watch } = useForm();
+
+    const handleButtonPressMenu = () => {
+        navigation.navigate("Menu");
+    };
     return (
         <NativeBaseProvider>
+        <StatusBar></StatusBar>
             <Stack
                 style={styles.backgroundContainer}
                 space="sm"
-                height="100%"
+                height={height}
                 alignItems="center"
                 safeAreaTop={true}
             >
@@ -23,27 +33,42 @@ const ChangePasswordScreen = () => {
                     flexDirection="row"
                     style={styles.containerChangePassword}
                 >
-                    <SimpleLineIcons name="lock" size={24} color="#3f60af" />
+                    <SimpleLineIcons name="lock" style={styles.icon} color="#3f60af" />
                     <Text style={styles.textChangePassword}>Cambiar Clave</Text>
                 </Stack>
-                <Input
-                    style={styles.inputChangePassword}
+                <HStack maxW="85%">
+                    <InputControlled
+                    name="newPassword"
                     placeholder="Nueva Clave"
-                    borderRadius={30}
-                ></Input>
-                <Input
-                    style={styles.inputChangePassword}
+                    control={control}
+                    width="85%"
+                    // rules={}
+                    >    
+                    </InputControlled>
+                </HStack>
+                <HStack maxW="85%">
+                    <InputControlled
+                    name="repeatNewPassword"
                     placeholder="Repetir Nueva Clave"
-                    borderRadius={30}
-                ></Input>
-                <Input
-                    style={styles.inputChangePassword}
+                    control={control}
+                    width="85%"
+                    // rules={}
+                    >    
+                    </InputControlled>
+                </HStack>
+                <HStack maxW="85%">
+                    <InputControlled
+                    name="oldPassword"
                     placeholder="Clave Actual"
-                    borderRadius={30}
-                ></Input>
+                    control={control}
+                    width="85%"
+                    // rules={}
+                    >    
+                    </InputControlled>
+                </HStack>
                 <Button
                     startIcon={
-                        <SimpleLineIcons name="lock" size={24} color="white" />
+                        <SimpleLineIcons name="lock" style={styles.icon} color="white" />
                     }
                     style={styles.buttonConfirmPassword}
                 >
@@ -58,51 +83,35 @@ const ChangePasswordScreen = () => {
 
 export default ChangePasswordScreen;
 
-const styles = StyleSheet.create({
-    containerHeader: {
-        minHeight: "7%",
-        minWidth: "90%",
-        borderRadius: 5,
-        paddingHorizontal: 35,
-        backgroundColor: "#3f60af",
-        alignItems: "center",
-    },
+const styles = ScaledSheet.create({
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
     },
-    textHeader: {
-        fontSize: 19,
-        fontWeight: "bold",
-        color: "white",
-    },
     containerChangePassword: {
-        minHeight: "5%",
+        minHeight: "45@ms",
         minWidth: "85%",
         alignItems: "center",
-        paddingLeft: 10,
+        paddingLeft: "10@ms",
     },
     textChangePassword: {
-        fontSize: 19,
+        fontSize: "19@ms",
         fontWeight: "bold",
         color: "#515ba3",
-        paddingLeft: 10,
-    },
-    inputChangePassword: {
-        minHeight: "7%",
-        maxWidth: "85%",
-        backgroundColor: "white",
-        paddingLeft: 25,
+        paddingLeft: "10@ms",
     },
     buttonConfirmPassword: {
-        borderRadius: 30,
+        borderRadius: "30@ms",
         backgroundColor: "#00a54f",
         justifyContent: "flex-start",
-        minHeight: "7%",
+        minHeight: "45@ms",
         minWidth: "85%",
     },
     textConfirmPassword: {
         color: "white",
-        fontSize: 19,
+        fontSize: "19@ms",
         fontWeight: "bold",
+    },
+    icon: {
+        fontSize: "25@ms",
     },
 });
