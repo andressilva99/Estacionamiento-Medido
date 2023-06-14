@@ -17,17 +17,18 @@ import DeletePatentScreen from "../pages/DeletePatentScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import loggedUser from "../objects/user";
 import ChangePasswordScreen from "../pages/ChangePasswordScreen";
+import SplashScreen from "../pages/SplashScreen";
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-    const [user, setUser] = useState(null);
+    const [appIsReady, setAppIsReady] = useState(false);
     const [logged, setLogged] = useState(false);
 
     useEffect(() => {
         loadUser();
         logUser();
-        
+        initialApp();
     }, []);
 
     const logUser = async () => {
@@ -50,10 +51,22 @@ const Navigation = () => {
         }
     };
 
+    const initialApp = async () => {
+        try {
+            await new Promise((resolve) => {
+                setTimeout(resolve, 500);
+            });
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setAppIsReady(true);
+        }
+    };
+
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {logged ? (
+                {appIsReady ? (logged ? (
                     <>
                         <Stack.Screen
                             name="Parking"
@@ -96,7 +109,10 @@ const Navigation = () => {
                             name="DeletePatent"
                             component={DeletePatentScreen}
                         ></Stack.Screen>
-                        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}></Stack.Screen>
+                        <Stack.Screen
+                            name="ChangePassword"
+                            component={ChangePasswordScreen}
+                        ></Stack.Screen>
                     </>
                 ) : (
                     <>
@@ -114,7 +130,9 @@ const Navigation = () => {
                             component={RegisterStep2Screen}
                         ></Stack.Screen>
                     </>
-                )}
+                )) : <Stack.Screen
+                name="Splash"
+                component={SplashScreen}></Stack.Screen>}
             </Stack.Navigator>
         </NavigationContainer>
     );

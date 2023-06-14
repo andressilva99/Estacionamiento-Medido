@@ -71,7 +71,6 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 razonSocial: razonSocial,
                 email: email,
                 numeroTelefono: phone,
-                clave: "defecto",
             },
         };
         await constants.AXIOS_INST.post("usuario/registrar", information)
@@ -171,9 +170,9 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                 }}
                             ></InputControlled>
                             <HStack flex={1} minW="85%">
-                                <Stack style={styles.containerTypeDocument}>
-                                    <Text style={styles.textTypeDocument}>
-                                        Compañia teléfono
+                                <Stack style={styles.containerPhoneCompanie}>
+                                    <Text style={styles.textPhoneCompanie}>
+                                        Compañía teléfono
                                     </Text>
                                 </Stack>
                                 <Select
@@ -185,6 +184,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                     flex={1}
                                     selectedValue={phoneCompanie}
                                     onValueChange={setPhoneCompanie}
+                                    style={styles.selectPhoneCompanie}
                                 >
                                     {listPhoneCompanies.map((companie) => (
                                         <Select.Item
@@ -261,7 +261,7 @@ const styles = ScaledSheet.create({
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
     },
-    containerTypeDocument: {
+    containerPhoneCompanie: {
         justifyContent: "center",
         backgroundColor: "white",
         minHeight: "45@ms",
@@ -273,8 +273,8 @@ const styles = ScaledSheet.create({
         paddingLeft: "8.5%",
         borderEndWidth: 0,
     },
-    textTypeDocument: {
-        fontSize: "11@ms",
+    textPhoneCompanie: {
+        fontSize: "15@ms",
     },
     buttonNextStep: {
         borderRadius: "30@ms",
@@ -284,5 +284,8 @@ const styles = ScaledSheet.create({
         fontSize: "20@ms",
         fontWeight: "bold",
         color: "white",
+    },
+    selectPhoneCompanie: {
+        fontSize: "15@ms"
     },
 });

@@ -61,7 +61,7 @@ const ParkingHistoryScreen = ({ navigation }) => {
             },
         };
         console.log(see)
-        await constants.AXIOS_INST.get("historial/estacionamiento", see, config)
+        await constants.AXIOS_INST.get("historial/estacionamiento", config, see)
             .then((response) => {
                 console.log(response.data.mensaje);
                 setConsult(!consult);

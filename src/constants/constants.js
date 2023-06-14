@@ -15,6 +15,8 @@ const NOTICE_ICON = require("../image/Icon/Notice-Icon.png");
 const PARKING_ICON = require("../image/Icon/Parking-Icon.png");
 const PROFILE_ICON = require("../image/Icon/Profile-Icon.png");
 const LOGO = require("../image/logo-app.png");
+const CAR_SPLASH = require("../image/car-splash.png");
+const ARROW = require("../image/arrow.png")
 const CONFIG = {
     headers: {
         Authorization: `bearer ${loggedUser.user.token}`,
@@ -35,4 +37,6 @@ export default {
     PROFILE_ICON,
     LOGO,
     CONFIG,
+    CAR_SPLASH,
+    ARROW,
 };

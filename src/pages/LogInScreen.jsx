@@ -1,4 +1,11 @@
-import { ImageBackground, Text, Alert, Dimensions } from "react-native";
+import {
+    ImageBackground,
+    Text,
+    Alert,
+    Dimensions,
+    Touchable,
+    TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
@@ -18,6 +25,7 @@ import loggedUser from "../objects/user";
 import AlertError from "../components/Alerts/AlertError";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { saveUserInformation } from "../functions/saveUserInformation";
+import { Ionicons } from "@expo/vector-icons";
 
 const { height } = Dimensions.get("screen");
 
@@ -30,6 +38,8 @@ const LogInScreen = ({ navigation, route }) => {
     const [errorMessage, setErrorMessage] = useState();
     const cancelRef = useRef(null);
     const onClose = () => setIsOpen(!isOpen);
+
+    const [hidePassword, setHidePassword] = useState(true);
 
     const LogIn = async (data) => {
         const { user, password } = data;
@@ -55,10 +65,9 @@ const LogInScreen = ({ navigation, route }) => {
                 setErrorMessage(error.response.data.mensaje);
                 setIsOpen(true);
             });
-        const logged = true
-        AsyncStorage.setItem('loggedUser', JSON.stringify(logged))
+        const logged = true;
+        AsyncStorage.setItem("loggedUser", JSON.stringify(logged));
         setLoading(false);
-
     };
 
     const Register = () => {
@@ -69,7 +78,7 @@ const LogInScreen = ({ navigation, route }) => {
         const token = data.token;
         const userData = data.usuario;
 
-        console.log(userData.usuario_vehiculo)
+        console.log(userData.usuario_vehiculo);
 
         loggedUser.user.idUser = userData.idUsuario;
         loggedUser.user.documentNumber = userData.numeroDocumento;
@@ -107,7 +116,6 @@ const LogInScreen = ({ navigation, route }) => {
                 resizeMode="stretch"
             >
                 <VStack
-                    style={styles.backgroundContainer}
                     space="sm"
                     height={height}
                     alignItems="center"
@@ -132,7 +140,7 @@ const LogInScreen = ({ navigation, route }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Stack flex={1}>
+                            <Stack flex={1.2}>
                                 <Text style={styles.text}>Usuario</Text>
                             </Stack>
                             <HStack flex={2}>
@@ -157,7 +165,7 @@ const LogInScreen = ({ navigation, route }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Stack flex={1}>
+                            <Stack flex={1.2}>
                                 <Text style={styles.text}>Contraseña</Text>
                             </Stack>
                             <HStack flex={2}>
@@ -165,10 +173,13 @@ const LogInScreen = ({ navigation, route }) => {
                                     name="password"
                                     control={control}
                                     style={styles.input}
-                                    secureTextEntry={true}
+                                    secureTextEntry={hidePassword}
                                     variant="unstiled"
                                 ></InputControlled>
                             </HStack>
+                            <TouchableOpacity style={styles.touchVisiblePassword} onPress={() => setHidePassword(!hidePassword)}>
+                                <Ionicons name={hidePassword ? "eye" : "eye-off"} style={styles.icon} />
+                            </TouchableOpacity>
                         </HStack>
                     </LinearGradient>
                     <Button variant="link">¿Olvidó su contraseña?</Button>
@@ -256,4 +267,11 @@ const styles = ScaledSheet.create({
         marginBottom: "40@ms",
         marginTop: "40@ms",
     },
+    icon: {
+        color: "#04467C",
+        fontSize: "25@ms",
+    },
+    touchVisiblePassword: {
+        flex: 0.5,
+    },  
 });

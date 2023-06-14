@@ -100,6 +100,7 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     flex={1}
                                     selectedValue={typeDocument}
                                     onValueChange={setTypeDocument}
+                                    style={styles.selectTypeDocument}
                                 >
                                     {listTypesDocuments.map((documen) => (
                                         <Select.Item
@@ -192,7 +193,10 @@ const styles = ScaledSheet.create({
         borderEndWidth: 0,
     },
     textTypeDocument: {
-        fontSize: "11@ms",
+        fontSize: "15@ms",
+    },
+    selectTypeDocument: {
+        fontSize: "15@ms",
     },
     buttonNextStep: {
         borderRadius: "30@ms",

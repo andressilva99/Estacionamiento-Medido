@@ -19,19 +19,25 @@ import HeaderPage from "../components/HeaderPage";
 
 const ParkingScreen = ({ navigation }) => {
     const [isBalanceNegative, setIsBalanceNegative] = useState(false);
-    
+
+    const [refresh, setRefresh] = useState(false);
+
     useEffect(() => {
-       const verifyBalanceNegative = () => {
-        balance = parseFloat(loggedUser.user.balance);
-        if (balance < 0) {
-            setIsBalanceNegative(true);
-        }
-       }
-       verifyBalanceNegative();
-    }, []);
+        const verifyBalanceNegative = () => {
+            balance = parseFloat(loggedUser.user.balance);
+            if (balance < 0) {
+                setIsBalanceNegative(true);
+            }
+        };
+        verifyBalanceNegative();
+    }, [refresh]);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
+    };
+
+    const refreshScreen = () => {
+        setRefresh(!refresh);
     };
 
     return (
@@ -55,8 +61,24 @@ const ParkingScreen = ({ navigation }) => {
                     </Text>
                 </VStack>
                 <HStack style={styles.containerBalance}>
-                    <AntDesign name="wallet" style={[styles.icon, {color: "#17974c"}, isBalanceNegative ? styles.textBalanceNegative : null]} />
-                    <Text style={[styles.textBalance, isBalanceNegative ? styles.textBalanceNegative : null]}>
+                    <AntDesign
+                        name="wallet"
+                        style={[
+                            styles.icon,
+                            { color: "#17974c" },
+                            isBalanceNegative
+                                ? styles.textBalanceNegative
+                                : null,
+                        ]}
+                    />
+                    <Text
+                        style={[
+                            styles.textBalance,
+                            isBalanceNegative
+                                ? styles.textBalanceNegative
+                                : null,
+                        ]}
+                    >
                         Saldo: $ {loggedUser.user.balance}
                     </Text>
                 </HStack>
@@ -66,7 +88,7 @@ const ParkingScreen = ({ navigation }) => {
                             <FontAwesome5 name="car" style={styles.icon} />
                         }
                         style={styles.enterVehicleButton}
-                        onPress={() => navigation.navigate("EnterVehicle")}
+                        onPress={() => navigation.navigate("EnterVehicle", {refreshScreen})}
                     >
                         <Text style={styles.textEnterVehicle}>
                             Ingresar Nuevo Vehículo
@@ -77,7 +99,10 @@ const ParkingScreen = ({ navigation }) => {
                     <FontAwesome5 name="car" style={styles.icon} />
                     <Text style={styles.textParkingVehicle}>Estacionar</Text>
                     <Spacer></Spacer>
-                    <FontAwesome name="chevron-down" style={[styles.icon, {paddingRight: "6%"}]}/>
+                    <FontAwesome
+                        name="chevron-down"
+                        style={[styles.icon, { paddingRight: "6%" }]}
+                    />
                 </HStack>
                 <ScrollView>
                     {loggedUser.user.vehicles
@@ -176,5 +201,5 @@ const styles = ScaledSheet.create({
     },
     textBalanceNegative: {
         color: "red",
-    }
+    },
 });

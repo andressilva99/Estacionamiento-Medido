@@ -19,7 +19,9 @@ import { saveUserInformation } from "../functions/saveUserInformation";
 
 const { height } = Dimensions.get("screen");
 
-const EnterVehicleScreen = () => {
+const EnterVehicleScreen = ({route}) => {
+    const { refreshScreen } = route.params;
+
     const { control, handleSubmit, watch } = useForm();
 
     const [enableModel, setEnableModel] = useState(false);
@@ -27,8 +29,10 @@ const EnterVehicleScreen = () => {
 
     const [listMark, setListMark] = useState([]);
     const [mark, setMark] = useState();
+
     const [listModel, setListModel] = useState([]);
     const [model, setModel] = useState();
+
     const [listColor, setListColor] = useState([]);
     const [color, setColor] = useState();
 
@@ -57,6 +61,8 @@ const EnterVehicleScreen = () => {
 
     const obtainModels = async () => {
         try {
+            setEnableModel(false);
+            setEnableColor(false);
             if (mark.id !== null) {
                 const result = await constants.AXIOS_INST.get(
                     `modelos/${mark.id}`,
@@ -69,32 +75,36 @@ const EnterVehicleScreen = () => {
                     })
                 );
                 setListModel(models);
+                setEnableModel(true);
             }
         } catch (error) {
             console.error(error);
+            setEnableModel(false);
+            setEnableColor(false);
         }
     };
 
     const obtainColors = async () => {
         try {
+            setEnableColor(false);
             const result = await constants.AXIOS_INST.get("colores", config);
             const colors = result.data.mensaje.map(({ idColor, nombre }) => ({
                 id: idColor,
                 title: nombre,
             }));
             setListColor(colors);
+            setEnableColor(true);
         } catch (error) {
             console.error(error);
+            setEnableColor(false);
         }
     };
 
     const EnableModel = () => {
-        setEnableModel(true);
         obtainModels();
     };
 
     const EnableColor = () => {
-        setEnableColor(true);
         obtainColors();
     };
 
@@ -118,7 +128,8 @@ const EnterVehicleScreen = () => {
             .then((response) => {
                 alert(response.data.mensaje);
                 console.log(response.data.mensaje);
-                saveVehicle(response.data.mensaje)
+                saveVehicle(response.data.mensaje);
+                refreshScreen();
             })
             .catch((error) => {
                 alert(error.response.data.mensaje);
@@ -152,8 +163,7 @@ const EnterVehicleScreen = () => {
                     safeAreaTop={true}
                 >
                     <HStack maxW="90%">
-                        {/* onPress={handleButtonPressMenu} */}
-                        <HeaderPage></HeaderPage>
+                        <HeaderPage dissableButtonMenu={true}></HeaderPage>
                     </HStack>
                     <Stack flexDirection="row" style={styles.containerProfile}>
                         <FontAwesome5 name="car" size={24} color="#3f60af" />
@@ -178,6 +188,10 @@ const EnterVehicleScreen = () => {
                                 mark ? EnableModel() : null;
                             }}
                             enable={true}
+                            onClear={() => {
+                                setEnableModel(false);
+                                setEnableColor(false);
+                            }}
                         ></EnterVehicleComboBox>
                     </HStack>
                     <HStack zIndex={998} marginX="5%" maxW="85%">
@@ -190,6 +204,9 @@ const EnterVehicleScreen = () => {
                             }}
                             label="Modelo"
                             enable={enableModel}
+                            onClear={() => {
+                                setEnableColor(false);
+                            }}
                         ></EnterVehicleComboBox>
                     </HStack>
                     <HStack zIndex={997} marginX="5%" maxW="85%">

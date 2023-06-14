@@ -48,11 +48,10 @@ const InputControlled = ({
                             isDisabled={isDisabled}
                         ></Input>
                         {error && (
-                            <Text style={styles.errores}>
+                            <Text style={styles.error}>
                                 <Ionicons
                                     name="warning-outline"
-                                    size={24}
-                                    style={styles.errores}
+                                    style={styles.iconError}
                                 />
                                 {error.message || " Error"}
                             </Text>
@@ -72,8 +71,14 @@ const styles = ScaledSheet.create({
         minHeight: "45@ms",
         backgroundColor: "white",
         paddingLeft: "6%",
+        fontSize: "15@ms",
     },
-    errores: {
+    error: {
         color: "red",
+        fontSize: "15@ms"
     },
+    iconError: {
+        color: "red",
+        fontSize: "24@ms",
+    }
 });

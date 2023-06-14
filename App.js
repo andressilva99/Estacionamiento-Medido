@@ -11,6 +11,7 @@ import EnterVehicle from "./src/pages/EnterVehicleScreen";
 import PressableCustom from "./src/components/PressableCustom";
 import InformationScreen from "./src/pages/InformationScreen";
 import ParkingHistoryScreen from "./src/pages/History/ParkingHistoryScreen";
+import SplashScreen from "./src/pages/SplashScreen";
 
 export default function App() {
     return (
@@ -25,6 +26,7 @@ export default function App() {
         // <PressableCustom></PressableCustom>
         // <InformationScreen></InformationScreen>
         // <ParkingHistoryScreen></ParkingHistoryScreen>
+        // <SplashScreen></SplashScreen>
 
         <Navigation></Navigation>
 

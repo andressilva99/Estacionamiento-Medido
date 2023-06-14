@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text } from "react-native";
 import React from "react";
 import { Button, HStack, Image, NativeBaseProvider, Spacer } from "native-base";
 import { Feather } from "@expo/vector-icons";
 import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
 
-const HeaderPage = ({onPress}) => {
+const HeaderPage = ({onPress, dissableButtonMenu}) => {
     return (
         <NativeBaseProvider>
             <HStack style={styles.containerHeader}>
@@ -17,9 +17,9 @@ const HeaderPage = ({onPress}) => {
                 <Spacer></Spacer>
                 <Text style={styles.textHeader}>Estacionamiento medido</Text>
                 <Spacer></Spacer>
-                <Button variant="ghost" onPress={onPress}>
-                    <Feather name="menu" size={30} color="white" />
-                </Button>
+                {dissableButtonMenu ? null : (<Button variant="ghost" onPress={onPress}>
+                    <Feather name="menu" style={styles.iconMenu} />
+                </Button>)}
             </HStack>
         </NativeBaseProvider>
     );
@@ -29,7 +29,7 @@ export default HeaderPage;
 
 const styles = ScaledSheet.create({
     containerHeader: {
-        minHeight: "45@ms",
+        minHeight: "50@ms",
         minWidth: "90%",
         borderRadius: "5@ms",
         paddingLeft: "15@ms",
@@ -46,4 +46,8 @@ const styles = ScaledSheet.create({
         height: "30@ms",
         borderRadius: "100@ms",
     },
+    iconMenu: {
+        color: "white",
+        fontSize: "30@ms",
+    }
 });

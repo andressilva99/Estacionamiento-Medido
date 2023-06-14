@@ -57,13 +57,13 @@ const RechargesHistoryScreen = ({ navigation }) => {
                 idUsuario: loggedUser.user.idUser,
             },
         };
-        await constants.AXIOS_INST.get("historial/recargas", see, config)
+        await constants.AXIOS_INST.get("historial/recargas", config, see)
             .then((response) => {
                 console.log(response.data.mensaje);
                 setConsult(!consult);
             })
             .catch((error) => {
-                alert(error.response.data);
+                alert(error.response.data.mensaje);
             });
     };
 

@@ -1,21 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { HStack, NativeBaseProvider, Spacer, Stack } from "native-base";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { ScaledSheet } from "react-native-size-matters";
 
 const EnterVehicleComboBox = ({
     setElement,
-    element,
     listElement,
     label,
     onBlur,
     enable,
-    onChangeText,
+    onClear,
 }) => {
-    const handleSelectItem = () => {
-        console.log(element);
-    };
+    const [elem, setElem] = useState(null);
+    // const [enableOnBlur, setEnableOnBlur] = useState(initialState);
 
     return (
         <NativeBaseProvider>
@@ -31,29 +29,35 @@ const EnterVehicleComboBox = ({
                             clearOnFocus={false}
                             closeOnBlur={true}
                             onSelectItem={setElement}
-                            dataSet={element ? listElement : []}
-                            onChangeText={setElement}
+                            dataSet={elem ? listElement : []}
+                            onChangeText={setElem}
                             showChevron={false}
                             onBlur={onBlur}
-                            EmptyResultComponent={<Text>Sin resultados</Text>}
+                            EmptyResultComponent={
+                                <Text style={styles.text}>Sin resultados</Text>
+                            }
                             containerStyle={styles.autocompleteDropdown}
                             suggestionsListContainerStyle={{
-                                maxWidth: "80%",
                                 alignItems: "center",
                             }}
                             inputContainerStyle={styles.inputContainer}
+                            suggestionsListTextStyle={
+                                styles.suggestionsListTextStyle
+                            }
+                            onClear={onClear}
                         ></AutocompleteDropdown>
                     </Stack>
                 </HStack>
-            ) : <HStack style={styles.containerDisabled}>
+            ) : (
+                <HStack style={styles.containerDisabled}>
                     <HStack flex={2} alignItems="center">
                         <Text style={styles.label}>{label}</Text>
                         <Spacer></Spacer>
                         <Text style={styles.slash}>l</Text>
                     </HStack>
-                    <Stack flex={4}>
-                    </Stack>
-                </HStack>}
+                    <Stack flex={4}></Stack>
+                </HStack>
+            )}
         </NativeBaseProvider>
     );
 };
@@ -96,5 +100,11 @@ const styles = ScaledSheet.create({
         fontSize: "30@ms",
         color: "#656a6e",
         fontWeight: "bold",
+    },
+    suggestionsListTextStyle: {
+        fontSize: "15@ms",
+    },
+    text: {
+        fontSize: "15@ms",
     },
 });
