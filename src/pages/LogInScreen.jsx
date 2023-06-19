@@ -32,8 +32,8 @@ const { height } = Dimensions.get("screen");
 const LogInScreen = ({ navigation, route }) => {
     const { control, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
-    const { setLogged } = route.params;
-
+    const { setLogged, setCurrentData } = route.params;
+    
     const [isOpen, setIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const cancelRef = useRef(null);
@@ -46,7 +46,7 @@ const LogInScreen = ({ navigation, route }) => {
         if (loading) {
             return;
         }
-
+        
         setLoading(true);
 
         const logIn = {
@@ -59,6 +59,7 @@ const LogInScreen = ({ navigation, route }) => {
         await constants.AXIOS_INST.post("usuario/logIn", logIn)
             .then((response) => {
                 const data = response.data.mensaje;
+                loggedUser.user.password = password;
                 FillUserData(data);
             })
             .catch((error) => {
@@ -77,8 +78,6 @@ const LogInScreen = ({ navigation, route }) => {
     const FillUserData = (data) => {
         const token = data.token;
         const userData = data.usuario;
-
-        console.log(userData.usuario_vehiculo);
 
         loggedUser.user.idUser = userData.idUsuario;
         loggedUser.user.documentNumber = userData.numeroDocumento;
@@ -106,6 +105,7 @@ const LogInScreen = ({ navigation, route }) => {
         }
         saveUserInformation();
         setLogged(true);
+        setCurrentData(true);
     };
 
     return (

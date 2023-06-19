@@ -1,5 +1,5 @@
 import { Dimensions, StatusBar, StyleSheet, View } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     AlertDialog,
     Button,
@@ -20,12 +20,18 @@ import DeletePatentModule from "../components/DeletePatentModule";
 const { height } = Dimensions.get("screen");
 
 const DeletePatentScreen = ({ navigation }) => {
-    // const [isOpen, setIsOpen] = useState(false);
-    // const cancelRef = useRef(null);
-    // const onClose = () => setIsOpen(!isOpen);
+
+    const [refresh, setRefresh] = useState(false);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
+    };
+
+    useEffect(() => {
+    }, [refresh]);
+
+    const refreshScreen = () => {
+        setRefresh(!refresh);
     };
 
     return (
@@ -42,14 +48,16 @@ const DeletePatentScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>
-                    <Text style={styles.textProfile}>Eliminar patentes</Text>
+                    <Text style={styles.textProfile}>Eliminar patente</Text>
                 </Stack>
                 <ScrollView>
                     {loggedUser.user.vehicles
-                        ? loggedUser.user.vehicles.map((vehicle) => (
+                        ? loggedUser.user.vehicles.map((vehicle, index) => (
                               <DeletePatentModule
                                   patent={vehicle.patent}
                                   id={vehicle.idVehicle}
+                                  index={index}
+                                  refreshScreen={refreshScreen}
                               ></DeletePatentModule>
                           ))
                         : null}

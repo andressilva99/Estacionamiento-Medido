@@ -27,12 +27,121 @@ const MovementsHistoryScreen = ({ navigation }) => {
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
 
+    const [listMovements, setListMovements] = useState([]);
+
+    // const response = {
+    //     data: {
+    //         mensaje: [
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 debito: "500",
+    //                 credito: "0",
+    //                 saldo: "150",
+    //             },
+    //         ],
+    //     },
+    // };
+
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
 
     const SearchHistory = async () => {
-        console.log(patentSelected);
+        const config = {
+            headers: {
+                Authorization: `bearer ${loggedUser.user.token}`,
+            },
+        };
 
         const yearInitial = dateInitial.getFullYear();
         const monthInitial = String(dateInitial.getMonth() + 1).padStart(
@@ -48,19 +157,41 @@ const MovementsHistoryScreen = ({ navigation }) => {
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
         const see = {
-            estacionamiento: {
+            historial: {
                 fechaInicio: formattedDateInitial,
                 fechaFin: formattedDateEnd,
                 idVehiculo: patentSelected,
                 idUsuario: loggedUser.user.idUser,
             },
         };
-        setConsult(!consult);
-        // await constants.AXIOS_INST.get("historial/movimientos", see)
-        //     .then((response) => {})
-        //     .catch((error) => {
-        //         alert(error.response.data.mensaje);
-        //     });
+
+        await constants.AXIOS_INST.get("historial/movimientos", config, see)
+            .then((resp) => {
+                completeListMovements(resp);
+                setConsult(!consult);
+            })
+            .catch((error) => {
+                alert(error.response.data.mensaje);
+            });
+    };
+
+    const completeListMovements = (response) => {
+        const list = [];
+        response.data.mensaje.forEach((movement) => {
+            const dateString = movement.fecha;
+            const dateObject = new Date(dateString);
+            const day = dateObject.getDate();
+            const month = dateObject.getMonth() + 1;
+            const year = dateObject.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            list.push({
+                date: formattedDate,
+                debit: movement.debito,
+                credit: movement.credito,
+                amount: movement.saldo,
+            });
+        });
+        setListMovements(list);
     };
 
     return (
@@ -124,52 +255,72 @@ const MovementsHistoryScreen = ({ navigation }) => {
                                 </Stack>
                             </HStack>
                             <ScrollView style={styles.scrollView}>
-                                <HStack minW="85%">
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerLeft,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerCenter,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerCenter,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerRight,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                </HStack>
+                                <VStack space="sm">
+                                    {listMovements.map((movement, index) => (
+                                        <HStack minW="85%" key={index}>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerLeft,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {movement.date}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {movement.debit}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {movement.credit}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerRight,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {movement.amount}
+                                                </Text>
+                                            </Stack>
+                                        </HStack>
+                                    ))}
+                                </VStack>
                             </ScrollView>
                             <Button
                                 style={styles.button}
-                                onPress={SearchHistory}
+                                onPress={() => setConsult(!consult)}
                             >
                                 <Text style={styles.textButton}>
                                     Volver a consultar

@@ -48,11 +48,9 @@ const PatentCustom = ({
     const onCloseAlertNoticeFunction = () =>
         setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
-    const [isOpenAlertNotice, setIsOpenAlertNotice] =
-        useState(false);
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () =>
-        setIsOpenAlertNotice(!isOpenAlertNotice);
+    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
@@ -74,10 +72,34 @@ const PatentCustom = ({
             },
         };
         if (idButton == "start") {
-            await constants.AXIOS_INST.post(
-                "estacionamiento/activar",
-                parking,
-                config
+            // await constants.AXIOS_INST.post(
+            //     "estacionamiento/activar",
+            //     parking,
+            //     config
+            // )
+            //     .then((response) => {
+            //         setMessageAlertNotice(response.data.mensaje);
+            //         setIsOpenAlertNotice(true);
+            //         setButtonStart(false);
+            //         setButtonStop(true);
+            //         loggedUser.user.vehicles[position].parked = buttonStart;
+            //     })
+            //     .catch((error) => {
+            //         alert(error.response.data.mensaje);
+            //     });
+            await constants.AXIOS_INST({
+                method: "post",
+                url: "estacionamiento/activar",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+                data:{
+                    estacionamiento: {
+                        idVehiculo: idVehicle,
+                        idUsuario: idUser,
+                    },
+                }
+            }
             )
                 .then((response) => {
                     setMessageAlertNotice(response.data.mensaje);
@@ -211,7 +233,8 @@ const PatentCustom = ({
                 isOpen={isOpenAlertNotice}
                 cancelRef={cancelRefAlertNotice}
                 onClose={onCloseAlertNotice}
-                message={messageAlertNotice}></AlertNotice>
+                message={messageAlertNotice}
+            ></AlertNotice>
         </NativeBaseProvider>
     );
 };

@@ -15,7 +15,8 @@ const user = {
     },
     vehicles: [],
     token: "",
-    balance: ""
+    balance: "",
+    password: "",
 };
 
 export default {

@@ -26,6 +26,65 @@ const RechargesHistoryScreen = ({ navigation }) => {
     const [dateEnd, setDateEnd] = useState(new Date());
     const [consult, setConsult] = useState(false);
 
+    const [listRecharges, setListRecharges] = useState([]);
+
+    // const response = {
+    //     data: {
+    //         mensaje: [
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //         ],
+    //     },
+    // };
+
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
@@ -51,20 +110,39 @@ const RechargesHistoryScreen = ({ navigation }) => {
         };
 
         const see = {
-            estacionamiento: {
+            recarga: {
                 fechaInicio: formattedDateInitial,
                 fechaFin: formattedDateEnd,
                 idUsuario: loggedUser.user.idUser,
             },
         };
+
         await constants.AXIOS_INST.get("historial/recargas", config, see)
-            .then((response) => {
-                console.log(response.data.mensaje);
+            .then((resp) => {
+                completeListRecharges(resp);
                 setConsult(!consult);
             })
             .catch((error) => {
                 alert(error.response.data.mensaje);
             });
+    };
+
+    const completeListRecharges = (response) => {
+        const list = [];
+        response.data.mensaje.forEach((recharge) => {
+            const dateString = recharge.fecha;
+            const dateObject = new Date(dateString);
+            const day = dateObject.getDate();
+            const month = dateObject.getMonth() + 1;
+            const year = dateObject.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            list.push({
+                date: formattedDate,
+                cost: recharge.importe,
+                amount: recharge.saldo,
+            });
+        });
+        setListRecharges(list);
     };
 
     return (
@@ -99,41 +177,80 @@ const RechargesHistoryScreen = ({ navigation }) => {
                                 <Stack
                                     style={[
                                         styles.tableContainer,
-                                        styles.tableContainerRight,
+                                        styles.tableContainerCenter,
                                     ]}
                                 >
                                     <Text style={styles.textTableHeader}>
                                         Importe
                                     </Text>
                                 </Stack>
+                                <Stack
+                                    style={[
+                                        styles.tableContainer,
+                                        styles.tableContainerRight,
+                                    ]}
+                                >
+                                    <Text style={styles.textTableHeader}>
+                                        Saldo
+                                    </Text>
+                                </Stack>
                             </HStack>
-                            <ScrollView style={styles.scrollView}>
-                                <HStack minW="85%">
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerLeft,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerRight,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                </HStack>
+                            <ScrollView
+                                style={styles.scrollView}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                <VStack space="sm">
+                                    {listRecharges.map((recharge, index) => (
+                                        <HStack minW="85%" key={index}>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerLeft,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {recharge.date}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {recharge.cost}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerRight,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {recharge.amount}
+                                                </Text>
+                                            </Stack>
+                                        </HStack>
+                                    ))}
+                                </VStack>
                             </ScrollView>
                             <Button
                                 style={styles.button}
-                                onPress={SearchHistory}
+                                onPress={() => setConsult(!consult)}
                             >
                                 <Text style={styles.textButton}>
                                     Volver a consultar

@@ -158,7 +158,7 @@ const EnterVehicleScreen = ({route}) => {
                 <Stack
                     style={styles.backgroundContainer}
                     space="sm"
-                    height={height}
+                    height="100%"
                     alignItems="center"
                     safeAreaTop={true}
                 >

@@ -138,8 +138,8 @@ const MenuScreen = ({ navigation, route }) => {
                                 text={"Avisos"}
                                 icon={constants.NOTICE_ICON}
                                 styleTouchable={{ backgroundColor: "#05509C" }}
-                                //En desarrollo
-                                disabled={true}
+                                onPress={handleButtonPress}
+                                id={"Announcements"}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>

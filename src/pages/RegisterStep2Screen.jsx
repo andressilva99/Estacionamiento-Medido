@@ -75,10 +75,10 @@ const RegisterStep2Screen = ({ route, navigation }) => {
         };
         await constants.AXIOS_INST.post("usuario/registrar", information)
             .then((response) => {
-                alert(response.data.mensaje);
+                console.log(response.data.mensaje);
             })
             .catch((error) => {
-                alert(error.response.data.mensaje);
+                console.error(error.response.data.mensaje);
             });
     };
 
