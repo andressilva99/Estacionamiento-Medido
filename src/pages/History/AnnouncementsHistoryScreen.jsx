@@ -73,21 +73,21 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        const config = {
-            headers: {
-                Authorization: `bearer ${loggedUser.user.token}`,
-            },
-        };
-
-        const see = {
-            ticket: {
-                fechaInicio: formattedDateInitial,
-                fechaFin: formattedDateEnd,
-                idVehiculo: patentSelected,
-            },
-        }
-
-        await constants.AXIOS_INST.get("historial/avisos", config, see)
+        await constants
+            .AXIOS_INST({
+                method: "get",
+                url: "historial/avisos",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+                data: {
+                    ticket: {
+                        fechaInicio: formattedDateInitial,
+                        fechaFin: formattedDateEnd,
+                        idVehiculo: patentSelected,
+                    },
+                },
+            })
             .then((resp) => {
                 completeListAnnouncements(resp);
                 setConsult(!consult);
@@ -127,7 +127,7 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <Text>Avisos</Text>
+                    <Text style={styles.textProfile}>Avisos</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -268,7 +268,7 @@ const styles = ScaledSheet.create({
         borderColor: "#dadadc",
         borderRadius: "30@ms",
         height: "45@ms",
-        alignItems: "center", 
+        alignItems: "center",
         paddingHorizontal: "5%",
     },
     text: {
@@ -338,5 +338,11 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         maxHeight: "68%",
+    },
+    textProfile: {
+        fontSize: "19@ms",
+        fontWeight: "bold",
+        color: "#515ba3",
+        paddingLeft: "3%",
     },
 });

@@ -72,31 +72,6 @@ const ParkingHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        const config = {
-            headers: {
-                Authorization: `bearer ${loggedUser.user.token}`,
-            },
-        };
-
-        const see = {
-            estacionamiento: {
-                fechaInicio: formattedDateInitial,
-                fechaFin: formattedDateEnd,
-                idVehiculo: patentSelected,
-                idUsuario: loggedUser.user.idUser,
-            },
-        };
-
-        // await constants.AXIOS_INST.get("historial/estacionamiento", config, see)
-        //     .then((resp) => {
-        //         completeListParking(resp);
-        //         setConsult(!consult);
-        //     })
-        //     .catch((error) => {
-        //         alert(error.response.data.mensaje);
-        //         console.error(error.response.data)
-        //     });
-
         await constants
             .AXIOS_INST({
                 method: "get",
@@ -161,7 +136,7 @@ const ParkingHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <Text>Estacionamientos</Text>
+                    <Text style={styles.textProfile}>Estacionamientos</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -417,5 +392,11 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         maxHeight: "68%",
+    },
+    textProfile: {
+        fontSize: "19@ms",
+        fontWeight: "bold",
+        color: "#515ba3",
+        paddingLeft: "3%",
     },
 });

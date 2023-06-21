@@ -137,12 +137,6 @@ const MovementsHistoryScreen = ({ navigation }) => {
     };
 
     const SearchHistory = async () => {
-        const config = {
-            headers: {
-                Authorization: `bearer ${loggedUser.user.token}`,
-            },
-        };
-
         const yearInitial = dateInitial.getFullYear();
         const monthInitial = String(dateInitial.getMonth() + 1).padStart(
             2,
@@ -156,16 +150,22 @@ const MovementsHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        const see = {
-            historial: {
-                fechaInicio: formattedDateInitial,
-                fechaFin: formattedDateEnd,
-                idVehiculo: patentSelected,
-                idUsuario: loggedUser.user.idUser,
-            },
-        };
-
-        await constants.AXIOS_INST.get("historial/movimientos", config, see)
+        await constants
+            .AXIOS_INST({
+                method: "get",
+                url: "historial/movimientos",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+                data: {
+                    historial: {
+                        fechaInicio: formattedDateInitial,
+                        fechaFin: formattedDateEnd,
+                        idVehiculo: patentSelected,
+                        idUsuario: loggedUser.user.idUser,
+                    },
+                },
+            })
             .then((resp) => {
                 completeListMovements(resp);
                 setConsult(!consult);
@@ -207,7 +207,7 @@ const MovementsHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <Text>Movimientos</Text>
+                    <Text style={styles.textProfile}>Movimientos</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -460,5 +460,11 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         maxHeight: "68%",
+    },
+    textProfile: {
+        fontSize: "19@ms",
+        fontWeight: "bold",
+        color: "#515ba3",
+        paddingLeft: "3%",
     },
 });

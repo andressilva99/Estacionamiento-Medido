@@ -5,6 +5,7 @@ import {
     Dimensions,
     Touchable,
     TouchableOpacity,
+    TextInput,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -26,6 +27,7 @@ import AlertError from "../components/Alerts/AlertError";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { saveUserInformation } from "../functions/saveUserInformation";
 import { Ionicons } from "@expo/vector-icons";
+import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 
 const { height } = Dimensions.get("screen");
 
@@ -43,6 +45,9 @@ const LogInScreen = ({ navigation, route }) => {
 
     const LogIn = async (data) => {
         const { user, password } = data;
+
+        console.log(password);
+
         if (loading) {
             return;
         }
@@ -63,7 +68,7 @@ const LogInScreen = ({ navigation, route }) => {
                 FillUserData(data);
             })
             .catch((error) => {
-                setErrorMessage(error.response.data.mensaje);
+                setErrorMessage("Usuario y/o contraseña incorrectos");
                 setIsOpen(true);
             });
         const logged = true;
@@ -169,13 +174,13 @@ const LogInScreen = ({ navigation, route }) => {
                                 <Text style={styles.text}>Contraseña</Text>
                             </Stack>
                             <HStack flex={2}>
-                                <InputControlled
+                                <InputControlledCopyPaste
                                     name="password"
                                     control={control}
                                     style={styles.input}
                                     secureTextEntry={hidePassword}
                                     variant="unstiled"
-                                ></InputControlled>
+                                ></InputControlledCopyPaste>
                             </HStack>
                             <TouchableOpacity style={styles.touchVisiblePassword} onPress={() => setHidePassword(!hidePassword)}>
                                 <Ionicons name={hidePassword ? "eye" : "eye-off"} style={styles.icon} />

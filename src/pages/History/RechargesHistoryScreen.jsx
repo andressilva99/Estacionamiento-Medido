@@ -103,21 +103,20 @@ const RechargesHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        const config = {
+        await constants.AXIOS_INST({
+            method: "get",
+            url: "historial/recargas",
             headers: {
                 Authorization: `bearer ${loggedUser.user.token}`,
             },
-        };
-
-        const see = {
-            recarga: {
-                fechaInicio: formattedDateInitial,
-                fechaFin: formattedDateEnd,
-                idUsuario: loggedUser.user.idUser,
-            },
-        };
-
-        await constants.AXIOS_INST.get("historial/recargas", config, see)
+            data: {
+                recarga: {
+                    fechaInicio: formattedDateInitial,
+                    fechaFin: formattedDateEnd,
+                    idUsuario: loggedUser.user.idUser,
+                },
+            }
+        })
             .then((resp) => {
                 completeListRecharges(resp);
                 setConsult(!consult);
@@ -158,7 +157,7 @@ const RechargesHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <Text>Regargas</Text>
+                    <Text style={styles.textProfile}>Regargas</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -364,5 +363,11 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         maxHeight: "68%",
+    },
+    textProfile: {
+        fontSize: "19@ms",
+        fontWeight: "bold",
+        color: "#515ba3",
+        paddingLeft: "3%",
     },
 });
