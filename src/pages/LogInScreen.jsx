@@ -145,16 +145,17 @@ const LogInScreen = ({ navigation, route }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Stack flex={1.2}>
+                            {/* <Stack flex={1.2}>
                                 <Text style={styles.text}>Usuario</Text>
-                            </Stack>
+                            </Stack> */}
                             <HStack flex={2}>
-                                <InputControlled
+                                <InputControlledCopyPaste
                                     name="user"
                                     control={control}
                                     style={styles.input}
                                     variant="unstiled"
-                                ></InputControlled>
+                                    placeholder="Correo"
+                                ></InputControlledCopyPaste>
                             </HStack>
                         </HStack>
                     </LinearGradient>
@@ -170,9 +171,9 @@ const LogInScreen = ({ navigation, route }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Stack flex={1.2}>
+                            {/* <Stack flex={1.2}>
                                 <Text style={styles.text}>Contraseña</Text>
-                            </Stack>
+                            </Stack> */}
                             <HStack flex={2}>
                                 <InputControlledCopyPaste
                                     name="password"
@@ -180,6 +181,7 @@ const LogInScreen = ({ navigation, route }) => {
                                     style={styles.input}
                                     secureTextEntry={hidePassword}
                                     variant="unstiled"
+                                    placeholder="Contraseña"
                                 ></InputControlledCopyPaste>
                             </HStack>
                             <TouchableOpacity style={styles.touchVisiblePassword} onPress={() => setHidePassword(!hidePassword)}>
@@ -277,6 +279,6 @@ const styles = ScaledSheet.create({
         fontSize: "25@ms",
     },
     touchVisiblePassword: {
-        flex: 0.5,
+        flex: 0.4,
     },  
 });

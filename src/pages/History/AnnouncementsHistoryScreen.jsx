@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
     Flex,
@@ -15,9 +15,11 @@ import InputDate from "../../components/InputDate";
 import { ScaledSheet } from "react-native-size-matters";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
+import AlertError from "../../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -28,6 +30,11 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
     const [consult, setConsult] = useState(false);
 
     const [listAnnouncements, setListAnnouncements] = useState([]);
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
     // const response = {
     //     data: {
@@ -93,7 +100,8 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                 setConsult(!consult);
             })
             .catch((error) => {
-                alert(error.response.data.mensaje);
+                setIsOpenAlertError(true);
+                setMessageAlertError(error.response.data.mensaje);
             });
     };
 
@@ -127,6 +135,7 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
+                    <MaterialCommunityIcons name="alert-circle-outline" style={styles.noticeIcon} />
                     <Text style={styles.textProfile}>Avisos</Text>
                 </HStack>
                 {consult ? (
@@ -251,6 +260,11 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                     </>
                 )}
             </VStack>
+            <AlertError
+            isOpen={isOpenAlertError}
+            onClose={onCloseAlertError}
+            message={messageAlertError}
+            cancelRef={cancelRefAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -344,5 +358,10 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
         color: "#515ba3",
         paddingLeft: "3%",
+    },
+    noticeIcon: {
+        color: "#515ba3",
+        fontSize: "25@ms",
+        marginLeft: "15@ms",
     },
 });

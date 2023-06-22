@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
     Button,
     Flex,
@@ -15,9 +15,11 @@ import InputDate from "../../components/InputDate";
 import { ScaledSheet } from "react-native-size-matters";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
+import AlertError from "../../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -25,6 +27,11 @@ const RechargesHistoryScreen = ({ navigation }) => {
     const [dateInitial, setDateInitial] = useState(new Date());
     const [dateEnd, setDateEnd] = useState(new Date());
     const [consult, setConsult] = useState(false);
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
     const [listRecharges, setListRecharges] = useState([]);
 
@@ -122,7 +129,8 @@ const RechargesHistoryScreen = ({ navigation }) => {
                 setConsult(!consult);
             })
             .catch((error) => {
-                alert(error.response.data.mensaje);
+                setIsOpenAlertError(true);
+                setMessageAlertError(error.response.data.mensaje);
             });
     };
 
@@ -157,6 +165,7 @@ const RechargesHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
+                    <MaterialCommunityIcons name="hand-coin-outline" style={styles.rechargeIcon} />
                     <Text style={styles.textProfile}>Regargas</Text>
                 </HStack>
                 {consult ? (
@@ -277,6 +286,11 @@ const RechargesHistoryScreen = ({ navigation }) => {
                     </>
                 )}
             </VStack>
+            <AlertError
+            onClose={onCloseAlertError}
+            message={messageAlertError}
+            isOpen={isOpenAlertError}
+            cancelRef={cancelRefAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -369,5 +383,10 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
         color: "#515ba3",
         paddingLeft: "3%",
+    },
+    rechargeIcon: {
+        color: "#515ba3",
+        fontSize: "25@ms",
+        marginLeft: "15@ms",
     },
 });

@@ -1,5 +1,5 @@
 import { Text, Dimensions, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
     HStack,
@@ -16,6 +16,8 @@ import { useForm } from "react-hook-form";
 import loggedUser from "../objects/user";
 import HeaderPage from "../components/HeaderPage";
 import { saveUserInformation } from "../functions/saveUserInformation";
+import AlertNotice from "../components/Alerts/AlertNotice";
+import AlertError from "../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -35,6 +37,16 @@ const EnterVehicleScreen = ({route}) => {
 
     const [listColor, setListColor] = useState([]);
     const [color, setColor] = useState();
+
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
     const config = {
         headers: {
@@ -126,13 +138,14 @@ const EnterVehicleScreen = ({route}) => {
             config
         )
             .then((response) => {
-                alert(response.data.mensaje);
-                console.log(response.data.mensaje);
+                setMessageAlertNotice("Vehículo registrado");
+                setIsOpenAlertNotice(true);
                 saveVehicle(response.data.mensaje);
                 refreshScreen();
             })
-            .catch((error) => {
-                alert(error.response.data.mensaje);
+            .catch(() => {
+                setMessageAlertError("Error al registrar el vehículo");
+                setIsOpenAlertError(true);
             });
     };
 
@@ -176,6 +189,7 @@ const EnterVehicleScreen = ({route}) => {
                             name="patent"
                             control={control}
                             autoCapitalize="characters"
+                            placeholder="Patente"
                         ></InputControlled>
                     </HStack>
                     <HStack zIndex={999} marginX="5%" maxW="85%">
@@ -192,6 +206,7 @@ const EnterVehicleScreen = ({route}) => {
                                 setEnableModel(false);
                                 setEnableColor(false);
                             }}
+                            
                         ></EnterVehicleComboBox>
                     </HStack>
                     <HStack zIndex={998} marginX="5%" maxW="85%">
@@ -218,6 +233,11 @@ const EnterVehicleScreen = ({route}) => {
                             enable={enableColor}
                         ></EnterVehicleComboBox>
                     </HStack>
+                    <Stack>
+                        <Text style={styles.textNote}>
+                            *Nota: Escriba y seleccione
+                        </Text>
+                    </Stack>
                     <Button
                         onPress={handleSubmit(RegisterVehicle)}
                         style={styles.button}
@@ -227,6 +247,16 @@ const EnterVehicleScreen = ({route}) => {
                 </Stack>
                 {/* </ScrollView> */}
             </KeyboardAvoidingView>
+            <AlertNotice
+            isOpen={isOpenAlertNotice}
+            onClose={onCloseAlertNotice}
+            message={messageAlertNotice}
+            cancelRef={cancelRefAlertNotice}></AlertNotice>
+            <AlertError
+            isOpen={isOpenAlertError}
+            onClose={onCloseAlertError}
+            message={messageAlertError}
+            cancelRef={cancelRefAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -260,4 +290,7 @@ const styles = ScaledSheet.create({
         color: "white",
         fontSize: "18@ms",
     },
+    textNote: {
+        color: "#414241",
+    }
 });

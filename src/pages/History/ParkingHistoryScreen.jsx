@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
     Button,
     Flex,
@@ -18,6 +18,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
+import AlertError from "../../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -26,6 +27,11 @@ const ParkingHistoryScreen = ({ navigation }) => {
     const [dateEnd, setDateEnd] = useState(new Date());
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
     const [listParking, setListParking] = useState([]);
 
@@ -91,8 +97,8 @@ const ParkingHistoryScreen = ({ navigation }) => {
                 setConsult(!consult);
             })
             .catch((error) => {
-                alert(error.response.data.mensaje);
-                console.error(error.response.data);
+                setIsOpenAlertError(true);
+                setMessageAlertError(error.response.data.mensaje);
             });
     };
 
@@ -136,6 +142,7 @@ const ParkingHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
+                    <FontAwesome5 name="parking" style={styles.parkingIcon} />
                     <Text style={styles.textProfile}>Estacionamientos</Text>
                 </HStack>
                 {consult ? (
@@ -306,6 +313,11 @@ const ParkingHistoryScreen = ({ navigation }) => {
                     </>
                 )}
             </VStack>
+            <AlertError
+            message={messageAlertError}
+            onClose={onCloseAlertError}
+            cancelRef={cancelRefAlertError}
+            isOpen={isOpenAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -319,11 +331,17 @@ const styles = ScaledSheet.create({
     containerVehicle: {
         minWidth: "85%",
         backgroundColor: "#7bb6de",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        paddingVertical: "3%",
+        borderRadius: "30@ms",
+        height: "45@ms",
         paddingHorizontal: "5%",
+        alignItems: "center",
+    },
+    parkingIcon: {
+        color: "#515ba3",
+        fontSize: "25@ms",
+        marginLeft: "15@ms",
     },
     text: {
         fontSize: "19@ms",
@@ -338,18 +356,18 @@ const styles = ScaledSheet.create({
     select: {
         minWidth: "85%",
         backgroundColor: "#bbbcc0",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        minHeight: "6%",
+        borderRadius: "30@ms",
+        minHeight: "45@ms",
     },
     button: {
         minWidth: "85%",
         backgroundColor: "#c4e5f6",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        minHeight: "6%",
+        borderRadius: "30@ms",
+        minHeight: "45@ms",
     },
     textButton: {
         color: "#1290c0",
@@ -365,21 +383,21 @@ const styles = ScaledSheet.create({
     },
     tableContainerCenter: {
         borderRadius: 0,
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRightWidth: 0,
     },
     tableContainerLeft: {
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRadius: 0,
-        borderBottomLeftRadius: 30,
-        borderTopLeftRadius: 30,
+        borderBottomLeftRadius: "30@ms",
+        borderTopLeftRadius: "30@ms",
         borderRightWidth: 0,
     },
     tableContainerRight: {
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRadius: 0,
-        borderBottomRightRadius: 30,
-        borderTopRightRadius: 30,
+        borderBottomRightRadius: "30@ms",
+        borderTopRightRadius: "30@ms",
     },
     textTableHeader: {
         fontSize: "16@ms",
