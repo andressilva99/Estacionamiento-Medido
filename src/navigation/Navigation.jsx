@@ -18,12 +18,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import loggedUser from "../objects/user";
 import ChangePasswordScreen from "../pages/ChangePasswordScreen";
 import SplashScreen from "../pages/SplashScreen";
+import WelcomeScreen from "../pages/WelcomeScreen";
+import AnnouncementsScreen from "../pages/AnnouncementsScreen";
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
     const [appIsReady, setAppIsReady] = useState(false);
     const [logged, setLogged] = useState(false);
+    const [currentData, setCurrentData] = useState(false);
 
     useEffect(() => {
         loadUser();
@@ -66,73 +69,90 @@ const Navigation = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {appIsReady ? (logged ? (
-                    <>
-                        <Stack.Screen
-                            name="Parking"
-                            component={ParkingScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="Profile"
-                            component={ProfileScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="Menu"
-                            component={MenuScreen}
-                            initialParams={{ setLogged }}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="Information"
-                            component={InformationScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="EnterVehicle"
-                            component={EnterVehicleScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="ParkingHistory"
-                            component={ParkingHistoryScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="RechargesHistory"
-                            component={RechargesHistoryScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="MovementsHistory"
-                            component={MovementsHistoryScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="AnnouncementsHistory"
-                            component={AnnouncementsHistoryScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="DeletePatent"
-                            component={DeletePatentScreen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="ChangePassword"
-                            component={ChangePasswordScreen}
-                        ></Stack.Screen>
-                    </>
+                {appIsReady ? (
+                    logged ? (
+                        currentData ? (
+                            <>
+                                <Stack.Screen
+                                    name="Parking"
+                                    component={ParkingScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="Profile"
+                                    component={ProfileScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="Menu"
+                                    component={MenuScreen}
+                                    initialParams={{ setLogged }}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="Information"
+                                    component={InformationScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="EnterVehicle"
+                                    component={EnterVehicleScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="ParkingHistory"
+                                    component={ParkingHistoryScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="RechargesHistory"
+                                    component={RechargesHistoryScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="MovementsHistory"
+                                    component={MovementsHistoryScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="AnnouncementsHistory"
+                                    component={AnnouncementsHistoryScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="DeletePatent"
+                                    component={DeletePatentScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="ChangePassword"
+                                    component={ChangePasswordScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                name="Announcements"
+                                component={AnnouncementsScreen}></Stack.Screen>
+                            </>
+                        ) : (
+                            <Stack.Screen
+                                name="Welcome"
+                                component={WelcomeScreen}
+                                initialParams={{ setCurrentData, setLogged }}
+                            ></Stack.Screen>
+                            
+                        )
+                    ) : (
+                        <>
+                            <Stack.Screen
+                                name="LogInS"
+                                component={LogInScreen}
+                                initialParams={{ setLogged, setCurrentData }}
+                            ></Stack.Screen>
+                            <Stack.Screen
+                                name="Register1"
+                                component={RegisterStep1Screen}
+                            ></Stack.Screen>
+                            <Stack.Screen
+                                name="Register2"
+                                component={RegisterStep2Screen}
+                            ></Stack.Screen>
+                        </>
+                    )
                 ) : (
-                    <>
-                        <Stack.Screen
-                            name="LogInS"
-                            component={LogInScreen}
-                            initialParams={{ setLogged }}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="Register1"
-                            component={RegisterStep1Screen}
-                        ></Stack.Screen>
-                        <Stack.Screen
-                            name="Register2"
-                            component={RegisterStep2Screen}
-                        ></Stack.Screen>
-                    </>
-                )) : <Stack.Screen
-                name="Splash"
-                component={SplashScreen}></Stack.Screen>}
+                    <Stack.Screen
+                        name="Splash"
+                        component={SplashScreen}
+                    ></Stack.Screen>
+                )}
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -5,6 +5,7 @@ import {
     Dimensions,
     Touchable,
     TouchableOpacity,
+    TextInput,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -26,14 +27,15 @@ import AlertError from "../components/Alerts/AlertError";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { saveUserInformation } from "../functions/saveUserInformation";
 import { Ionicons } from "@expo/vector-icons";
+import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 
 const { height } = Dimensions.get("screen");
 
 const LogInScreen = ({ navigation, route }) => {
     const { control, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
-    const { setLogged } = route.params;
-
+    const { setLogged, setCurrentData } = route.params;
+    
     const [isOpen, setIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const cancelRef = useRef(null);
@@ -43,10 +45,13 @@ const LogInScreen = ({ navigation, route }) => {
 
     const LogIn = async (data) => {
         const { user, password } = data;
+
+        console.log(password);
+
         if (loading) {
             return;
         }
-
+        
         setLoading(true);
 
         const logIn = {
@@ -59,10 +64,11 @@ const LogInScreen = ({ navigation, route }) => {
         await constants.AXIOS_INST.post("usuario/logIn", logIn)
             .then((response) => {
                 const data = response.data.mensaje;
+                loggedUser.user.password = password;
                 FillUserData(data);
             })
             .catch((error) => {
-                setErrorMessage(error.response.data.mensaje);
+                setErrorMessage("Usuario y/o contraseña incorrectos");
                 setIsOpen(true);
             });
         const logged = true;
@@ -77,8 +83,6 @@ const LogInScreen = ({ navigation, route }) => {
     const FillUserData = (data) => {
         const token = data.token;
         const userData = data.usuario;
-
-        console.log(userData.usuario_vehiculo);
 
         loggedUser.user.idUser = userData.idUsuario;
         loggedUser.user.documentNumber = userData.numeroDocumento;
@@ -106,6 +110,7 @@ const LogInScreen = ({ navigation, route }) => {
         }
         saveUserInformation();
         setLogged(true);
+        setCurrentData(true);
     };
 
     return (
@@ -140,16 +145,17 @@ const LogInScreen = ({ navigation, route }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Stack flex={1.2}>
+                            {/* <Stack flex={1.2}>
                                 <Text style={styles.text}>Usuario</Text>
-                            </Stack>
+                            </Stack> */}
                             <HStack flex={2}>
-                                <InputControlled
+                                <InputControlledCopyPaste
                                     name="user"
                                     control={control}
                                     style={styles.input}
                                     variant="unstiled"
-                                ></InputControlled>
+                                    placeholder="Correo"
+                                ></InputControlledCopyPaste>
                             </HStack>
                         </HStack>
                     </LinearGradient>
@@ -165,17 +171,18 @@ const LogInScreen = ({ navigation, route }) => {
                         style={styles.gradientContainer}
                     >
                         <HStack style={styles.inputContainer}>
-                            <Stack flex={1.2}>
+                            {/* <Stack flex={1.2}>
                                 <Text style={styles.text}>Contraseña</Text>
-                            </Stack>
+                            </Stack> */}
                             <HStack flex={2}>
-                                <InputControlled
+                                <InputControlledCopyPaste
                                     name="password"
                                     control={control}
                                     style={styles.input}
                                     secureTextEntry={hidePassword}
                                     variant="unstiled"
-                                ></InputControlled>
+                                    placeholder="Contraseña"
+                                ></InputControlledCopyPaste>
                             </HStack>
                             <TouchableOpacity style={styles.touchVisiblePassword} onPress={() => setHidePassword(!hidePassword)}>
                                 <Ionicons name={hidePassword ? "eye" : "eye-off"} style={styles.icon} />
@@ -272,6 +279,6 @@ const styles = ScaledSheet.create({
         fontSize: "25@ms",
     },
     touchVisiblePassword: {
-        flex: 0.5,
+        flex: 0.4,
     },  
 });

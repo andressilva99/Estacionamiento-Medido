@@ -19,19 +19,14 @@ const MenuScreen = ({ navigation, route }) => {
     const [subMenu, setSubMenu] = useState(false);
     const { setLogged } = route.params;
 
-    useEffect(() => {
-        if (subMenu) {
-            setSubMenu(!subMenu);
-        }
-    }, []);
-
     const handleButtonPress = (id) => {
         if (id !== "logOut") {
             navigation.navigate(id);
+            setSubMenu(false);
         } else {
             deleteUserData();
             setLogged(false);
-            
+            setSubMenu(false);
         }
     };
 
@@ -89,7 +84,7 @@ const MenuScreen = ({ navigation, route }) => {
                                 <HStack style={styles.containerPressable}>
                                     <PressableCustom
                                         text={"Estacionamientos"}
-                                        icon={constants.PROFILE_ICON}
+                                        icon={constants.PARKING_HISTORY_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
                                         id={"ParkingHistory"}
@@ -98,7 +93,7 @@ const MenuScreen = ({ navigation, route }) => {
                                 <HStack style={styles.containerPressable}>
                                     <PressableCustom
                                         text={"Recargas"}
-                                        icon={constants.PROFILE_ICON}
+                                        icon={constants.RECHARGES_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
                                         id={"RechargesHistory"}
@@ -107,7 +102,7 @@ const MenuScreen = ({ navigation, route }) => {
                                 <HStack style={styles.containerPressable}>
                                     <PressableCustom
                                         text={"Movimientos"}
-                                        icon={constants.PROFILE_ICON}
+                                        icon={constants.MOVEMENTS_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
                                         id={"MovementsHistory"}
@@ -116,7 +111,7 @@ const MenuScreen = ({ navigation, route }) => {
                                 <HStack style={styles.containerPressable}>
                                     <PressableCustom
                                         text={"Avisos"}
-                                        icon={constants.PROFILE_ICON}
+                                        icon={constants.NOTICE_ICON}
                                         styleTouchable={styles.touchableSubMenu}
                                         onPress={handleButtonPress}
                                         id={"AnnouncementsHistory"}
@@ -138,8 +133,8 @@ const MenuScreen = ({ navigation, route }) => {
                                 text={"Avisos"}
                                 icon={constants.NOTICE_ICON}
                                 styleTouchable={{ backgroundColor: "#05509C" }}
-                                //En desarrollo
-                                disabled={true}
+                                onPress={handleButtonPress}
+                                id={"Announcements"}
                             ></PressableCustom>
                         </HStack>
                         <HStack style={styles.containerPressable}>
@@ -163,7 +158,7 @@ const MenuScreen = ({ navigation, route }) => {
                         <HStack style={styles.containerPressable}>
                             <PressableCustom
                                 text={"Eliminar patente"}
-                                icon={constants.INFORMATION_ICON}
+                                icon={constants.DELETE_PATENT_ICON}
                                 styleTouchable={{ backgroundColor: "#086EC1" }}
                                 onPress={handleButtonPress}
                                 id={"DeletePatent"}

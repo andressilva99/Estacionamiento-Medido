@@ -14,12 +14,14 @@ import { ScaledSheet } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import constants from "../constants/constants";
+import { Ionicons } from "@expo/vector-icons";
 
 const { height } = Dimensions.get("screen");
 
 const RegisterStep1Screen = ({ navigation }) => {
     const [listTypesDocuments, setListTypesDocuments] = useState([]);
-    const [typeDocument, setTypeDocument] = useState();
+    const [typeDocument, setTypeDocument] = useState(null);
+    const [invalidTypeDocument, setInvalidTypeDocument] = useState(false);
 
     useEffect(() => {
         const obtainDocuments = async () => {
@@ -45,16 +47,21 @@ const RegisterStep1Screen = ({ navigation }) => {
 
     const NextStep = (data) => {
         const { numberDocument, name, surname, razonSocial } = data;
-        try {
-            navigation.navigate("Register2", {
-                typeDocument,
-                numberDocument,
-                name,
-                surname,
-                razonSocial,
-            });
-        } catch (e) {
-            Alert.alert("Error", e.message);
+        if (typeDocument != null) {
+            setInvalidTypeDocument(false);
+            try {
+                navigation.navigate("Register2", {
+                    typeDocument,
+                    numberDocument,
+                    name,
+                    surname,
+                    razonSocial,
+                });
+            } catch (e) {
+                Alert.alert("Error", e.message);
+            }
+        } else {
+            setInvalidTypeDocument(true);
         }
     };
 
@@ -69,9 +76,9 @@ const RegisterStep1Screen = ({ navigation }) => {
                     space="sm"
                     alignItems="center"
                     safeAreaTop={true}
-                    height={height}
+                    height={"100%"}
                 >
-                    <ScrollView>
+                    <ScrollView showsVerticalScrollIndicator={false}>
                         <Stack space="sm">
                             <HStack
                                 flex={1}
@@ -111,6 +118,17 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     ))}
                                 </Select>
                             </HStack>
+                            {invalidTypeDocument  ? (
+                                <Stack>
+                                <Text style={styles.error}>
+                                    <Ionicons
+                                        name="warning-outline"
+                                        style={styles.iconError}
+                                    />
+                                    {"Seleccione un tipo de Documento"}
+                                </Text>
+                                </Stack>
+                            ) : null}
                             <InputControlled
                                 keyboardType="numeric"
                                 name="numberDocument"
@@ -119,6 +137,8 @@ const RegisterStep1Screen = ({ navigation }) => {
                                 width="85%"
                                 rules={{
                                     required: " Número de Documento requerido",
+                                    minLength: 6,
+                                    maxLength: 12,
                                 }}
                             ></InputControlled>
                             <InputControlled
@@ -197,6 +217,7 @@ const styles = ScaledSheet.create({
     },
     selectTypeDocument: {
         fontSize: "15@ms",
+        height: "45@ms",
     },
     buttonNextStep: {
         borderRadius: "30@ms",
@@ -206,5 +227,13 @@ const styles = ScaledSheet.create({
         fontSize: "20@ms",
         fontWeight: "bold",
         color: "white",
+    },
+    error: {
+        color: "red",
+        fontSize: "15@ms",
+    },
+    iconError: {
+        color: "red",
+        fontSize: "24@ms",
     },
 });

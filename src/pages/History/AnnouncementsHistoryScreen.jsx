@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
     Flex,
@@ -15,9 +15,11 @@ import InputDate from "../../components/InputDate";
 import { ScaledSheet } from "react-native-size-matters";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
+import AlertError from "../../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -26,6 +28,39 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
     const [dateEnd, setDateEnd] = useState(new Date());
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
+
+    const [listAnnouncements, setListAnnouncements] = useState([]);
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
+
+    // const response = {
+    //     data: {
+    //         mensaje: [
+    //             { fecha: "2023-11-25T00:00:00.000Z", importe: "500" },
+    //             { fecha: "2023-11-26T00:00:00.000Z", importe: "600" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //             { fecha: "2023-11-27T00:00:00.000Z", importe: "700" },
+    //         ],
+    //     },
+    // };
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
@@ -45,22 +80,46 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        console.log(formattedDateEnd)
+        await constants
+            .AXIOS_INST({
+                method: "get",
+                url: "historial/avisos",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+                data: {
+                    ticket: {
+                        fechaInicio: formattedDateInitial,
+                        fechaFin: formattedDateEnd,
+                        idVehiculo: patentSelected,
+                    },
+                },
+            })
+            .then((resp) => {
+                completeListAnnouncements(resp);
+                setConsult(!consult);
+            })
+            .catch((error) => {
+                setIsOpenAlertError(true);
+                setMessageAlertError(error.response.data.mensaje);
+            });
+    };
 
-        const see = {
-            estacionamiento: {
-                fechaInicio: formattedDateInitial,
-                fechaFin: formattedDateEnd,
-                idVehiculo: patentSelected,
-                idUsuario: loggedUser.user.idUser,
-            },
-        };
-        setConsult(!consult);
-        // await constants.AXIOS_INST.get("historial/avisos", see)
-        //     .then((response) => {})
-        //     .catch((error) => {
-        //         alert(error.response.data.mensaje);
-        //     });
+    const completeListAnnouncements = (response) => {
+        const list = [];
+        response.data.mensaje.forEach((announcement) => {
+            const dateString = announcement.fecha;
+            const dateObject = new Date(dateString);
+            const day = dateObject.getDate();
+            const month = dateObject.getMonth() + 1;
+            const year = dateObject.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            list.push({
+                date: formattedDate,
+                amount: announcement.importe,
+            });
+        });
+        setListAnnouncements(list);
     };
 
     return (
@@ -76,7 +135,8 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <Text>Avisos</Text>
+                    <MaterialCommunityIcons name="alert-circle-outline" style={styles.noticeIcon} />
+                    <Text style={styles.textProfile}>Avisos</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -95,16 +155,6 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                                 <Stack
                                     style={[
                                         styles.tableContainer,
-                                        styles.tableContainerCenter,
-                                    ]}
-                                >
-                                    <Text style={styles.textTableHeader}>
-                                        Nro. Aviso
-                                    </Text>
-                                </Stack>
-                                <Stack
-                                    style={[
-                                        styles.tableContainer,
                                         styles.tableContainerRight,
                                     ]}
                                 >
@@ -113,43 +163,50 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                                     </Text>
                                 </Stack>
                             </HStack>
-                            <ScrollView style={styles.scrollView}>
-                                <HStack minW="85%">
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerLeft,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerCenter,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerRight,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                </HStack>
+                            <ScrollView
+                                style={styles.scrollView}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                <VStack space="sm">
+                                    {listAnnouncements.map(
+                                        (announcement, index) => (
+                                            <HStack minW="85%" key={index}>
+                                                <Stack
+                                                    style={[
+                                                        styles.tableContainer,
+                                                        styles.tableContainerLeft,
+                                                    ]}
+                                                >
+                                                    <Text
+                                                        style={
+                                                            styles.textTableItems
+                                                        }
+                                                    >
+                                                        {announcement.date}
+                                                    </Text>
+                                                </Stack>
+                                                <Stack
+                                                    style={[
+                                                        styles.tableContainer,
+                                                        styles.tableContainerRight,
+                                                    ]}
+                                                >
+                                                    <Text
+                                                        style={
+                                                            styles.textTableItems
+                                                        }
+                                                    >
+                                                        {announcement.amount}
+                                                    </Text>
+                                                </Stack>
+                                            </HStack>
+                                        )
+                                    )}
+                                </VStack>
                             </ScrollView>
                             <Button
                                 style={styles.button}
-                                onPress={SearchHistory}
+                                onPress={() => setConsult(!consult)}
                             >
                                 <Text style={styles.textButton}>
                                     Volver a consultar
@@ -203,6 +260,11 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                     </>
                 )}
             </VStack>
+            <AlertError
+            isOpen={isOpenAlertError}
+            onClose={onCloseAlertError}
+            message={messageAlertError}
+            cancelRef={cancelRefAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -216,10 +278,11 @@ const styles = ScaledSheet.create({
     containerVehicle: {
         minWidth: "85%",
         backgroundColor: "#7bb6de",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        paddingVertical: "3%",
+        borderRadius: "30@ms",
+        height: "45@ms",
+        alignItems: "center",
         paddingHorizontal: "5%",
     },
     text: {
@@ -235,18 +298,18 @@ const styles = ScaledSheet.create({
     select: {
         minWidth: "85%",
         backgroundColor: "#bbbcc0",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        minHeight: "6%",
+        borderRadius: "30@ms",
+        minHeight: "45@ms",
     },
     button: {
         minWidth: "85%",
         backgroundColor: "#c4e5f6",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        minHeight: "6%",
+        borderRadius: "30@ms",
+        minHeight: "45@ms",
     },
     textButton: {
         color: "#1290c0",
@@ -256,27 +319,27 @@ const styles = ScaledSheet.create({
     tableContainer: {
         justifyContent: "center",
         alignItems: "center",
-        flex: 1,
+        flex: "1@ms",
         borderColor: "#d3d3d3",
         paddingVertical: "3%",
     },
     tableContainerCenter: {
         borderRadius: 0,
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRightWidth: 0,
     },
     tableContainerLeft: {
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRadius: 0,
-        borderBottomLeftRadius: 30,
-        borderTopLeftRadius: 30,
+        borderBottomLeftRadius: "30@ms",
+        borderTopLeftRadius: "30@ms",
         borderRightWidth: 0,
     },
     tableContainerRight: {
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRadius: 0,
-        borderBottomRightRadius: 30,
-        borderTopRightRadius: 30,
+        borderBottomRightRadius: "30@ms",
+        borderTopRightRadius: "30@ms",
     },
     textTableHeader: {
         fontSize: "16@ms",
@@ -289,5 +352,16 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         maxHeight: "68%",
+    },
+    textProfile: {
+        fontSize: "19@ms",
+        fontWeight: "bold",
+        color: "#515ba3",
+        paddingLeft: "3%",
+    },
+    noticeIcon: {
+        color: "#515ba3",
+        fontSize: "25@ms",
+        marginLeft: "15@ms",
     },
 });

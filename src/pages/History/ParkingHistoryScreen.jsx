@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
     Button,
     Flex,
@@ -18,6 +18,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
+import AlertError from "../../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -27,12 +28,37 @@ const ParkingHistoryScreen = ({ navigation }) => {
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
 
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
-    const config = {
-        headers: {
-            Authorization: `bearer ${loggedUser.user.token}`,
-        },
-    };
+    const [listParking, setListParking] = useState([]);
+
+    // const response = {
+    //     data: {
+    //         mensaje: [
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
+
+    //         ],
+    //     },
+    // };
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
@@ -52,24 +78,55 @@ const ParkingHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        const see = {
-            estacionamiento: {
-                fechaInicio: formattedDateInitial,
-                fechaFin: formattedDateEnd,
-                idVehiculo: patentSelected,
-                idUsuario: loggedUser.user.idUser,
-            },
-        };
-        console.log(see)
-        await constants.AXIOS_INST.get("historial/estacionamiento", config, see)
-            .then((response) => {
-                console.log(response.data.mensaje);
+        await constants
+            .AXIOS_INST({
+                method: "get",
+                url: "historial/estacionamiento",
+                headers: { Authorization: `bearer ${loggedUser.user.token}` },
+                data: {
+                    estacionamiento: {
+                        fechaInicio: formattedDateInitial,
+                        fechaFin: formattedDateEnd,
+                        idVehiculo: patentSelected,
+                        idUsuario: loggedUser.user.idUser,
+                    },
+                },
+            })
+            .then((resp) => {
+                completeListParking(resp);
                 setConsult(!consult);
             })
             .catch((error) => {
-                alert(error.response.data.mensaje);
-                console.error(error.response.data)
+                setIsOpenAlertError(true);
+                setMessageAlertError(error.response.data.mensaje);
             });
+    };
+
+    const completeListParking = (response) => {
+        const list = [];
+        response.data.mensaje.forEach((parking) => {
+            const dateString = parking.fecha;
+            const dateObject = new Date(dateString);
+            const day = dateObject.getDate();
+            const month = dateObject.getMonth() + 1;
+            const year = dateObject.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+
+            const hourInitString = parking.horaInicio;
+            const formattedTimeInit = hourInitString.slice(0, 5);
+
+            const hourFinishString = parking.horaFin;
+            const formattedTimeFinish = hourFinishString.slice(0, 5);
+
+            list.push({
+                date: formattedDate,
+                timeInit: formattedTimeInit,
+                timeFinish: formattedTimeFinish,
+                cost: parking.costo,
+                amount: parking.saldo,
+            });
+        });
+        setListParking(list);
     };
 
     return (
@@ -85,7 +142,8 @@ const ParkingHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <Text>Estacionamientos</Text>
+                    <FontAwesome5 name="parking" style={styles.parkingIcon} />
+                    <Text style={styles.textProfile}>Estacionamientos</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -124,77 +182,80 @@ const ParkingHistoryScreen = ({ navigation }) => {
                                 <Stack
                                     style={[
                                         styles.tableContainer,
-                                        styles.tableContainerCenter,
+                                        styles.tableContainerRight,
                                     ]}
                                 >
                                     <Text style={styles.textTableHeader}>
                                         Costo
                                     </Text>
                                 </Stack>
-                                <Stack
-                                    style={[
-                                        styles.tableContainer,
-                                        styles.tableContainerRight,
-                                    ]}
-                                >
-                                    <Text style={styles.textTableHeader}>
-                                        Saldo
-                                    </Text>
-                                </Stack>
                             </HStack>
-                            <ScrollView style={styles.scrollView}>
-                                <HStack minW="85%">
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerLeft,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerCenter,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerCenter,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerCenter,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerRight,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                </HStack>
+                            <ScrollView
+                                style={styles.scrollView}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                <VStack space="sm">
+                                    {listParking.map((parking, index) => (
+                                        <HStack minW="85%" key={index}>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerLeft,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {parking.date}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {parking.timeInit}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {parking.timeFinish}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerRight,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {parking.cost}
+                                                </Text>
+                                            </Stack>
+                                        </HStack>
+                                    ))}
+                                </VStack>
                             </ScrollView>
                             <Button
                                 style={styles.button}
@@ -252,6 +313,11 @@ const ParkingHistoryScreen = ({ navigation }) => {
                     </>
                 )}
             </VStack>
+            <AlertError
+            message={messageAlertError}
+            onClose={onCloseAlertError}
+            cancelRef={cancelRefAlertError}
+            isOpen={isOpenAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -265,11 +331,17 @@ const styles = ScaledSheet.create({
     containerVehicle: {
         minWidth: "85%",
         backgroundColor: "#7bb6de",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        paddingVertical: "3%",
+        borderRadius: "30@ms",
+        height: "45@ms",
         paddingHorizontal: "5%",
+        alignItems: "center",
+    },
+    parkingIcon: {
+        color: "#515ba3",
+        fontSize: "25@ms",
+        marginLeft: "15@ms",
     },
     text: {
         fontSize: "19@ms",
@@ -284,18 +356,18 @@ const styles = ScaledSheet.create({
     select: {
         minWidth: "85%",
         backgroundColor: "#bbbcc0",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        minHeight: "6%",
+        borderRadius: "30@ms",
+        minHeight: "45@ms",
     },
     button: {
         minWidth: "85%",
         backgroundColor: "#c4e5f6",
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        minHeight: "6%",
+        borderRadius: "30@ms",
+        minHeight: "45@ms",
     },
     textButton: {
         color: "#1290c0",
@@ -311,21 +383,21 @@ const styles = ScaledSheet.create({
     },
     tableContainerCenter: {
         borderRadius: 0,
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRightWidth: 0,
     },
     tableContainerLeft: {
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRadius: 0,
-        borderBottomLeftRadius: 30,
-        borderTopLeftRadius: 30,
+        borderBottomLeftRadius: "30@ms",
+        borderTopLeftRadius: "30@ms",
         borderRightWidth: 0,
     },
     tableContainerRight: {
-        borderWidth: 1,
+        borderWidth: "1@ms",
         borderRadius: 0,
-        borderBottomRightRadius: 30,
-        borderTopRightRadius: 30,
+        borderBottomRightRadius: "30@ms",
+        borderTopRightRadius: "30@ms",
     },
     textTableHeader: {
         fontSize: "16@ms",
@@ -338,5 +410,11 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         maxHeight: "68%",
+    },
+    textProfile: {
+        fontSize: "19@ms",
+        fontWeight: "bold",
+        color: "#515ba3",
+        paddingLeft: "3%",
     },
 });

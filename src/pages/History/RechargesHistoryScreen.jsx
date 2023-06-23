@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
     Button,
     Flex,
@@ -15,9 +15,11 @@ import InputDate from "../../components/InputDate";
 import { ScaledSheet } from "react-native-size-matters";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
+import AlertError from "../../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -25,6 +27,70 @@ const RechargesHistoryScreen = ({ navigation }) => {
     const [dateInitial, setDateInitial] = useState(new Date());
     const [dateEnd, setDateEnd] = useState(new Date());
     const [consult, setConsult] = useState(false);
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
+
+    const [listRecharges, setListRecharges] = useState([]);
+
+    // const response = {
+    //     data: {
+    //         mensaje: [
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //             {
+    //                 fecha: "2023-11-25T00:00:00.000Z",
+    //                 importe: "500",
+    //                 saldo: "900",
+    //             },
+    //         ],
+    //     },
+    // };
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
@@ -44,27 +110,46 @@ const RechargesHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        const config = {
+        await constants.AXIOS_INST({
+            method: "get",
+            url: "historial/recargas",
             headers: {
                 Authorization: `bearer ${loggedUser.user.token}`,
             },
-        };
-
-        const see = {
-            estacionamiento: {
-                fechaInicio: formattedDateInitial,
-                fechaFin: formattedDateEnd,
-                idUsuario: loggedUser.user.idUser,
-            },
-        };
-        await constants.AXIOS_INST.get("historial/recargas", config, see)
-            .then((response) => {
-                console.log(response.data.mensaje);
+            data: {
+                recarga: {
+                    fechaInicio: formattedDateInitial,
+                    fechaFin: formattedDateEnd,
+                    idUsuario: loggedUser.user.idUser,
+                },
+            }
+        })
+            .then((resp) => {
+                completeListRecharges(resp);
                 setConsult(!consult);
             })
             .catch((error) => {
-                alert(error.response.data.mensaje);
+                setIsOpenAlertError(true);
+                setMessageAlertError(error.response.data.mensaje);
             });
+    };
+
+    const completeListRecharges = (response) => {
+        const list = [];
+        response.data.mensaje.forEach((recharge) => {
+            const dateString = recharge.fecha;
+            const dateObject = new Date(dateString);
+            const day = dateObject.getDate();
+            const month = dateObject.getMonth() + 1;
+            const year = dateObject.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            list.push({
+                date: formattedDate,
+                cost: recharge.importe,
+                amount: recharge.saldo,
+            });
+        });
+        setListRecharges(list);
     };
 
     return (
@@ -80,7 +165,8 @@ const RechargesHistoryScreen = ({ navigation }) => {
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <Text>Regargas</Text>
+                    <MaterialCommunityIcons name="hand-coin-outline" style={styles.rechargeIcon} />
+                    <Text style={styles.textProfile}>Regargas</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -99,41 +185,80 @@ const RechargesHistoryScreen = ({ navigation }) => {
                                 <Stack
                                     style={[
                                         styles.tableContainer,
-                                        styles.tableContainerRight,
+                                        styles.tableContainerCenter,
                                     ]}
                                 >
                                     <Text style={styles.textTableHeader}>
                                         Importe
                                     </Text>
                                 </Stack>
+                                <Stack
+                                    style={[
+                                        styles.tableContainer,
+                                        styles.tableContainerRight,
+                                    ]}
+                                >
+                                    <Text style={styles.textTableHeader}>
+                                        Saldo
+                                    </Text>
+                                </Stack>
                             </HStack>
-                            <ScrollView style={styles.scrollView}>
-                                <HStack minW="85%">
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerLeft,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                    <Stack
-                                        style={[
-                                            styles.tableContainer,
-                                            styles.tableContainerRight,
-                                        ]}
-                                    >
-                                        <Text style={styles.textTableItems}>
-                                            11/03/2023
-                                        </Text>
-                                    </Stack>
-                                </HStack>
+                            <ScrollView
+                                style={styles.scrollView}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                <VStack space="sm">
+                                    {listRecharges.map((recharge, index) => (
+                                        <HStack minW="85%" key={index}>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerLeft,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {recharge.date}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {recharge.cost}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerRight,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {recharge.amount}
+                                                </Text>
+                                            </Stack>
+                                        </HStack>
+                                    ))}
+                                </VStack>
                             </ScrollView>
                             <Button
                                 style={styles.button}
-                                onPress={SearchHistory}
+                                onPress={() => setConsult(!consult)}
                             >
                                 <Text style={styles.textButton}>
                                     Volver a consultar
@@ -161,6 +286,11 @@ const RechargesHistoryScreen = ({ navigation }) => {
                     </>
                 )}
             </VStack>
+            <AlertError
+            onClose={onCloseAlertError}
+            message={messageAlertError}
+            isOpen={isOpenAlertError}
+            cancelRef={cancelRefAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -247,5 +377,16 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         maxHeight: "68%",
+    },
+    textProfile: {
+        fontSize: "19@ms",
+        fontWeight: "bold",
+        color: "#515ba3",
+        paddingLeft: "3%",
+    },
+    rechargeIcon: {
+        color: "#515ba3",
+        fontSize: "25@ms",
+        marginLeft: "15@ms",
     },
 });

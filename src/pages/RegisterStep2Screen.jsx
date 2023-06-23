@@ -5,8 +5,8 @@ import {
     Text,
     View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useRef, useState } from "react";
+import { set, useForm } from "react-hook-form";
 import {
     NativeBaseProvider,
     Stack,
@@ -22,6 +22,9 @@ import { ScaledSheet } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import constants from "../constants/constants";
+import AlertNotice from "../components/Alerts/AlertNotice";
+import { Ionicons } from "@expo/vector-icons";
+import AlertError from "../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
@@ -75,31 +78,56 @@ const RegisterStep2Screen = ({ route, navigation }) => {
         };
         await constants.AXIOS_INST.post("usuario/registrar", information)
             .then((response) => {
-                alert(response.data.mensaje);
+                console.log(response.data.mensaje);
+                setMessageAlertNotice(
+                    "Su contraseña ha sido enviada a su correo electrónico. Registrado con éxito"
+                );
+                setIsOpenAlertNotice(true);
             })
             .catch((error) => {
-                alert(error.response.data.mensaje);
+                setMessageAlertError(error.response.data.mensaje);
+                setIsOpenAlertError(true);
             });
     };
 
+    const [invalidPhoneCompanie, setInvalidPhoneCompanie] = useState(false);
+
     const SuccessfulRegistration = async (data) => {
-        try {
-            await Register(data);
-            setResponse(true);
-        } catch (error) {
-            console.log(error);
+        if (phoneCompanie != null) {
+            if (loading) {
+                return;
+            }
+            setInvalidPhoneCompanie(false);
+            setLoading(true);
+            try {
+                await Register(data);
+            } catch (error) {
+                console.log(error);
+            }
+            setLoading(false);
+        } else {
+            setInvalidPhoneCompanie(true);
         }
     };
 
     const emailRepeat = watch("email");
 
-    const [response, setResponse] = useState(false);
-    const closeResponse = () => setResponse(false);
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
     const CloseAlert = () => {
-        closeResponse();
+        onCloseAlertNotice();
         navigation.popToTop();
     };
+
+    const [loading, setLoading] = useState(false);
 
     return (
         <NativeBaseProvider>
@@ -110,11 +138,11 @@ const RegisterStep2Screen = ({ route, navigation }) => {
             >
                 <Stack
                     space="sm"
-                    height={height}
+                    height={"100%"}
                     alignItems="center"
                     safeAreaTop={true}
                 >
-                    <ScrollView>
+                    <ScrollView showsVerticalScrollIndicator={false}>
                         <Stack space="sm">
                             <HStack
                                 flex={1}
@@ -195,6 +223,17 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                     ))}
                                 </Select>
                             </HStack>
+                            {invalidPhoneCompanie ? (
+                                <Stack>
+                                    <Text style={styles.error}>
+                                        <Ionicons
+                                            name="warning-outline"
+                                            style={styles.iconError}
+                                        />
+                                        {"Seleccione compañía de teléfono"}
+                                    </Text>
+                                </Stack>
+                            ) : null}
                             <InputControlled
                                 keyboardType="numeric"
                                 name="phone"
@@ -213,33 +252,50 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                     },
                                 }}
                             ></InputControlled>
-                            <Button
-                                onPress={handleSubmit(SuccessfulRegistration)}
-                                marginTop="15%"
-                                style={styles.buttonNextStep}
-                                endIcon={
-                                    <Feather
-                                        name="check-circle"
-                                        style={styles.textNextStep}
-                                    />
-                                }
-                            >
-                                <Text style={styles.textNextStep}>
-                                    Registrarse
-                                </Text>
-                            </Button>
+                            {loading ? (
+                                <Button
+                                    isLoading
+                                    style={styles.buttonNextStep}
+                                    isLoadingText={
+                                        <Text style={styles.textNextStep}>
+                                            Registrando
+                                        </Text>
+                                    }
+                                    spinnerPlacement="end"
+                                ></Button>
+                            ) : (
+                                <Button
+                                    onPress={handleSubmit(
+                                        SuccessfulRegistration
+                                    )}
+                                    marginTop="15%"
+                                    style={styles.buttonNextStep}
+                                    endIcon={
+                                        <Feather
+                                            name="check-circle"
+                                            style={styles.textNextStep}
+                                        />
+                                    }
+                                >
+                                    <Text style={styles.textNextStep}>
+                                        Registrarse
+                                    </Text>
+                                </Button>
+                            )}
                         </Stack>
                     </ScrollView>
-                    <AlertDialog isOpen={response} onClose={closeResponse}>
-                        <AlertDialog.Content>
-                            <AlertDialog.Body>
-                                Ahora puede iniciar sesión
-                            </AlertDialog.Body>
-                            <AlertDialog.Footer>
-                                <Button onPress={CloseAlert}>Aceptar</Button>
-                            </AlertDialog.Footer>
-                        </AlertDialog.Content>
-                    </AlertDialog>
+                    <AlertNotice
+                        isOpen={isOpenAlertNotice}
+                        cancelRef={cancelRefAlertNotice}
+                        onClose={CloseAlert}
+                        message={messageAlertNotice}
+                    ></AlertNotice>
+                    <AlertError
+                        isOpen={isOpenAlertError}
+                        cancelRef={cancelRefAlertError}
+                        onClose={onCloseAlertError}
+                        message={messageAlertError}
+                    ></AlertError>
                 </Stack>
             </ImageBackground>
         </NativeBaseProvider>
@@ -286,6 +342,15 @@ const styles = ScaledSheet.create({
         color: "white",
     },
     selectPhoneCompanie: {
-        fontSize: "15@ms"
+        fontSize: "15@ms",
+        height: "45@ms",
+    },
+    error: {
+        color: "red",
+        fontSize: "15@ms",
+    },
+    iconError: {
+        color: "red",
+        fontSize: "24@ms",
     },
 });

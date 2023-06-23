@@ -1,8 +1,8 @@
 import axios from "axios";
 import backgroundInit from "../image/fondo-app.png";
-import loggedUser from "../objects/user"
 
 const PATH_INST = "https://sem1.onrender.com/api/";
+// const PATH_INST = "https://estacionamientotest.sanfrancisco.gov.ar/api/";
 const AXIOS_INST = axios.create({ baseURL: PATH_INST });
 const BACKGROUND_INIT = backgroundInit;
 const CLOSE_ICON = require("../image/Icon/Close-Icon.png");
@@ -17,11 +17,10 @@ const PROFILE_ICON = require("../image/Icon/Profile-Icon.png");
 const LOGO = require("../image/logo-app.png");
 const CAR_SPLASH = require("../image/car-splash.png");
 const ARROW = require("../image/arrow.png")
-const CONFIG = {
-    headers: {
-        Authorization: `bearer ${loggedUser.user.token}`,
-    },
-};
+const DELETE_PATENT_ICON = require("../image/Icon/Delete-Patent-Icon.png")
+const PARKING_HISTORY_ICON = require("../image/Icon/Parking-History-Icon.png")
+const RECHARGES_ICON = require("../image/Icon/Recharges-Icon.png")
+const MOVEMENTS_ICON = require("../image/Icon/Movements-Icon.png")
 
 export default {
     AXIOS_INST,
@@ -36,7 +35,10 @@ export default {
     PARKING_ICON,
     PROFILE_ICON,
     LOGO,
-    CONFIG,
     CAR_SPLASH,
     ARROW,
+    DELETE_PATENT_ICON,
+    PARKING_HISTORY_ICON,
+    RECHARGES_ICON,
+    MOVEMENTS_ICON,
 };

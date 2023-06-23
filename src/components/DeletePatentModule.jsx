@@ -10,71 +10,81 @@ import {
     VStack,
 } from "native-base";
 import { ScaledSheet } from "react-native-size-matters";
+import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
+import loggedUser from "../objects/user";
+import constants from "../constants/constants";
+import { saveUserInformation } from "../functions/saveUserInformation";
 
-const DeletePatentModule = ({ patent, id }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const cancelRef = useRef(null);
-    const onClose = () => setIsOpen(!isOpen);
+const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
+    const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
+        useState(false);
+    const cancelRefAlertNoticeFunction = useRef(null);
+    const onCloseAlertNoticeFunction = () =>
+        setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
+
+    const deletePatent = async () => {
+        onCloseAlertNoticeFunction();
+
+        const vehicleSelected = loggedUser.user.vehicles.find((vehicle) => vehicle.patent === patent);
+
+        if (!vehicleSelected.parked) {
+            await constants.AXIOS_INST({
+                method: "delete",
+                url: "vehiculo/eliminar",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+                data: {
+                    vehiculo: {
+                        idUsuario: loggedUser.user.idUser,
+                        patente: patent,
+                    },
+                },
+            })
+                .then((response) => {
+                    deleteVehicle();
+                    console.log(response.data.mensaje);
+                })
+                .catch((error) => {
+                    console.error(error.response.data);
+                });
+        } else {
+            alert("No se puede eliminar un vehículo estacionado");
+        }
+    };
+
+    const deleteVehicle = () => {
+        const list = loggedUser.user.vehicles.filter((vehicle) => vehicle.patent !== patent);
+        loggedUser.user.vehicles = [];
+        loggedUser.user.vehicles = list;
+        saveUserInformation();
+        refreshScreen();
+    }
 
     return (
         <>
-            <HStack style={styles.containerPatent} marginBottom="5%">
+            <HStack style={styles.containerPatent} marginBottom="5%" key={index}>
                 <Spacer></Spacer>
-                <Text key={id} style={styles.textPatent}>
+                <Text style={styles.textPatent}>
                     {patent}
                 </Text>
                 <Spacer></Spacer>
                 <Button
                     style={styles.button}
                     flex={2}
-                    onPress={() => setIsOpen(true)}
+                    onPress={() => setIsOpenAlertNoticeFunction(true)}
                 >
                     <Text style={styles.textButton}>Eliminar</Text>
                 </Button>
             </HStack>
-            <AlertDialog
-                leastDestructiveRef={cancelRef}
-                isOpen={isOpen}
-                onClose={onClose}
-            >
-                <AlertDialog.Content>
-                    <AlertDialog.CloseButton></AlertDialog.CloseButton>
-                    <AlertDialog.Header>
-                        <Text style={styles.textHeader}>Advertencia</Text>
-                    </AlertDialog.Header>
-                    <AlertDialog.Body>
-                        <VStack space="xl">
-                            <Stack>
-                                <Text style={styles.textBody}>
-                                    ¿Está seguro de que desea eliminar la
-                                    patente "{patent}"?
-                                </Text>
-                            </Stack>
-                            <HStack justifyContent="center">
-                                <Button
-                                    variant="ghost"
-                                    ref={cancelRef}
-                                    onPress={onClose}
-                                    flex={3}
-                                >
-                                    <Text
-                                        underline
-                                        style={styles.textButtonCancel}
-                                    >
-                                        Cancelar
-                                    </Text>
-                                </Button>
-                                <Spacer></Spacer>
-                                <Button style={styles.button} flex={3}>
-                                    <Text style={styles.textButton}>
-                                        Aceptar
-                                    </Text>
-                                </Button>
-                            </HStack>
-                        </VStack>
-                    </AlertDialog.Body>
-                </AlertDialog.Content>
-            </AlertDialog>
+            <AlertNoticeFunction
+                isOpen={isOpenAlertNoticeFunction}
+                cancelRef={cancelRefAlertNoticeFunction}
+                onClose={onCloseAlertNoticeFunction}
+                message={`¿Está seguro que quiere eliminar la patente "${patent}"?`}
+                onPressAccept={deletePatent}
+            ></AlertNoticeFunction>
+            
         </>
     );
 };

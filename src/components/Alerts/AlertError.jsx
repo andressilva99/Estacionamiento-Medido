@@ -14,7 +14,7 @@ const AlertError = ({ cancelRef, isOpen, onClose, message }) => {
             <AlertDialog.Content>
                 <AlertDialog.Body style={styles.containerAlert}>
                     <VStack space="lg">
-                        <HStack space="sm" alignItems="center">
+                        <HStack space="sm">
                         <Entypo name="circle-with-cross"
                                 style={styles.iconHeader}
                             />
@@ -40,7 +40,6 @@ export default AlertError;
 const styles = ScaledSheet.create({
     containerAlert: {
         backgroundColor: "red",
-        alignItems: "center",
     },
     textHeader: {
         color: "white",

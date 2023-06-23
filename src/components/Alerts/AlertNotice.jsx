@@ -14,7 +14,7 @@ const AlertNotice = ({ cancelRef, isOpen, onClose, message }) => {
             <AlertDialog.Content>
                 <AlertDialog.Body style={styles.containerAlert}>
                     <VStack space="lg">
-                        <HStack space="sm" alignItems="center">
+                        <HStack space="sm">
                         <MaterialIcons name="error"
                                 style={styles.iconHeader}
                             />
@@ -40,7 +40,6 @@ export default AlertNotice
 const styles = ScaledSheet.create({
     containerAlert: {
         backgroundColor: "#3D61AD",
-        alignItems: "center",
     },
     textHeader: {
         color: "white",

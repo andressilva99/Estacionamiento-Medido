@@ -1,5 +1,5 @@
 import { Text, Dimensions, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
     Button,
     HStack,
@@ -26,6 +26,11 @@ const ChangePasswordScreen = () => {
     const [hidePassword2, setHidePassword2] = useState(true);
     const [hidePassword3, setHidePassword3] = useState(true);
 
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
+
     const config = {
         headers: {
             Authorization: `bearer ${loggedUser.user.token}`,
@@ -50,7 +55,9 @@ const ChangePasswordScreen = () => {
         ).then((response) => {
             const message = response.data.mensaje;
             alert(message);
-        }).catch((error) => alert(error));
+        }).catch((error) => {
+            alert(error)
+        });
     };
 
     return (

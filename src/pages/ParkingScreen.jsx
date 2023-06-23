@@ -104,7 +104,7 @@ const ParkingScreen = ({ navigation }) => {
                         style={[styles.icon, { paddingRight: "6%" }]}
                     />
                 </HStack>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     {loggedUser.user.vehicles
                         ? loggedUser.user.vehicles.map((vehicle, index) => (
                               <PatentCustom
