@@ -1,5 +1,9 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
+=======
+import React, { useEffect } from "react";
+>>>>>>> 3c62430bb1b634367f9ce63f24981c6ebd1353bc
 import {
     HStack,
     NativeBaseProvider,
@@ -11,22 +15,48 @@ import HeaderPage from "../components/HeaderPage";
 import { ScaledSheet } from "react-native-size-matters";
 import { Feather } from "@expo/vector-icons";
 import loggedUser from "../objects/user"
+<<<<<<< HEAD
 import { findTickets } from "../functions/findTickets";
 
 const AnnouncementsScreen = ({navigation}) => {
     const [haveTickets, setHaveTickets] = useState(false);
 
+=======
+
+const AnnouncementsScreen = ({navigation}) => {
+>>>>>>> 3c62430bb1b634367f9ce63f24981c6ebd1353bc
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
 
     useEffect(() => {
+<<<<<<< HEAD
         findTickets();
         if (loggedUser.user.tickets[0] != undefined) {
             setHaveTickets(true)
         }
     }, []);
 
+=======
+        
+        
+    }, []);
+
+    searchAnnouncements = async()=>{
+        const config = {
+            headers: {
+                Authorization: `bearer ${loggedUser.user.token}`,
+            },
+            body: {
+                ticket: {
+                    fechaInicio: "2023-01-01",
+                    patente: patent,
+                },
+            }
+        };
+    }
+
+>>>>>>> 3c62430bb1b634367f9ce63f24981c6ebd1353bc
     return (
         <NativeBaseProvider>
             <StatusBar></StatusBar>
@@ -48,6 +78,7 @@ const AnnouncementsScreen = ({navigation}) => {
                     />
                     <Text style={styles.textProfile}>Avisos</Text>
                 </Stack>
+<<<<<<< HEAD
                 {haveTickets ? (<>
                         <VStack space="sm">
                             <HStack minW="85%">
@@ -118,6 +149,12 @@ const AnnouncementsScreen = ({navigation}) => {
                     <Text style={styles.textWithoutAnnouncements}>No hay avisos</Text>
                 </Stack>
                 )}
+=======
+                <Stack style={styles.containerWithoutAnnouncements}>
+                    <Text style={styles.textWithoutAnnouncements}>No hay avisos</Text>
+                </Stack>
+                <ScrollView showsVerticalScrollIndicator={false}></ScrollView>
+>>>>>>> 3c62430bb1b634367f9ce63f24981c6ebd1353bc
             </VStack>
         </NativeBaseProvider>
     );
@@ -159,6 +196,7 @@ const styles = ScaledSheet.create({
         fontSize: "23@ms",
         fontWeight: "bold",
     },
+<<<<<<< HEAD
     tableContainerLeft: {
         borderWidth: "1@ms",
         borderRadius: 0,
@@ -191,4 +229,6 @@ const styles = ScaledSheet.create({
         borderColor: "#d3d3d3",
         paddingVertical: "3%",
     },
+=======
+>>>>>>> 3c62430bb1b634367f9ce63f24981c6ebd1353bc
 });
