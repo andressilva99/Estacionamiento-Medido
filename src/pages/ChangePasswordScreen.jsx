@@ -12,6 +12,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import HeaderPage from "../components/HeaderPage";
 import { ScaledSheet } from "react-native-size-matters";
 import InputControlled from "../components/InputControlled";
+import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 import { useForm } from "react-hook-form";
 import loggedUser from "../objects/user";
 import constants from "../constants/constants";
@@ -85,40 +86,40 @@ const ChangePasswordScreen = () => {
                     <Text style={styles.textChangePassword}>Cambiar Clave</Text>
                 </Stack>
                 <HStack maxW="85%">
-                    <InputControlled
+                    <InputControlledCopyPaste
                         name="newPassword"
                         placeholder="Nueva Clave"
                         control={control}
                         width="85%"
                         secureTextEntry={hidePassword1}
                         // rules={}
-                    ></InputControlled>
+                    ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
                         <Ionicons name={hidePassword1 ? "eye" : "eye-off"} style={styles.icon} color="#3f60af" onPress={() => setHidePassword1(!hidePassword1)} />
                     </TouchableOpacity>
                 </HStack>
                 <HStack maxW="85%">
-                    <InputControlled
+                    <InputControlledCopyPaste
                         name="repeatNewPassword"
                         placeholder="Repetir Nueva Clave"
                         control={control}
                         width="85%"
                         secureTextEntry={hidePassword2}
                         // rules={}
-                    ></InputControlled>
+                    ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
                         <Ionicons name={hidePassword2 ? "eye" : "eye-off"} style={styles.icon} color="#3f60af" onPress={() => setHidePassword2(!hidePassword2)} />
                     </TouchableOpacity>
                 </HStack>
                 <HStack maxW="85%">
-                    <InputControlled
+                    <InputControlledCopyPaste
                         name="oldPassword"
                         placeholder="Clave Actual"
                         control={control}
                         width="85%"
                         secureTextEntry={hidePassword3}
                         // rules={}
-                    ></InputControlled>
+                    ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
                         <Ionicons name={hidePassword3 ? "eye" : "eye-off"} style={styles.icon} color="#3f60af" onPress={() => setHidePassword3(!hidePassword3)} />
                     </TouchableOpacity>

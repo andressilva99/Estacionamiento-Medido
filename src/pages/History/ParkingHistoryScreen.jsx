@@ -77,6 +77,18 @@ const ParkingHistoryScreen = ({ navigation }) => {
         const monthEnd = String(dateEnd.getMonth() + 1).padStart(2, "0");
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
+        
+        const datos = {
+            
+                estacionamiento: {
+                    fechaInicio: formattedDateInitial,
+                    fechaFin: formattedDateEnd,
+                    idVehiculo: patentSelected,
+                    idUsuario: loggedUser.user.idUser,
+                },
+        }
+
+        console.log(datos)
 
         await constants
             .AXIOS_INST({

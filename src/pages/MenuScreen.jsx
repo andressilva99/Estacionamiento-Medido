@@ -137,7 +137,7 @@ const MenuScreen = ({ navigation, route }) => {
                                 id={"Announcements"}
                             ></PressableCustom>
                         </HStack>
-                        <HStack style={styles.containerPressable}>
+                        {/* <HStack style={styles.containerPressable}>
                             <PressableCustom
                                 text={"Mapas"}
                                 icon={constants.MAP_ICON}
@@ -145,12 +145,12 @@ const MenuScreen = ({ navigation, route }) => {
                                 //En desarrollo
                                 disabled={true}
                             ></PressableCustom>
-                        </HStack>
+                        </HStack> */}
                         <HStack style={styles.containerPressable}>
                             <PressableCustom
                                 text={"A cerca de"}
                                 icon={constants.INFORMATION_ICON}
-                                styleTouchable={{ backgroundColor: "#086EC1" }}
+                                styleTouchable={{ backgroundColor: "#009FE3" }}
                                 onPress={handleButtonPress}
                                 id={"Information"}
                             ></PressableCustom>

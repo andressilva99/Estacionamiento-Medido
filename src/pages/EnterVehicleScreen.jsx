@@ -21,7 +21,7 @@ import AlertError from "../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
-const EnterVehicleScreen = ({route}) => {
+const EnterVehicleScreen = ({navigation, route}) => {
     const { refreshScreen } = route.params;
 
     const { control, handleSubmit, watch } = useForm();
@@ -40,7 +40,7 @@ const EnterVehicleScreen = ({route}) => {
 
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
+    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice); navigation.goBack();};
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
