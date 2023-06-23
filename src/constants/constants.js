@@ -1,13 +1,8 @@
 import axios from "axios";
 import backgroundInit from "../image/fondo-app.png";
 
-<<<<<<< HEAD
-const PATH_INST = "https://sem1.onrender.com/api/";
-// const PATH_INST = "https://estacionamientotest.sanfrancisco.gov.ar/api/";
-=======
 // const PATH_INST = "https://sem1.onrender.com/api/";
 const PATH_INST = "https://estacionamientotest.sanfrancisco.gov.ar/api/";
->>>>>>> 3c62430bb1b634367f9ce63f24981c6ebd1353bc
 const AXIOS_INST = axios.create({ baseURL: PATH_INST });
 const BACKGROUND_INIT = backgroundInit;
 const CLOSE_ICON = require("../image/Icon/Close-Icon.png");
