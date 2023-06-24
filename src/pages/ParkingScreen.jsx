@@ -49,7 +49,7 @@ const ParkingScreen = ({ navigation }) => {
                 style={styles.background}
                 safeAreaTop={true}
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <VStack style={styles.containerUser}>

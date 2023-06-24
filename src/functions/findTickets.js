@@ -6,7 +6,7 @@ export const findTickets = () => {
     if (loggedUser.user.vehicles != []) {
         loggedUser.user.vehicles.forEach(async(vehicle) => {
             await constants.AXIOS_INST({
-                method: "get",
+                method: "post",
                 url: "ticket/mostrar",
                 headers: {
                     Authorization: `bearer ${loggedUser.user.token}`,

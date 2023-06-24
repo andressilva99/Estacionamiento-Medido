@@ -14,8 +14,20 @@ import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
 import loggedUser from "../objects/user";
 import constants from "../constants/constants";
 import { saveUserInformation } from "../functions/saveUserInformation";
+import AlertError from "./Alerts/AlertError"
+import AlertNotice from "./Alerts/AlertNotice"
 
 const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice); navigation.goBack();};
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
+
     const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
         useState(false);
     const cancelRefAlertNoticeFunction = useRef(null);
@@ -43,13 +55,17 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
             })
                 .then((response) => {
                     deleteVehicle();
-                    console.log(response.data.mensaje);
+                    setMessageAlertNotice(response.data.mensaje);
+                    setIsOpenAlertNotice(true);
                 })
                 .catch((error) => {
-                    console.error(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                    console.error(error.response.data.mensaje)
                 });
         } else {
-            alert("No se puede eliminar un vehículo estacionado");
+            setMessageAlertError("No se puede eliminar un vehículo estacionado");
+            setIsOpenAlertError(true);
         }
     };
 
@@ -81,10 +97,19 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
                 isOpen={isOpenAlertNoticeFunction}
                 cancelRef={cancelRefAlertNoticeFunction}
                 onClose={onCloseAlertNoticeFunction}
-                message={`¿Está seguro que quiere eliminar la patente "${patent}"?`}
+                message={`¿Está seguro que desea eliminar la patente "${patent}"?`}
                 onPressAccept={deletePatent}
             ></AlertNoticeFunction>
-            
+            <AlertError
+            isOpen={isOpenAlertError}
+            onClose={onCloseAlertError}
+            message={messageAlertError}
+            cancelRef={cancelRefAlertError}></AlertError>
+            <AlertNotice
+            isOpen={isOpenAlertNotice}
+            onClose={onCloseAlertNotice}
+            message={messageAlertNotice}
+            cancelRef={cancelRefAlertNotice}></AlertNotice>
         </>
     );
 };

@@ -37,7 +37,7 @@ const AnnouncementsScreen = ({navigation}) => {
                 style={styles.background}
                 safeAreaTop={true}
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>

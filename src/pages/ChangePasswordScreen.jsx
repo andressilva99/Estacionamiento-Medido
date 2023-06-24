@@ -16,11 +16,13 @@ import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 import { useForm } from "react-hook-form";
 import loggedUser from "../objects/user";
 import constants from "../constants/constants";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import AlertError from "../components/Alerts/AlertError";
+import AlertNotice from "../components/Alerts/AlertNotice";
 
 const { height } = Dimensions.get("screen");
 
-const ChangePasswordScreen = () => {
+const ChangePasswordScreen = ({ navigation }) => {
     const { control, handleSubmit, watch } = useForm();
 
     const [hidePassword1, setHidePassword1] = useState(true);
@@ -32,6 +34,16 @@ const ChangePasswordScreen = () => {
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
 
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => {
+        setIsOpenAlertNotice(!isOpenAlertNotice);
+        navigation.goBack();
+    };
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
+
+    const [loading, setLoading] = useState(false);
+
     const config = {
         headers: {
             Authorization: `bearer ${loggedUser.user.token}`,
@@ -40,6 +52,7 @@ const ChangePasswordScreen = () => {
 
     const changePassword = async (data) => {
         const { newPassword, oldPassword } = data;
+        setLoading(true);
 
         const changePass = {
             usuario: {
@@ -53,12 +66,18 @@ const ChangePasswordScreen = () => {
             "usuario/modificarClave",
             changePass,
             config
-        ).then((response) => {
-            const message = response.data.mensaje;
-            alert(message);
-        }).catch((error) => {
-            alert(error)
-        });
+        )
+            .then((response) => {
+                const message = response.data.mensaje;
+                setMessageAlertNotice("Clave cambiada");
+                setIsOpenAlertNotice(true);
+            })
+            .catch((error) => {
+                setMessageAlertError(error.response.data.mensaje);
+                setIsOpenAlertError(true);
+            });
+
+        setLoading(false);
     };
 
     return (
@@ -71,7 +90,7 @@ const ChangePasswordScreen = () => {
                 alignItems="center"
                 safeAreaTop={true}
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage dissableButtonMenu={true}></HeaderPage>
                 </HStack>
                 <Stack
@@ -95,7 +114,12 @@ const ChangePasswordScreen = () => {
                         // rules={}
                     ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
-                        <Ionicons name={hidePassword1 ? "eye" : "eye-off"} style={styles.icon} color="#3f60af" onPress={() => setHidePassword1(!hidePassword1)} />
+                        <Ionicons
+                            name={hidePassword1 ? "eye" : "eye-off"}
+                            style={styles.icon}
+                            color="#3f60af"
+                            onPress={() => setHidePassword1(!hidePassword1)}
+                        />
                     </TouchableOpacity>
                 </HStack>
                 <HStack maxW="85%">
@@ -108,7 +132,12 @@ const ChangePasswordScreen = () => {
                         // rules={}
                     ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
-                        <Ionicons name={hidePassword2 ? "eye" : "eye-off"} style={styles.icon} color="#3f60af" onPress={() => setHidePassword2(!hidePassword2)} />
+                        <Ionicons
+                            name={hidePassword2 ? "eye" : "eye-off"}
+                            style={styles.icon}
+                            color="#3f60af"
+                            onPress={() => setHidePassword2(!hidePassword2)}
+                        />
                     </TouchableOpacity>
                 </HStack>
                 <HStack maxW="85%">
@@ -121,25 +150,62 @@ const ChangePasswordScreen = () => {
                         // rules={}
                     ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
-                        <Ionicons name={hidePassword3 ? "eye" : "eye-off"} style={styles.icon} color="#3f60af" onPress={() => setHidePassword3(!hidePassword3)} />
+                        <Ionicons
+                            name={hidePassword3 ? "eye" : "eye-off"}
+                            style={styles.icon}
+                            color="#3f60af"
+                            onPress={() => setHidePassword3(!hidePassword3)}
+                        />
                     </TouchableOpacity>
                 </HStack>
-                <Button
-                    startIcon={
-                        <SimpleLineIcons
-                            name="lock"
-                            style={styles.icon}
-                            color="white"
-                        />
-                    }
-                    style={styles.buttonConfirmPassword}
-                    onPress={handleSubmit(changePassword)}
-                >
-                    <Text style={styles.textConfirmPassword}>
-                        Confirmar Nueva Clave
-                    </Text>
-                </Button>
+                {loading ? (
+                    <Button
+                        isLoading
+                        startIcon={
+                            <SimpleLineIcons
+                                name="lock"
+                                style={styles.icon}
+                                color="white"
+                            />
+                        }
+                        style={styles.buttonConfirmPassword}
+                        isLoadingText={
+                            <Text style={styles.textConfirmPassword}>
+                                Cambiando Clave
+                            </Text>
+                        }
+                        spinnerPlacement="end"
+                    ></Button>
+                ) : (
+                    <Button
+                        startIcon={
+                            <SimpleLineIcons
+                                name="lock"
+                                style={styles.icon}
+                                color="white"
+                            />
+                        }
+                        style={styles.buttonConfirmPassword}
+                        onPress={handleSubmit(changePassword)}
+                    >
+                        <Text style={styles.textConfirmPassword}>
+                            Cambiar Clave
+                        </Text>
+                    </Button>
+                )}
             </Stack>
+            <AlertNotice
+                isOpen={isOpenAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+            ></AlertNotice>
+            <AlertError
+                isOpen={isOpenAlertError}
+                onClose={onCloseAlertError}
+                cancelRef={cancelRefAlertError}
+                message={messageAlertError}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };

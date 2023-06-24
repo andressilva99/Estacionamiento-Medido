@@ -16,19 +16,18 @@ import HeaderPage from "../components/HeaderPage";
 import { ScaledSheet } from "react-native-size-matters";
 import loggedUser from "../objects/user";
 import DeletePatentModule from "../components/DeletePatentModule";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const { height } = Dimensions.get("screen");
 
 const DeletePatentScreen = ({ navigation }) => {
-
     const [refresh, setRefresh] = useState(false);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
 
-    useEffect(() => {
-    }, [refresh]);
+    useEffect(() => {}, [refresh]);
 
     const refreshScreen = () => {
         setRefresh(!refresh);
@@ -44,10 +43,15 @@ const DeletePatentScreen = ({ navigation }) => {
                 alignItems="center"
                 safeAreaTop={true}
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>
+                    <MaterialCommunityIcons
+                        name="car-off"
+                        style={styles.icon}
+                        color="#515ba3"
+                    />
                     <Text style={styles.textProfile}>Eliminar patente</Text>
                 </Stack>
                 <ScrollView>
@@ -117,5 +121,8 @@ const styles = ScaledSheet.create({
     textButtonCancel: {
         fontSize: "17@ms",
         fontWeight: "bold",
+    },
+    icon: {
+        fontSize: "25@ms",
     },
 });

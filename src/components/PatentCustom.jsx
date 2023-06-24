@@ -23,6 +23,7 @@ import constants from "../constants/constants";
 import loggedUser from "../objects/user";
 import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
 import AlertNotice from "./Alerts/AlertNotice";
+import AlertError from "./Alerts/AlertError";
 import { saveUserInformation } from "../functions/saveUserInformation";
 
 const PatentCustom = ({
@@ -56,6 +57,7 @@ const PatentCustom = ({
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
     const config = {
         headers: {
@@ -102,14 +104,15 @@ const PatentCustom = ({
             }
             )
                 .then((response) => {
-                    setMessageAlertNotice(response.data.mensaje);
+                    setMessageAlertNotice("Estacionameinto Activado");
                     setIsOpenAlertNotice(true);
                     setButtonStart(false);
                     setButtonStop(true);
                     loggedUser.user.vehicles[position].parked = buttonStart;
                 })
                 .catch((error) => {
-                    alert(error.response.data.mensaje);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
                 });
         } else {
             await constants.AXIOS_INST.put(
@@ -118,14 +121,15 @@ const PatentCustom = ({
                 config
             )
                 .then((response) => {
-                    setMessageAlertNotice(response.data.mensaje);
+                    setMessageAlertNotice("Estacionamiento Desactivado");
                     setIsOpenAlertNotice(true);
                     setButtonStart(true);
                     setButtonStop(false);
                     loggedUser.user.vehicles[position].parked = buttonStart;
                 })
                 .catch((error) => {
-                    alert(error.response.data.mensaje);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
                 });
         }
         saveUserInformation();
@@ -218,7 +222,7 @@ const PatentCustom = ({
                     onClose={onCloseAlertNoticeFunction}
                     buttonColorAcept={{ backgroundColor: "green" }}
                     onPressAccept={() => Parking(idButtonStart)}
-                    message={`¿Está seguro de que quiere iniciar el estacionamiento para la patente ${patent}?`}
+                    message={`¿Está seguro que desea INICIAR el estacionamiento para la patente ${patent}?`}
                 ></AlertNoticeFunction>
             ) : (
                 <AlertNoticeFunction
@@ -226,7 +230,7 @@ const PatentCustom = ({
                     cancelRef={cancelRefAlertNoticeFunction}
                     onClose={onCloseAlertNoticeFunction}
                     onPressAccept={() => Parking(idButtonStop)}
-                    message={`¿Está seguro de que quiere detener el estacionamiento para la patente ${patent}?`}
+                    message={`¿Está seguro que desea PARAR el estacionamiento para la patente ${patent}?`}
                 ></AlertNoticeFunction>
             )}
             <AlertNotice
@@ -235,6 +239,11 @@ const PatentCustom = ({
                 onClose={onCloseAlertNotice}
                 message={messageAlertNotice}
             ></AlertNotice>
+            <AlertError
+            isOpen={isOpenAlertError}
+            cancelRef={cancelRefAlertError}
+            onClose={onCloseAlertError}
+            message={messageAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };

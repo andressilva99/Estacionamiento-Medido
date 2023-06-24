@@ -22,12 +22,19 @@ import { saveUserInformation } from "../functions/saveUserInformation";
 import { useRef } from "react";
 import AlertError from "../components/Alerts/AlertError";
 import { deleteUserData } from "../functions/deleteUserData";
+import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction"
 
 const { height } = Dimensions.get("screen");
 
 const WelcomeScreen = ({navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const { setCurrentData, setLogged } = route.params;
+
+    const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
+        useState(false);
+    const cancelRefAlertNoticeFunction = useRef(null);
+    const onCloseAlertNoticeFunction = () =>
+        setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
     const [isOpen, setIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
@@ -86,18 +93,17 @@ const WelcomeScreen = ({navigation, route }) => {
                     safeAreaTop={true}
                     alignItems="center"
                 >
-                    <Stack alignItems="center" flex={1}>
+                    <Stack alignItems="center" flex={0.5}>
                         <Spacer></Spacer>
                         <Text style={styles.text}>Bienvenido</Text>
                         <Text style={styles.text}>{loggedUser.user.lastName}, {loggedUser.user.firstName}</Text>
-                        {/* <Text style={styles.text}>Pulidori, Juanse</Text> */}
                         <Spacer></Spacer>
                     </Stack>
-                    <Stack flex={0.3} justifyContent={"center"}>
+                    <Stack flex={0.4}>
                         {loading ? (
                             <Button
                                 isLoading
-                                style={styles.button}
+                                style={styles.buttonLogIn}
                                 isLoadingText={
                                     <Text style={styles.buttonText}>
                                         Ingresando
@@ -110,20 +116,20 @@ const WelcomeScreen = ({navigation, route }) => {
                                 onPress={() => {
                                     updateUserData();
                                 }}
-                                style={styles.button}
+                                style={styles.buttonLogIn}
                             >
                                 <Text style={styles.buttonText}>Ingresar</Text>
                             </Button>
                         )}
                     </Stack>
-                    <Stack flex={0.3} justifyContent={"center"}>
-                        <Button style={styles.button} onPress={logOut}>
+                    <Stack flex={0.4} justifyContent="flex-end">
+                        <Button style={styles.buttonLogOut} onPress={() => setIsOpenAlertNoticeFunction(true)}>
                             <Text style={styles.buttonText}>
                                 Cambiar cuenta
                             </Text>
                         </Button>
                     </Stack>
-                    <Stack flex={1} justifyContent={"center"}>
+                    <Stack flex={0.7} style={styles.containerImage}>
                         <Image
                             source={constants.LOGO}
                             alt="logo"
@@ -139,6 +145,12 @@ const WelcomeScreen = ({navigation, route }) => {
                 onClose={onClose}
                 message={errorMessage}
             ></AlertError>
+            <AlertNoticeFunction
+            isOpen={isOpenAlertNoticeFunction}
+            cancelRef={cancelRefAlertNoticeFunction}
+            onClose={onCloseAlertNoticeFunction}
+            message={"¿Está seguro que desea Cambiar de Usuario?"}
+            onPressAccept={logOut}></AlertNoticeFunction>
         </NativeBaseProvider>
     );
 };
@@ -151,9 +163,15 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
         color: "#04467C",
     },
-    button: {
+    buttonLogIn: {
         borderRadius: "30@ms",
         backgroundColor: "#04467C",
+        minWidth: "50%",
+        height: "45@ms",
+    },
+    buttonLogOut: {
+        borderRadius: "30@ms",
+        backgroundColor: "#8c0606",
         minWidth: "50%",
         height: "45@ms",
     },
@@ -163,6 +181,7 @@ const styles = ScaledSheet.create({
         color: "white",
     },
     image: {
-        height: "100@ms",
+        marginTop: "40@ms",
+        height: "120@ms",
     },
 });

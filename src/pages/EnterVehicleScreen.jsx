@@ -21,7 +21,7 @@ import AlertError from "../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
 
-const EnterVehicleScreen = ({navigation, route}) => {
+const EnterVehicleScreen = ({ navigation, route }) => {
     const { refreshScreen } = route.params;
 
     const { control, handleSubmit, watch } = useForm();
@@ -40,13 +40,18 @@ const EnterVehicleScreen = ({navigation, route}) => {
 
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice); navigation.goBack();};
+    const onCloseAlertNotice = () => {
+        setIsOpenAlertNotice(!isOpenAlertNotice);
+        navigation.goBack();
+    };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
+
+    const [loading, setLoading] = useState(false);
 
     const config = {
         headers: {
@@ -107,7 +112,7 @@ const EnterVehicleScreen = ({navigation, route}) => {
             setListColor(colors);
             setEnableColor(true);
         } catch (error) {
-            console.error(error);
+            console.error(error.response.data.mensaje);
             setEnableColor(false);
         }
     };
@@ -121,6 +126,7 @@ const EnterVehicleScreen = ({navigation, route}) => {
     };
 
     const RegisterVehicle = async (data) => {
+        setLoading(true);
         const { patent } = data;
         const vehicleRegister = {
             vehiculo: {
@@ -143,10 +149,11 @@ const EnterVehicleScreen = ({navigation, route}) => {
                 saveVehicle(response.data.mensaje);
                 refreshScreen();
             })
-            .catch(() => {
-                setMessageAlertError("Error al registrar el vehículo");
+            .catch((error) => {
+                setMessageAlertError(error.response.data.mensaje);
                 setIsOpenAlertError(true);
             });
+        setLoading(false);
     };
 
     const saveVehicle = (vehicle) => {
@@ -160,7 +167,7 @@ const EnterVehicleScreen = ({navigation, route}) => {
                 parked: false,
             });
         });
-        console.log(loggedUser.user.vehicles)
+        console.log(loggedUser.user.vehicles);
         saveUserInformation();
     };
 
@@ -175,7 +182,7 @@ const EnterVehicleScreen = ({navigation, route}) => {
                     alignItems="center"
                     safeAreaTop={true}
                 >
-                    <HStack maxW="90%">
+                    <HStack>
                         <HeaderPage dissableButtonMenu={true}></HeaderPage>
                     </HStack>
                     <Stack flexDirection="row" style={styles.containerProfile}>
@@ -190,6 +197,9 @@ const EnterVehicleScreen = ({navigation, route}) => {
                             control={control}
                             autoCapitalize="characters"
                             placeholder="Patente"
+                            rules={{
+                                required: " Patente Requerida",
+                            }}
                         ></InputControlled>
                     </HStack>
                     <HStack zIndex={999} marginX="5%" maxW="85%">
@@ -206,7 +216,6 @@ const EnterVehicleScreen = ({navigation, route}) => {
                                 setEnableModel(false);
                                 setEnableColor(false);
                             }}
-                            
                         ></EnterVehicleComboBox>
                     </HStack>
                     <HStack zIndex={998} marginX="5%" maxW="85%">
@@ -238,25 +247,42 @@ const EnterVehicleScreen = ({navigation, route}) => {
                             *Nota: Escriba y seleccione
                         </Text>
                     </Stack>
-                    <Button
-                        onPress={handleSubmit(RegisterVehicle)}
-                        style={styles.button}
-                    >
-                        <Text style={styles.textButton}>Ingresar vehículo</Text>
-                    </Button>
+                    {loading ? (
+                        <Button
+                            isLoading
+                            isLoadingText={
+                                <Text style={styles.textButton}>
+                                    Ingresando vehículo
+                                </Text>
+                            }
+                            style={styles.button}
+                            spinnerPlacement="end"
+                        ></Button>
+                    ) : (
+                        <Button
+                            onPress={handleSubmit(RegisterVehicle)}
+                            style={styles.button}
+                        >
+                            <Text style={styles.textButton}>
+                                Ingresar vehículo
+                            </Text>
+                        </Button>
+                    )}
                 </Stack>
                 {/* </ScrollView> */}
             </KeyboardAvoidingView>
             <AlertNotice
-            isOpen={isOpenAlertNotice}
-            onClose={onCloseAlertNotice}
-            message={messageAlertNotice}
-            cancelRef={cancelRefAlertNotice}></AlertNotice>
+                isOpen={isOpenAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+            ></AlertNotice>
             <AlertError
-            isOpen={isOpenAlertError}
-            onClose={onCloseAlertError}
-            message={messageAlertError}
-            cancelRef={cancelRefAlertError}></AlertError>
+                isOpen={isOpenAlertError}
+                onClose={onCloseAlertError}
+                message={messageAlertError}
+                cancelRef={cancelRefAlertError}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -292,5 +318,5 @@ const styles = ScaledSheet.create({
     },
     textNote: {
         color: "#414241",
-    }
+    },
 });

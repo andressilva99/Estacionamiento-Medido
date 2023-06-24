@@ -35,36 +35,14 @@ const ParkingHistoryScreen = ({ navigation }) => {
 
     const [listParking, setListParking] = useState([]);
 
-    // const response = {
-    //     data: {
-    //         mensaje: [
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-    //             { fecha: "2023-11-25T00:00:00.000Z", horaInicio: "10:55:00.000Z", horaFin: "11:55:00.000Z", costo: "500", saldo: "100" },
-
-    //         ],
-    //     },
-    // };
+    const [loaging, setLoaging] = useState(false);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
 
     const SearchHistory = async () => {
+        setLoaging(true);
         const yearInitial = dateInitial.getFullYear();
         const monthInitial = String(dateInitial.getMonth() + 1).padStart(
             2,
@@ -77,68 +55,73 @@ const ParkingHistoryScreen = ({ navigation }) => {
         const monthEnd = String(dateEnd.getMonth() + 1).padStart(2, "0");
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
-        
-        const datos = {
-            
-                estacionamiento: {
-                    fechaInicio: formattedDateInitial,
-                    fechaFin: formattedDateEnd,
-                    idVehiculo: patentSelected,
-                    idUsuario: loggedUser.user.idUser,
-                },
-        }
 
-        console.log(datos)
-
-        await constants
-            .AXIOS_INST({
-                method: "get",
-                url: "historial/estacionamiento",
-                headers: { Authorization: `bearer ${loggedUser.user.token}` },
-                data: {
-                    estacionamiento: {
-                        fechaInicio: formattedDateInitial,
-                        fechaFin: formattedDateEnd,
-                        idVehiculo: patentSelected,
-                        idUsuario: loggedUser.user.idUser,
+        if (patentSelected != undefined) {
+            await constants
+                .AXIOS_INST({
+                    method: "post",
+                    url: "historial/estacionamiento",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
                     },
-                },
-            })
-            .then((resp) => {
-                completeListParking(resp);
-                setConsult(!consult);
-            })
-            .catch((error) => {
-                setIsOpenAlertError(true);
-                setMessageAlertError(error.response.data.mensaje);
-            });
+                    data: {
+                        estacionamiento: {
+                            fechaInicio: formattedDateInitial,
+                            fechaFin: formattedDateEnd,
+                            idVehiculo: patentSelected,
+                            idUsuario: loggedUser.user.idUser,
+                        },
+                    },
+                })
+                .then((resp) => {
+                    completeListParking(resp);
+                })
+                .catch((error) => {
+                    setMessageAlertError(error);
+                    setIsOpenAlertError(true);
+                });
+        } else {
+            setMessageAlertError("Patente no seleccionada");
+            setIsOpenAlertError(true);
+        }
+        setLoaging(false);
     };
 
     const completeListParking = (response) => {
         const list = [];
         response.data.mensaje.forEach((parking) => {
-            const dateString = parking.fecha;
-            const dateObject = new Date(dateString);
-            const day = dateObject.getDate();
-            const month = dateObject.getMonth() + 1;
-            const year = dateObject.getFullYear();
-            const formattedDate = `${day}-${month}-${year}`;
+            if (parking != null) {
+                const dateString = parking.fecha;
+                const dateObject = new Date(dateString);
+                const day = dateObject.getDate();
+                const month = dateObject.getMonth() + 1;
+                const year = dateObject.getFullYear();
+                const formattedDate = `${day}-${month}-${year}`;
 
-            const hourInitString = parking.horaInicio;
-            const formattedTimeInit = hourInitString.slice(0, 5);
+                const hourInitString = parking.horaInicio;
+                const formattedTimeInit = hourInitString.slice(0, 5);
 
-            const hourFinishString = parking.horaFin;
-            const formattedTimeFinish = hourFinishString.slice(0, 5);
+                const hourFinishString = parking.horaFin;
+                const formattedTimeFinish = hourFinishString.slice(0, 5);
 
-            list.push({
-                date: formattedDate,
-                timeInit: formattedTimeInit,
-                timeFinish: formattedTimeFinish,
-                cost: parking.costo,
-                amount: parking.saldo,
-            });
+                list.push({
+                    date: formattedDate,
+                    timeInit: formattedTimeInit,
+                    timeFinish: formattedTimeFinish,
+                    cost: parking.costo,
+                    amount: parking.saldo,
+                });
+            }
         });
-        setListParking(list);
+        if (list[0] != undefined) {
+            setListParking(list);
+            setConsult(!consult);
+        } else {
+            setIsOpenAlertError(true);
+            setMessageAlertError(
+                "No se encontraron Estacionamientos"
+            );
+        }
     };
 
     return (
@@ -150,7 +133,7 @@ const ParkingHistoryScreen = ({ navigation }) => {
                 style={styles.backgroundContainer}
                 space="sm"
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
@@ -295,7 +278,7 @@ const ParkingHistoryScreen = ({ navigation }) => {
                         </HStack>
                         <HStack style={styles.containerVehicle}>
                             <FontAwesome5 name="car" style={styles.icon} />
-                            <Text style={styles.text}>Móvil</Text>
+                            <Text style={styles.text}>Vehículo</Text>
                             <Spacer></Spacer>
                             <FontAwesome
                                 name="chevron-down"
@@ -319,17 +302,34 @@ const ParkingHistoryScreen = ({ navigation }) => {
                                 ))}
                             </Select>
                         </Stack>
-                        <Button style={styles.button} onPress={SearchHistory}>
-                            <Text style={styles.textButton}>Consultar</Text>
-                        </Button>
+                        {loaging ? (
+                            <Button
+                                isLoading
+                                style={styles.button}
+                                isLoadingText={
+                                    <Text style={styles.textButton}>
+                                        Consultando
+                                    </Text>
+                                }
+                                spinnerPlacement="end"
+                            ></Button>
+                        ) : (
+                            <Button
+                                style={styles.button}
+                                onPress={SearchHistory}
+                            >
+                                <Text style={styles.textButton}>Consultar</Text>
+                            </Button>
+                        )}
                     </>
                 )}
             </VStack>
             <AlertError
-            message={messageAlertError}
-            onClose={onCloseAlertError}
-            cancelRef={cancelRefAlertError}
-            isOpen={isOpenAlertError}></AlertError>
+                message={messageAlertError}
+                onClose={onCloseAlertError}
+                cancelRef={cancelRefAlertError}
+                isOpen={isOpenAlertError}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };

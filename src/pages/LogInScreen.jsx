@@ -66,13 +66,13 @@ const LogInScreen = ({ navigation, route }) => {
                 const data = response.data.mensaje;
                 loggedUser.user.password = password;
                 FillUserData(data);
+                const logged = true;
+                AsyncStorage.setItem("loggedUser", JSON.stringify(logged));
             })
             .catch((error) => {
                 setErrorMessage("Usuario y/o contraseña incorrectos");
                 setIsOpen(true);
             });
-        const logged = true;
-        AsyncStorage.setItem("loggedUser", JSON.stringify(logged));
         setLoading(false);
     };
 

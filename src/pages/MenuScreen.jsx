@@ -148,7 +148,7 @@ const MenuScreen = ({ navigation, route }) => {
                         </HStack> */}
                         <HStack style={styles.containerPressable}>
                             <PressableCustom
-                                text={"A cerca de"}
+                                text={"Acerca de"}
                                 icon={constants.INFORMATION_ICON}
                                 styleTouchable={{ backgroundColor: "#009FE3" }}
                                 onPress={handleButtonPress}

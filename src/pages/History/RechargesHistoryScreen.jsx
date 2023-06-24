@@ -15,7 +15,7 @@ import InputDate from "../../components/InputDate";
 import { ScaledSheet } from "react-native-size-matters";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
@@ -35,68 +35,14 @@ const RechargesHistoryScreen = ({ navigation }) => {
 
     const [listRecharges, setListRecharges] = useState([]);
 
-    // const response = {
-    //     data: {
-    //         mensaje: [
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 importe: "500",
-    //                 saldo: "900",
-    //             },
-    //         ],
-    //     },
-    // };
+    const [loaging, setLoaging] = useState(false);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
 
     const SearchHistory = async () => {
+        setLoaging(true);
         const yearInitial = dateInitial.getFullYear();
         const monthInitial = String(dateInitial.getMonth() + 1).padStart(
             2,
@@ -110,28 +56,29 @@ const RechargesHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        await constants.AXIOS_INST({
-            method: "get",
-            url: "historial/recargas",
-            headers: {
-                Authorization: `bearer ${loggedUser.user.token}`,
-            },
-            data: {
-                recarga: {
-                    fechaInicio: formattedDateInitial,
-                    fechaFin: formattedDateEnd,
-                    idUsuario: loggedUser.user.idUser,
+        await constants
+            .AXIOS_INST({
+                method: "post",
+                url: "historial/recargas",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
                 },
-            }
-        })
+                data: {
+                    recarga: {
+                        fechaInicio: formattedDateInitial,
+                        fechaFin: formattedDateEnd,
+                        idUsuario: loggedUser.user.idUser,
+                    },
+                },
+            })
             .then((resp) => {
                 completeListRecharges(resp);
-                setConsult(!consult);
             })
             .catch((error) => {
                 setIsOpenAlertError(true);
                 setMessageAlertError(error.response.data.mensaje);
             });
+        setLoaging(false);
     };
 
     const completeListRecharges = (response) => {
@@ -149,7 +96,13 @@ const RechargesHistoryScreen = ({ navigation }) => {
                 amount: recharge.saldo,
             });
         });
-        setListRecharges(list);
+        if (list[0] != undefined) {
+            setListRecharges(list);
+            setConsult(!consult);
+        } else {
+            setIsOpenAlertError(true);
+            setMessageAlertError("No se encontraron Recargas");
+        }
     };
 
     return (
@@ -161,12 +114,15 @@ const RechargesHistoryScreen = ({ navigation }) => {
                 style={styles.backgroundContainer}
                 space="sm"
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
-                    <MaterialCommunityIcons name="hand-coin-outline" style={styles.rechargeIcon} />
-                    <Text style={styles.textProfile}>Regargas</Text>
+                    <MaterialCommunityIcons
+                        name="hand-coin-outline"
+                        style={styles.rechargeIcon}
+                    />
+                    <Text style={styles.textProfile}>Recargas</Text>
                 </HStack>
                 {consult ? (
                     <>
@@ -280,17 +236,34 @@ const RechargesHistoryScreen = ({ navigation }) => {
                                 setDateSent={setDateEnd}
                             ></InputDate>
                         </HStack>
-                        <Button style={styles.button} onPress={SearchHistory}>
-                            <Text style={styles.textButton}>Consultar</Text>
-                        </Button>
+                        {loaging ? (
+                            <Button
+                                isLoading
+                                style={styles.button}
+                                isLoadingText={
+                                    <Text style={styles.textButton}>
+                                        Consultando
+                                    </Text>
+                                }
+                                spinnerPlacement="end"
+                            ></Button>
+                        ) : (
+                            <Button
+                                style={styles.button}
+                                onPress={SearchHistory}
+                            >
+                                <Text style={styles.textButton}>Consultar</Text>
+                            </Button>
+                        )}
                     </>
                 )}
             </VStack>
             <AlertError
-            onClose={onCloseAlertError}
-            message={messageAlertError}
-            isOpen={isOpenAlertError}
-            cancelRef={cancelRefAlertError}></AlertError>
+                onClose={onCloseAlertError}
+                message={messageAlertError}
+                isOpen={isOpenAlertError}
+                cancelRef={cancelRefAlertError}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };

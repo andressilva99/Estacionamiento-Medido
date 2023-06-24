@@ -122,7 +122,7 @@ const ProfileScreen = ({ navigation }) => {
                 alignItems="center"
                 safeAreaTop={true}
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>

@@ -18,7 +18,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import loggedUser from "../../objects/user";
 import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
-import { Octicons } from '@expo/vector-icons';
+import { Octicons } from "@expo/vector-icons";
 import AlertError from "../../components/Alerts/AlertError";
 
 const { height } = Dimensions.get("screen");
@@ -36,114 +36,14 @@ const MovementsHistoryScreen = ({ navigation }) => {
 
     const [listMovements, setListMovements] = useState([]);
 
-    // const response = {
-    //     data: {
-    //         mensaje: [
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //             {
-    //                 fecha: "2023-11-25T00:00:00.000Z",
-    //                 debito: "500",
-    //                 credito: "0",
-    //                 saldo: "150",
-    //             },
-    //         ],
-    //     },
-    // };
+    const [loaging, setLoaging] = useState(false);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
 
     const SearchHistory = async () => {
+        setLoaging(true);
         const yearInitial = dateInitial.getFullYear();
         const monthInitial = String(dateInitial.getMonth() + 1).padStart(
             2,
@@ -157,49 +57,62 @@ const MovementsHistoryScreen = ({ navigation }) => {
         const dayEnd = String(dateEnd.getDate()).padStart(2, "0");
         const formattedDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
 
-        await constants
-            .AXIOS_INST({
-                method: "get",
-                url: "historial/movimientos",
-                headers: {
-                    Authorization: `bearer ${loggedUser.user.token}`,
-                },
-                data: {
-                    historial: {
-                        fechaInicio: formattedDateInitial,
-                        fechaFin: formattedDateEnd,
-                        idVehiculo: patentSelected,
-                        idUsuario: loggedUser.user.idUser,
+        if (patentSelected != undefined) {
+            await constants
+                .AXIOS_INST({
+                    method: "post",
+                    url: "historial/movimientos",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
                     },
-                },
-            })
-            .then((resp) => {
-                completeListMovements(resp);
-                setConsult(!consult);
-            })
-            .catch((error) => {
-                setIsOpenAlertError(true);
-                setMessageAlertError(error.response.data.mensaje);
-            });
+                    data: {
+                        historial: {
+                            fechaInicio: formattedDateInitial,
+                            fechaFin: formattedDateEnd,
+                            idVehiculo: patentSelected,
+                            idUsuario: loggedUser.user.idUser,
+                        },
+                    },
+                })
+                .then((resp) => {
+                    completeListMovements(resp);
+                })
+                .catch((error) => {
+                    setIsOpenAlertError(true);
+                    setMessageAlertError(error.response.data.mensaje);
+                });
+        } else {
+            setMessageAlertError("Patente no seleccionada");
+            setIsOpenAlertError(true);
+        }
+        setLoaging(false);
     };
 
     const completeListMovements = (response) => {
         const list = [];
         response.data.mensaje.forEach((movement) => {
-            const dateString = movement.fecha;
-            const dateObject = new Date(dateString);
-            const day = dateObject.getDate();
-            const month = dateObject.getMonth() + 1;
-            const year = dateObject.getFullYear();
-            const formattedDate = `${day}-${month}-${year}`;
-            list.push({
-                date: formattedDate,
-                debit: movement.debito,
-                credit: movement.credito,
-                amount: movement.saldo,
-            });
+            if (movement != null) {
+                const dateString = movement.fecha;
+                const dateObject = new Date(dateString);
+                const day = dateObject.getDate();
+                const month = dateObject.getMonth() + 1;
+                const year = dateObject.getFullYear();
+                const formattedDate = `${day}-${month}-${year}`;
+                list.push({
+                    date: formattedDate,
+                    debit: movement.debito,
+                    credit: movement.credito,
+                    amount: movement.saldo,
+                });
+            }
         });
-        setListMovements(list);
+        if (list[0] != undefined) {
+            setListMovements(list);
+            setConsult(!consult);
+        } else {
+            setIsOpenAlertError(true);
+            setMessageAlertError("No se encontraron Movimientos");
+        }
     };
 
     return (
@@ -211,7 +124,7 @@ const MovementsHistoryScreen = ({ navigation }) => {
                 style={styles.backgroundContainer}
                 space="sm"
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
@@ -353,7 +266,7 @@ const MovementsHistoryScreen = ({ navigation }) => {
                         </HStack>
                         <HStack style={styles.containerVehicle}>
                             <FontAwesome5 name="car" style={styles.icon} />
-                            <Text style={styles.text}>Móvil</Text>
+                            <Text style={styles.text}>Vehículo</Text>
                             <Spacer></Spacer>
                             <FontAwesome
                                 name="chevron-down"
@@ -377,17 +290,34 @@ const MovementsHistoryScreen = ({ navigation }) => {
                                 ))}
                             </Select>
                         </Stack>
-                        <Button style={styles.button} onPress={SearchHistory}>
-                            <Text style={styles.textButton}>Consultar</Text>
-                        </Button>
+                        {loaging ? (
+                            <Button
+                                isLoading
+                                style={styles.button}
+                                isLoadingText={
+                                    <Text style={styles.textButton}>
+                                        Consultando
+                                    </Text>
+                                }
+                                spinnerPlacement="end"
+                            ></Button>
+                        ) : (
+                            <Button
+                                style={styles.button}
+                                onPress={SearchHistory}
+                            >
+                                <Text style={styles.textButton}>Consultar</Text>
+                            </Button>
+                        )}
                     </>
                 )}
             </VStack>
             <AlertError
-            isOpen={isOpenAlertError}
-            onClose={onCloseAlertError}
-            message={messageAlertError}
-            cancelRef={cancelRefAlertError}></AlertError>
+                isOpen={isOpenAlertError}
+                onClose={onCloseAlertError}
+                message={messageAlertError}
+                cancelRef={cancelRefAlertError}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };

@@ -25,7 +25,7 @@ const InformationScreen = ({navigation}) => {
                 style={styles.background}
                 safeAreaTop={true}
             >
-                <HStack maxW="90%">
+                <HStack>
                     <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
                 </HStack>
                 <HStack justifyItems="flex-start" minW="85%">
@@ -33,25 +33,27 @@ const InformationScreen = ({navigation}) => {
                         name="information-circle-outline"
                         style={styles.iconInformation}
                     />
-                    <Text style={styles.textBold}>A cerca de</Text>
+                    <Text style={styles.textBold}>Acerca de</Text>
                 </HStack>
                 <VStack space="sm">
                     <Stack>
-                        <Text style={styles.textBold}>Oficina</Text>
-                        <Text style={styles.textNormal}>Iturraspe 2345</Text>
+                        <Text style={styles.textBold}>Oficina SEM</Text>
+                        <Text style={styles.textNormal}>9 de Julio 1880</Text>
                     </Stack>
                     <Stack>
                         <Text style={styles.textBold}>Teléfono</Text>
-                        <Text style={styles.textNormal}>3564 / 435890</Text>
+                        <Text style={styles.textNormal}>3564-545134</Text>
                     </Stack>
                     <Stack>
                         <Text style={styles.textBold}>Correo</Text>
-                        <Text style={styles.textNormal}>estacionamientomedido@em.com</Text>
+                        <Text style={styles.textNormal}>estacionamientosfco@gmail.com</Text>
                     </Stack>
                     <Stack>
                         <Text style={styles.textBold}>Horario</Text>
                         <Text style={styles.textNormal}>Lunes a Viernes</Text>
-                        <Text style={styles.textNormal}>de 7.30 a 12.30 hs.</Text>
+                        <Text style={styles.textNormal}>7:30 a 13:00 hs. - 14:00 a 19:30 hs.</Text>
+                        <Text style={styles.textNormal}>Sábado</Text>
+                        <Text style={styles.textNormal}>8:30 a 12:30 hs.</Text>
                     </Stack>
                 </VStack>
             </Stack>

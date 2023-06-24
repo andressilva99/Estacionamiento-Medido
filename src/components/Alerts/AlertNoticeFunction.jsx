@@ -66,7 +66,7 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
     },
     textBody: {
-        fontSize: "15@ms",
+        fontSize: "17@ms",
     },
     textHeader: {
         fontSize: "20@ms",
