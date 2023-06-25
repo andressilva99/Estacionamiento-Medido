@@ -46,8 +46,6 @@ const LogInScreen = ({ navigation, route }) => {
     const LogIn = async (data) => {
         const { user, password } = data;
 
-        console.log(password);
-
         if (loading) {
             return;
         }
@@ -70,7 +68,7 @@ const LogInScreen = ({ navigation, route }) => {
                 AsyncStorage.setItem("loggedUser", JSON.stringify(logged));
             })
             .catch((error) => {
-                setErrorMessage("Usuario y/o contraseña incorrectos");
+                setErrorMessage("Correo y/o contraseña incorrectos");
                 setIsOpen(true);
             });
         setLoading(false);
@@ -79,6 +77,10 @@ const LogInScreen = ({ navigation, route }) => {
     const Register = () => {
         navigation.navigate("Register1");
     };
+
+    const handlePasswordRecovery = () => {
+        navigation.navigate("PasswordRecovery");
+    }
 
     const FillUserData = (data) => {
         const token = data.token;
@@ -90,8 +92,10 @@ const LogInScreen = ({ navigation, route }) => {
         loggedUser.user.firstName = userData.nombrePersona;
         loggedUser.user.lastName = userData.apellido;
         loggedUser.user.numberPhone = userData.numeroTelefono;
-        loggedUser.user.phoneCompany.name = userData.compania_telefono;
+        loggedUser.user.phoneCompany.idPhoneCompany = userData.compania_telefono.idCompaniaTelefono
+        loggedUser.user.phoneCompany.name = userData.compania_telefono.nombre;
         loggedUser.user.razonSocial = userData.razonSocial;
+        loggedUser.user.typeDocument.idTypeDocument = userData.tipo_documento.idTipoDocumento;
         loggedUser.user.typeDocument.name = userData.tipo_documento.nombre;
         loggedUser.user.userName = userData.nombreUsuario;
         loggedUser.user.token = token;
@@ -189,7 +193,7 @@ const LogInScreen = ({ navigation, route }) => {
                             </TouchableOpacity>
                         </HStack>
                     </LinearGradient>
-                    <Button variant="link">¿Olvidó su contraseña?</Button>
+                    <Button variant="link" onPress={handlePasswordRecovery}>¿Olvidó su contraseña?</Button>
                     {loading ? (
                         <Button
                             isLoading

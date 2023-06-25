@@ -20,7 +20,7 @@ import AlertNotice from "./Alerts/AlertNotice"
 const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice); navigation.goBack();};
+    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice);  refreshScreen();};
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
@@ -55,7 +55,7 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
             })
                 .then((response) => {
                     deleteVehicle();
-                    setMessageAlertNotice(response.data.mensaje);
+                    setMessageAlertNotice("Vehículo Eliminado");
                     setIsOpenAlertNotice(true);
                 })
                 .catch((error) => {
@@ -74,7 +74,6 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
         loggedUser.user.vehicles = [];
         loggedUser.user.vehicles = list;
         saveUserInformation();
-        refreshScreen();
     }
 
     return (

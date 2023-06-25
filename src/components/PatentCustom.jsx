@@ -34,6 +34,7 @@ const PatentCustom = ({
     idUser,
     parked,
     position,
+    setRefresh,
 }) => {
     const [buttonStart, setButtonStart] = useState(true);
     const [buttonStop, setButtonStop] = useState(false);
@@ -51,7 +52,7 @@ const PatentCustom = ({
 
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
+    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice); saveUserInformation(); setRefresh(true);}
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
@@ -65,6 +66,19 @@ const PatentCustom = ({
         },
     };
 
+    const updateBalance = async () => {
+        await constants.AXIOS_INST.get(
+            `usuario/obtener/${loggedUser.user.idUser}`,
+            config
+        )
+            .then((response) => {
+                loggedUser.user.balance = response.data.mensaje.saldo;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
     const Parking = async (idButton) => {
         onCloseAlertNoticeFunction();
         const parking = {
@@ -74,35 +88,20 @@ const PatentCustom = ({
             },
         };
         if (idButton == "start") {
-            // await constants.AXIOS_INST.post(
-            //     "estacionamiento/activar",
-            //     parking,
-            //     config
-            // )
-            //     .then((response) => {
-            //         setMessageAlertNotice(response.data.mensaje);
-            //         setIsOpenAlertNotice(true);
-            //         setButtonStart(false);
-            //         setButtonStop(true);
-            //         loggedUser.user.vehicles[position].parked = buttonStart;
-            //     })
-            //     .catch((error) => {
-            //         alert(error.response.data.mensaje);
-            //     });
-            await constants.AXIOS_INST({
-                method: "post",
-                url: "estacionamiento/activar",
-                headers: {
-                    Authorization: `bearer ${loggedUser.user.token}`,
-                },
-                data:{
-                    estacionamiento: {
-                        idVehiculo: idVehicle,
-                        idUsuario: idUser,
+            await constants
+                .AXIOS_INST({
+                    method: "post",
+                    url: "estacionamiento/activar",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
                     },
-                }
-            }
-            )
+                    data: {
+                        estacionamiento: {
+                            idVehiculo: idVehicle,
+                            idUsuario: idUser,
+                        },
+                    },
+                })
                 .then((response) => {
                     setMessageAlertNotice("Estacionameinto Activado");
                     setIsOpenAlertNotice(true);
@@ -126,13 +125,13 @@ const PatentCustom = ({
                     setButtonStart(true);
                     setButtonStop(false);
                     loggedUser.user.vehicles[position].parked = buttonStart;
+                    updateBalance();
                 })
                 .catch((error) => {
                     setMessageAlertError(error.response.data.mensaje);
                     setIsOpenAlertError(true);
                 });
         }
-        saveUserInformation();
     };
 
     return (
@@ -152,8 +151,8 @@ const PatentCustom = ({
                     </Stack>
                 </Flex>
                 <HStack style={styles.containerParking} marginTop={1}>
-                    <FontAwesome name="volume-up" size={24} color="black" />
-                    <Spacer></Spacer>
+                    {/* <FontAwesome name="volume-up" size={24} color="black" />
+                    <Spacer></Spacer> */}
                     <TouchableOpacity
                         style={
                             buttonStart
@@ -240,10 +239,11 @@ const PatentCustom = ({
                 message={messageAlertNotice}
             ></AlertNotice>
             <AlertError
-            isOpen={isOpenAlertError}
-            cancelRef={cancelRefAlertError}
-            onClose={onCloseAlertError}
-            message={messageAlertError}></AlertError>
+                isOpen={isOpenAlertError}
+                cancelRef={cancelRefAlertError}
+                onClose={onCloseAlertError}
+                message={messageAlertError}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };
@@ -252,24 +252,24 @@ export default PatentCustom;
 
 const styles = ScaledSheet.create({
     button: {
-        borderTopStartRadius: 30,
-        borderBottomStartRadius: 30,
+        borderTopStartRadius: "30@ms",
+        borderBottomStartRadius: "30@ms",
     },
     textPatent: {
-        fontSize: 30,
+        fontSize: "30@ms",
         fontWeight: "bold",
     },
     containerParking: {
-        minHeight: 50,
+        minHeight: "50@ms",
         minWidth: "85%",
-        borderRadius: 30,
-        paddingHorizontal: 20,
+        borderRadius: "30@ms",
+        paddingHorizontal: "20@ms",
         backgroundColor: "#dbdcde",
         alignItems: "center",
     },
     playButtonActivate: {
         height: "60%",
-        borderRadius: 100,
+        borderRadius: "100@ms",
         flexDirection: "row",
         backgroundColor: "#01a254",
         alignItems: "center",
@@ -277,7 +277,7 @@ const styles = ScaledSheet.create({
     },
     stopButtonActivate: {
         height: "60%",
-        borderRadius: 100,
+        borderRadius: "100@ms",
         flexDirection: "row",
         backgroundColor: "#e81524",
         alignItems: "center",
@@ -285,32 +285,32 @@ const styles = ScaledSheet.create({
     },
     buttonDesactivate: {
         height: "60%",
-        borderRadius: 100,
+        borderRadius: "100@ms",
         flexDirection: "row",
         backgroundColor: "#f4f3f1",
         alignItems: "center",
         minWidth: "20%",
     },
     textActivateButton: {
-        fontSize: 17,
+        fontSize: "17@ms",
         fontWeight: "bold",
         color: "white",
-        marginLeft: 16,
-        marginRight: 20,
+        marginLeft: "16@ms",
+        marginRight: "20@ms",
     },
     textDesactivateButton: {
-        fontSize: 17,
+        fontSize: "17@ms",
         fontWeight: "bold",
         color: "#473a4b",
-        marginLeft: 16,
-        marginRight: 20,
+        marginLeft: "16@ms",
+        marginRight: "20@ms",
     },
     iconActivate: {
         color: "white",
-        fontSize: 30,
+        fontSize: "30@ms",
     },
     iconDesactivate: {
         color: "#414141",
-        fontSize: 30,
+        fontSize: "30@ms",
     },
 });

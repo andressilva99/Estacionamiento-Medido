@@ -8,9 +8,11 @@ const user = {
     email: "",
     numberPhone: "",
     phoneCompany: {
+        idPhoneCompany: undefined,
         name: "",
     },
     typeDocument: {
+        idTypeDocument: undefined,
         name: "",
     },
     vehicles: [],

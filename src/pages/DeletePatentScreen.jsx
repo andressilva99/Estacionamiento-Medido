@@ -20,9 +20,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const { height } = Dimensions.get("screen");
 
-const DeletePatentScreen = ({ navigation }) => {
+const DeletePatentScreen = ({ navigation, route }) => {
     const [refresh, setRefresh] = useState(false);
 
+    const { refreshParkingScreen } = route.params;
+    
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
@@ -61,7 +63,7 @@ const DeletePatentScreen = ({ navigation }) => {
                                   patent={vehicle.patent}
                                   id={vehicle.idVehicle}
                                   index={index}
-                                  refreshScreen={refreshScreen}
+                                  refreshScreen={() => {refreshScreen(); refreshParkingScreen();}}
                               ></DeletePatentModule>
                           ))
                         : null}

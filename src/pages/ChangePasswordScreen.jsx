@@ -19,11 +19,14 @@ import constants from "../constants/constants";
 import { Ionicons } from "@expo/vector-icons";
 import AlertError from "../components/Alerts/AlertError";
 import AlertNotice from "../components/Alerts/AlertNotice";
+import { deleteUserData } from "../functions/deleteUserData";
 
 const { height } = Dimensions.get("screen");
 
-const ChangePasswordScreen = ({ navigation }) => {
+const ChangePasswordScreen = ({ navigation, route }) => {
     const { control, handleSubmit, watch } = useForm();
+
+    const { setLogged } = route.params;
 
     const [hidePassword1, setHidePassword1] = useState(true);
     const [hidePassword2, setHidePassword2] = useState(true);
@@ -38,7 +41,7 @@ const ChangePasswordScreen = ({ navigation }) => {
     const cancelRefAlertNotice = useRef(null);
     const onCloseAlertNotice = () => {
         setIsOpenAlertNotice(!isOpenAlertNotice);
-        navigation.goBack();
+        logOut();
     };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
@@ -79,6 +82,13 @@ const ChangePasswordScreen = ({ navigation }) => {
 
         setLoading(false);
     };
+
+    const logOut = () => {
+        deleteUserData();
+        setLogged(false);
+    };
+
+    const passRepeat = watch("newPassword")
 
     return (
         <NativeBaseProvider>
@@ -129,7 +139,9 @@ const ChangePasswordScreen = ({ navigation }) => {
                         control={control}
                         width="85%"
                         secureTextEntry={hidePassword2}
-                        // rules={}
+                        rules={{
+                            validate: (value) => value === passRepeat || " La contraseña ingresada no es la misma"
+                        }}
                     ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
                         <Ionicons
@@ -158,6 +170,12 @@ const ChangePasswordScreen = ({ navigation }) => {
                         />
                     </TouchableOpacity>
                 </HStack>
+                <Stack>
+                    <Text>
+                        *Nota: al cambiar la contraseña se cerrará sesión
+                        automaticamente
+                    </Text>
+                </Stack>
                 {loading ? (
                     <Button
                         isLoading

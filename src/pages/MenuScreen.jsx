@@ -1,5 +1,5 @@
 import { Dimensions, ImageBackground, StatusBar } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     HStack,
     NativeBaseProvider,
@@ -12,22 +12,33 @@ import PressableCustom from "../components/PressableCustom";
 import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
 import { deleteUserData } from "../functions/deleteUserData";
+import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
 
 const { height } = Dimensions.get("screen");
 
 const MenuScreen = ({ navigation, route }) => {
     const [subMenu, setSubMenu] = useState(false);
-    const { setLogged } = route.params;
+    const { setLogged, refreshParkingScreen } = route.params;
+
+    const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
+        useState(false);
+    const cancelRefAlertNoticeFunction = useRef(null);
+    const onCloseAlertNoticeFunction = () =>
+        setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
     const handleButtonPress = (id) => {
         if (id !== "logOut") {
-            navigation.navigate(id);
+            navigation.navigate(id, { refreshParkingScreen });
             setSubMenu(false);
         } else {
-            deleteUserData();
-            setLogged(false);
-            setSubMenu(false);
+            setIsOpenAlertNoticeFunction(true);
         }
+    };
+
+    const logOut = () => {
+        deleteUserData();
+        setLogged(false);
+        setSubMenu(false);
     };
 
     return (
@@ -184,6 +195,13 @@ const MenuScreen = ({ navigation, route }) => {
                     </VStack>
                 </ScrollView>
             </ImageBackground>
+            <AlertNoticeFunction
+                isOpen={isOpenAlertNoticeFunction}
+                cancelRef={cancelRefAlertNoticeFunction}
+                onClose={onCloseAlertNoticeFunction}
+                message={"¿Está seguro que desea Cerrar Sesión?"}
+                onPressAccept={logOut}
+            ></AlertNoticeFunction>
         </NativeBaseProvider>
     );
 };

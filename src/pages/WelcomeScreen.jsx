@@ -57,6 +57,7 @@ const WelcomeScreen = ({navigation, route }) => {
         await constants.AXIOS_INST.post("usuario/logIn", logIn)
             .then((response) => {
                 const data = response.data.mensaje;
+                console.log(data);
                 FillUserData(data);
                 navigation.navigate("Parking")
             })
@@ -71,6 +72,8 @@ const WelcomeScreen = ({navigation, route }) => {
         const token = data.token;
 
         loggedUser.user.token = token;
+        loggedUser.user.typeDocument.name = data.usuario.tipo_documento.nombre;
+        loggedUser.user.phoneCompany.name = data.usuario.compania_telefono.nombre;
         saveUserInformation();
         setCurrentData(true);
     };

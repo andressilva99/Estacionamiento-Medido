@@ -20,6 +20,7 @@ import ChangePasswordScreen from "../pages/ChangePasswordScreen";
 import SplashScreen from "../pages/SplashScreen";
 import WelcomeScreen from "../pages/WelcomeScreen";
 import AnnouncementsScreen from "../pages/AnnouncementsScreen";
+import PasswordRecoveryScreen from "../pages/PasswordRecoveryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -117,10 +118,12 @@ const Navigation = () => {
                                 <Stack.Screen
                                     name="ChangePassword"
                                     component={ChangePasswordScreen}
+                                    initialParams={{ setLogged }}
                                 ></Stack.Screen>
                                 <Stack.Screen
-                                name="Announcements"
-                                component={AnnouncementsScreen}></Stack.Screen>
+                                    name="Announcements"
+                                    component={AnnouncementsScreen}
+                                ></Stack.Screen>
                             </>
                         ) : (
                             <Stack.Screen
@@ -128,7 +131,6 @@ const Navigation = () => {
                                 component={WelcomeScreen}
                                 initialParams={{ setCurrentData, setLogged }}
                             ></Stack.Screen>
-                            
                         )
                     ) : (
                         <>
@@ -144,6 +146,10 @@ const Navigation = () => {
                             <Stack.Screen
                                 name="Register2"
                                 component={RegisterStep2Screen}
+                            ></Stack.Screen>
+                            <Stack.Screen
+                                name="PasswordRecovery"
+                                component={PasswordRecoveryScreen}
                             ></Stack.Screen>
                         </>
                     )

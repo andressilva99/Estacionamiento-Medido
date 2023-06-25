@@ -1,21 +1,37 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+    Dimensions,
+    Image,
+    Linking,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import React from "react";
 import { ScaledSheet } from "react-native-size-matters";
-import {
-    HStack,
-    NativeBaseProvider,
-    Stack,
-    VStack,
-} from "native-base";
+import { HStack, NativeBaseProvider, Stack, VStack } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import HeaderPage from "../components/HeaderPage";
 
 const { height } = Dimensions.get("screen");
 
-const InformationScreen = ({navigation}) => {
+const InformationScreen = ({ navigation }) => {
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
+
+    const handleWhatsAppPress = () => {
+        const phoneNumber = '3564545134'
+        const whatsappUrl = `https://wa.me/${phoneNumber}`;
+        Linking.openURL(whatsappUrl);
+    }
+
+    const handleEmailPress = () => {
+        const email = 'estacionamientosfco@gmail.com';
+        const emailUrl = `mailto:${email}`;
+        Linking.openURL(emailUrl);
+      };
+
     return (
         <NativeBaseProvider>
             <Stack
@@ -42,16 +58,24 @@ const InformationScreen = ({navigation}) => {
                     </Stack>
                     <Stack>
                         <Text style={styles.textBold}>Teléfono</Text>
-                        <Text style={styles.textNormal}>3564-545134</Text>
+                        <TouchableOpacity onPress={handleWhatsAppPress}>
+                            <Text style={styles.textLink}>3564-545134</Text>
+                        </TouchableOpacity>
                     </Stack>
                     <Stack>
                         <Text style={styles.textBold}>Correo</Text>
-                        <Text style={styles.textNormal}>estacionamientosfco@gmail.com</Text>
+                        <TouchableOpacity onPress={handleEmailPress}>
+                            <Text style={styles.textLink}>
+                                estacionamientosfco@gmail.com
+                            </Text>
+                        </TouchableOpacity>
                     </Stack>
                     <Stack>
                         <Text style={styles.textBold}>Horario</Text>
                         <Text style={styles.textNormal}>Lunes a Viernes</Text>
-                        <Text style={styles.textNormal}>7:30 a 13:00 hs. - 14:00 a 19:30 hs.</Text>
+                        <Text style={styles.textNormal}>
+                            7:30 a 13:00 hs. - 14:00 a 19:30 hs.
+                        </Text>
                         <Text style={styles.textNormal}>Sábado</Text>
                         <Text style={styles.textNormal}>8:30 a 12:30 hs.</Text>
                     </Stack>
@@ -67,11 +91,11 @@ const styles = ScaledSheet.create({
     background: {
         backgroundColor: "#f2f2f4",
     },
-    iconInformation:{
+    iconInformation: {
         fontWeight: "bold",
         color: "#3f60af",
         fontSize: "25@ms",
-        paddingRight: "10@ms"
+        paddingRight: "10@ms",
     },
     textBold: {
         fontWeight: "bold",
@@ -81,5 +105,10 @@ const styles = ScaledSheet.create({
     textNormal: {
         color: "#3f60af",
         fontSize: "15@ms",
+    },
+    textLink: {
+        color: "#3f60af",
+        fontSize: "15@ms",
+        textDecorationLine: "underline",
     },
 });

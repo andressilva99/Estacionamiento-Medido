@@ -22,9 +22,9 @@ import AlertError from "../components/Alerts/AlertError";
 const { height } = Dimensions.get("screen");
 
 const EnterVehicleScreen = ({ navigation, route }) => {
-    const { refreshScreen } = route.params;
-
     const { control, handleSubmit, watch } = useForm();
+
+    const { refreshParkingScreen } = route.params;
 
     const [enableModel, setEnableModel] = useState(false);
     const [enableColor, setEnableColor] = useState(false);
@@ -144,10 +144,10 @@ const EnterVehicleScreen = ({ navigation, route }) => {
             config
         )
             .then((response) => {
+                saveVehicle(response.data.mensaje);
                 setMessageAlertNotice("Vehículo registrado");
                 setIsOpenAlertNotice(true);
-                saveVehicle(response.data.mensaje);
-                refreshScreen();
+                refreshParkingScreen();
             })
             .catch((error) => {
                 setMessageAlertError(error.response.data.mensaje);

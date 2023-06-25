@@ -6,15 +6,15 @@ export const findTickets = () => {
     if (loggedUser.user.vehicles != []) {
         loggedUser.user.vehicles.forEach(async(vehicle) => {
             await constants.AXIOS_INST({
-                method: "post",
+                method: "get",
                 url: "ticket/mostrar",
                 headers: {
                     Authorization: `bearer ${loggedUser.user.token}`,
                 },
-                data: {
-                    ticket: {
+                params: {
+                    
                         patente: vehicle.patent,
-                    },
+                    
                 },
             }).then((resp) => {
                 const listTickets = resp.data.mensaje

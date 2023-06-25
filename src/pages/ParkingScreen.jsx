@@ -33,11 +33,12 @@ const ParkingScreen = ({ navigation }) => {
     }, [refresh]);
 
     const handleButtonPressMenu = () => {
-        navigation.navigate("Menu");
+        navigation.navigate("Menu", {refreshParkingScreen});
     };
 
-    const refreshScreen = () => {
+    const refreshParkingScreen = () => {
         setRefresh(!refresh);
+        console.log("Parking screen actualizado");
     };
 
     return (
@@ -88,7 +89,9 @@ const ParkingScreen = ({ navigation }) => {
                             <FontAwesome5 name="car" style={styles.icon} />
                         }
                         style={styles.enterVehicleButton}
-                        onPress={() => navigation.navigate("EnterVehicle", {refreshScreen})}
+                        onPress={() =>
+                            navigation.navigate("EnterVehicle", {refreshParkingScreen})
+                        }
                     >
                         <Text style={styles.textEnterVehicle}>
                             Ingresar Nuevo Vehículo
@@ -116,6 +119,7 @@ const ParkingScreen = ({ navigation }) => {
                                   idUser={loggedUser.user.idUser}
                                   parked={vehicle.parked}
                                   position={index}
+                                  setRefresh={refreshParkingScreen}
                               ></PatentCustom>
                           ))
                         : null}
