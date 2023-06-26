@@ -21,6 +21,7 @@ import SplashScreen from "../pages/SplashScreen";
 import WelcomeScreen from "../pages/WelcomeScreen";
 import AnnouncementsScreen from "../pages/AnnouncementsScreen";
 import PasswordRecoveryScreen from "../pages/PasswordRecoveryScreen";
+import VehiclePropertyScreen from "../pages/VehiclePropertyScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -123,6 +124,10 @@ const Navigation = () => {
                                 <Stack.Screen
                                     name="Announcements"
                                     component={AnnouncementsScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="VehicleProperty"
+                                    component={VehiclePropertyScreen}
                                 ></Stack.Screen>
                             </>
                         ) : (

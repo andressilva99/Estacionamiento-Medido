@@ -11,6 +11,7 @@ const EnterVehicleComboBox = ({
     onBlur,
     enable,
     onClear,
+    onFocus,
 }) => {
     const [elem, setElem] = useState(null);
     // const [enableOnBlur, setEnableOnBlur] = useState(initialState);

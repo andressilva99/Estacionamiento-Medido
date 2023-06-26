@@ -14,6 +14,7 @@ import ParkingHistoryScreen from "./src/pages/History/ParkingHistoryScreen";
 import SplashScreen from "./src/pages/SplashScreen";
 import WelcomeScreen from "./src/pages/WelcomeScreen";
 import AnnouncementsScreen from "./src/pages/AnnouncementsScreen";
+import VehiclePropertyScreen from "./src/pages/VehiclePropertyScreen";
 
 export default function App() {
     return (
@@ -31,6 +32,7 @@ export default function App() {
         // <SplashScreen></SplashScreen>
         // <WelcomeScreen></WelcomeScreen>
         // <AnnouncementsScreen></AnnouncementsScreen>
+        // <VehiclePropertyScreen></VehiclePropertyScreen>
 
         <Navigation></Navigation>
 

@@ -1,10 +1,11 @@
-import { Text, Dimensions, ScrollView } from "react-native";
+import { Text, Dimensions, ScrollView, TouchableOpacity } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
     HStack,
     KeyboardAvoidingView,
     NativeBaseProvider,
+    Spacer,
     Stack,
 } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -202,7 +203,123 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                             }}
                         ></InputControlled>
                     </HStack>
-                    <HStack zIndex={999} marginX="5%" maxW="85%">
+                    <HStack style={styles.containerEnabled} maxW={"85%"}>
+                        <HStack flex={2} alignItems="center">
+                            <Text style={styles.label}>Marca</Text>
+                            <Spacer></Spacer>
+                            <Text style={styles.slash}>l</Text>
+                        </HStack>
+                        <Stack flex={4}>
+                            <TouchableOpacity
+                                style={styles.touchableOpacity}
+                                onPress={() => {
+                                    navigation.navigate("VehicleProperty", {
+                                        setElement: setMark,
+                                        element: mark,
+                                        listElement: listMark,
+                                        label: "Marca",
+                                        onBlur: () => {
+                                            mark ? EnableModel() : null;
+                                        },
+                                        enable: true,
+                                        onClear: () => {
+                                            setEnableModel(false);
+                                            setEnableColor(false);
+                                        },
+                                    });
+                                }}
+                            >
+                                <Text style={styles.touchableOpacityLabel}>
+                                    {mark ? mark.title : "Seleccionar Marca"}
+                                </Text>
+                            </TouchableOpacity>
+                        </Stack>
+                    </HStack>
+                    {enableModel ? (
+                        <HStack style={styles.containerEnabled} maxW={"85%"}>
+                            <HStack flex={2} alignItems="center">
+                                <Text style={styles.label}>Modelo</Text>
+                                <Spacer></Spacer>
+                                <Text style={styles.slash}>l</Text>
+                            </HStack>
+                            <Stack flex={4}>
+                                <TouchableOpacity
+                                    style={styles.touchableOpacity}
+                                    onPress={() => {
+                                        navigation.navigate("VehicleProperty", {
+                                            setElement: setModel,
+                                            element: model,
+                                            listElement: listModel,
+                                            label: "Modelo",
+                                            onBlur: () => {
+                                                model ? EnableColor() : null;
+                                            },
+                                            enable: true,
+                                            onClear: () => {
+                                                setEnableColor(false);
+                                            },
+                                        });
+                                    }}
+                                >
+                                    <Text style={styles.touchableOpacityLabel}>
+                                        {model
+                                            ? model.title
+                                            : "Seleccionar Modelo"}
+                                    </Text>
+                                </TouchableOpacity>
+                            </Stack>
+                        </HStack>
+                    ) : (
+                        <HStack style={styles.containerDisabled} maxW={"85%"}>
+                            <HStack flex={2} alignItems="center">
+                                <Text style={styles.label}>Marca</Text>
+                                <Spacer></Spacer>
+                                <Text style={styles.slash}>l</Text>
+                            </HStack>
+                            <Stack flex={4}></Stack>
+                        </HStack>
+                    )}
+                    {enableColor ? (
+                        <HStack style={styles.containerEnabled} maxW={"85%"}>
+                            <HStack flex={2} alignItems="center">
+                                <Text style={styles.label}>Color</Text>
+                                <Spacer></Spacer>
+                                <Text style={styles.slash}>l</Text>
+                            </HStack>
+                            <Stack flex={4}>
+                                <TouchableOpacity
+                                    style={styles.touchableOpacity}
+                                    onPress={() => {
+                                        navigation.navigate("VehicleProperty", {
+                                            setElement: setColor,
+                                            element: color,
+                                            listElement: listColor,
+                                            label: "Color",
+                                            onBlur: () => {},
+                                            enable: true,
+                                            onClear: () => {},
+                                        });
+                                    }}
+                                >
+                                    <Text style={styles.touchableOpacityLabel}>
+                                        {color
+                                            ? color.title
+                                            : "Seleccionar Color"}
+                                    </Text>
+                                </TouchableOpacity>
+                            </Stack>
+                        </HStack>
+                    ) : (
+                        <HStack style={styles.containerDisabled} maxW={"85%"}>
+                            <HStack flex={2} alignItems="center">
+                                <Text style={styles.label}>Color</Text>
+                                <Spacer></Spacer>
+                                <Text style={styles.slash}>l</Text>
+                            </HStack>
+                            <Stack flex={4}></Stack>
+                        </HStack>
+                    )}
+                    {/* <HStack zIndex={999} marginX="5%" maxW="85%">
                         <EnterVehicleComboBox
                             setElement={setMark}
                             element={mark}
@@ -217,8 +334,8 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 setEnableColor(false);
                             }}
                         ></EnterVehicleComboBox>
-                    </HStack>
-                    <HStack zIndex={998} marginX="5%" maxW="85%">
+                    </HStack> */}
+                    {/* <HStack zIndex={998} marginX="5%" maxW="85%">
                         <EnterVehicleComboBox
                             setElement={setModel}
                             element={model}
@@ -232,8 +349,8 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 setEnableColor(false);
                             }}
                         ></EnterVehicleComboBox>
-                    </HStack>
-                    <HStack zIndex={997} marginX="5%" maxW="85%">
+                    </HStack> */}
+                    {/* <HStack zIndex={997} marginX="5%" maxW="85%">
                         <EnterVehicleComboBox
                             setElement={setColor}
                             element={color}
@@ -241,12 +358,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                             label="Color"
                             enable={enableColor}
                         ></EnterVehicleComboBox>
-                    </HStack>
-                    <Stack>
-                        <Text style={styles.textNote}>
-                            *Nota: Escriba y seleccione
-                        </Text>
-                    </Stack>
+                    </HStack> */}
                     {loading ? (
                         <Button
                             isLoading
@@ -318,5 +430,38 @@ const styles = ScaledSheet.create({
     },
     textNote: {
         color: "#414241",
+    },
+    containerEnabled: {
+        minHeight: "45@ms",
+        alignItems: "center",
+        backgroundColor: "white",
+        borderRadius: "30@ms",
+        borderColor: "#9d9ca1",
+        borderWidth: "1@ms",
+    },
+    label: {
+        fontSize: "18@ms",
+        color: "#656a6e",
+        marginLeft: "15@ms",
+    },
+    slash: {
+        fontSize: "30@ms",
+        color: "#656a6e",
+        fontWeight: "bold",
+    },
+    containerDisabled: {
+        minHeight: "45@ms",
+        alignItems: "center",
+        backgroundColor: "#eaeaec",
+        borderRadius: "30@ms",
+        borderColor: "#9d9ca1",
+        borderWidth: "1@ms",
+    },
+    touchableOpacity: {
+        alignItems: "center",
+    },
+    touchableOpacityLabel: {
+        fontSize: "18@ms",
+        color: "#656a6e",
     },
 });
