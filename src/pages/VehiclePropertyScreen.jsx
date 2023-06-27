@@ -3,18 +3,42 @@ import React from "react";
 import { HStack, NativeBaseProvider, Stack, VStack } from "native-base";
 import EnterVehicleComboBox from "../components/EnterVehicleComboBox";
 import { ScaledSheet } from "react-native-size-matters";
+import { newEnterVehicle } from "../objects/newEnterVehicle";
 
 const { height } = Dimensions.get("screen");
 
 const VehiclePropertyScreen = ({ navigation, route }) => {
-    const { setElement, listElement, label, onBlur, enable, onClear, element } =
+    const { setElement, listElement, label, onBlur, enable, onClear, type } =
         route.params;
 
     const selectedItem = (elem) => {
-        if (elem != undefined) {
-            setElement(elem);
-            navigation.goBack();
-            onBlur();
+        if (type == "mark") {
+            if (elem != null) {
+                newEnterVehicle.model = null
+                newEnterVehicle.color = null
+                newEnterVehicle.mark = elem;
+                console.log("Yo me guardo primero");
+                console.log(newEnterVehicle.mark);
+                onBlur();
+                navigation.goBack();
+            }
+        } else if (type == "model") {
+            if (elem != null) {
+                newEnterVehicle.color = null
+                newEnterVehicle.model = elem;
+                console.log("Yo me guardo primero");
+                console.log(newEnterVehicle.model);
+                onBlur();
+                navigation.goBack();
+            }
+        } else {
+            if (elem != null) {
+                newEnterVehicle.color = elem;
+                console.log("Y yo soy el ultimo en guardarme");
+                console.log(newEnterVehicle.color);
+                onBlur();
+                navigation.goBack();
+            }
         }
     };
 

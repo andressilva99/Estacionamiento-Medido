@@ -19,6 +19,7 @@ import HeaderPage from "../components/HeaderPage";
 import { saveUserInformation } from "../functions/saveUserInformation";
 import AlertNotice from "../components/Alerts/AlertNotice";
 import AlertError from "../components/Alerts/AlertError";
+import { newEnterVehicle } from "../objects/newEnterVehicle";
 
 const { height } = Dimensions.get("screen");
 
@@ -31,13 +32,11 @@ const EnterVehicleScreen = ({ navigation, route }) => {
     const [enableColor, setEnableColor] = useState(false);
 
     const [listMark, setListMark] = useState([]);
-    const [mark, setMark] = useState();
+    const [enableButton, setEnableButton] = useState(false);
 
     const [listModel, setListModel] = useState([]);
-    const [model, setModel] = useState();
 
     const [listColor, setListColor] = useState([]);
-    const [color, setColor] = useState();
 
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
@@ -78,12 +77,13 @@ const EnterVehicleScreen = ({ navigation, route }) => {
     };
 
     const obtainModels = async () => {
+        console.log("Y luego busco");
         try {
             setEnableModel(false);
             setEnableColor(false);
-            if (mark.id !== null) {
+            if (newEnterVehicle.mark != null) {
                 const result = await constants.AXIOS_INST.get(
-                    `modelos/${mark.id}`,
+                    `modelos/${newEnterVehicle.mark.id}`,
                     config
                 );
                 const models = result.data.mensaje.map(
@@ -104,6 +104,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
 
     const obtainColors = async () => {
         try {
+            console.log("Y luego busco");
             setEnableColor(false);
             const result = await constants.AXIOS_INST.get("colores", config);
             const colors = result.data.mensaje.map(({ idColor, nombre }) => ({
@@ -133,9 +134,9 @@ const EnterVehicleScreen = ({ navigation, route }) => {
             vehiculo: {
                 patente: patent,
                 idUsuario: loggedUser.user.idUser,
-                idMarca: mark.id,
-                idModelo: model.id,
-                idColor: color.id,
+                idMarca: newEnterVehicle.mark.id,
+                idModelo: newEnterVehicle.model.id,
+                idColor: newEnterVehicle.color.id,
             },
         };
 
@@ -213,13 +214,13 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                             <TouchableOpacity
                                 style={styles.touchableOpacity}
                                 onPress={() => {
+                                    setEnableButton(false)
                                     navigation.navigate("VehicleProperty", {
-                                        setElement: setMark,
-                                        element: mark,
+                                        type: "mark",
                                         listElement: listMark,
                                         label: "Marca",
                                         onBlur: () => {
-                                            mark ? EnableModel() : null;
+                                            EnableModel();
                                         },
                                         enable: true,
                                         onClear: () => {
@@ -230,7 +231,9 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 }}
                             >
                                 <Text style={styles.touchableOpacityLabel}>
-                                    {mark ? mark.title : "Seleccionar Marca"}
+                                    {newEnterVehicle.mark != null
+                                        ? newEnterVehicle.mark.title
+                                        : "Seleccionar Marca"}
                                 </Text>
                             </TouchableOpacity>
                         </Stack>
@@ -246,13 +249,13 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 <TouchableOpacity
                                     style={styles.touchableOpacity}
                                     onPress={() => {
+                                        setEnableButton(false)
                                         navigation.navigate("VehicleProperty", {
-                                            setElement: setModel,
-                                            element: model,
+                                            type: "model",
                                             listElement: listModel,
                                             label: "Modelo",
                                             onBlur: () => {
-                                                model ? EnableColor() : null;
+                                                EnableColor();
                                             },
                                             enable: true,
                                             onClear: () => {
@@ -262,8 +265,8 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     <Text style={styles.touchableOpacityLabel}>
-                                        {model
-                                            ? model.title
+                                        {newEnterVehicle.model != null
+                                            ? newEnterVehicle.model.title
                                             : "Seleccionar Modelo"}
                                     </Text>
                                 </TouchableOpacity>
@@ -290,20 +293,22 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 <TouchableOpacity
                                     style={styles.touchableOpacity}
                                     onPress={() => {
+                                        setEnableButton(false)
                                         navigation.navigate("VehicleProperty", {
-                                            setElement: setColor,
-                                            element: color,
+                                            type: "color",
                                             listElement: listColor,
                                             label: "Color",
-                                            onBlur: () => {},
+                                            onBlur: () => {
+                                                setEnableButton(true);
+                                            },
                                             enable: true,
                                             onClear: () => {},
                                         });
                                     }}
                                 >
                                     <Text style={styles.touchableOpacityLabel}>
-                                        {color
-                                            ? color.title
+                                        {newEnterVehicle.color
+                                            ? newEnterVehicle.color.title
                                             : "Seleccionar Color"}
                                     </Text>
                                 </TouchableOpacity>
@@ -372,6 +377,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                         ></Button>
                     ) : (
                         <Button
+                            isDisabled={!enableButton}
                             onPress={handleSubmit(RegisterVehicle)}
                             style={styles.button}
                         >

@@ -11,7 +11,7 @@ import HeaderPage from "../components/HeaderPage";
 import { ScaledSheet } from "react-native-size-matters";
 import { Feather } from "@expo/vector-icons";
 import loggedUser from "../objects/user"
-import { findTickets } from "../functions/findTickets";
+import constants from "../constants/constants";
 
 const AnnouncementsScreen = ({navigation}) => {
     const [haveTickets, setHaveTickets] = useState(false);
@@ -21,10 +21,45 @@ const AnnouncementsScreen = ({navigation}) => {
     };
 
     useEffect(() => {
-        findTickets();
-        if (loggedUser.user.tickets[0] != undefined) {
-            setHaveTickets(true)
+        const FindTickets = () => {
+            loggedUser.user.tickets = []
+            if (loggedUser.user.vehicles != []) {
+                loggedUser.user.vehicles.forEach(async(vehicle) => {
+                    await constants.AXIOS_INST({
+                        method: "post",
+                        url: "ticket/mostrar",
+                        headers: {
+                            Authorization: `bearer ${loggedUser.user.token}`,
+                        },
+                        data: {
+                            ticket: {
+                                patente: vehicle.patent,
+                            }
+                        },
+                    }).then((resp) => {
+                        const listTickets = resp.data.mensaje
+                        if (listTickets != undefined) {
+                            listTickets.forEach((ticket) => {
+                                if (ticket.estado == 0) {
+                                    loggedUser.user.tickets.push({
+                                        id: ticket.idTicket,
+                                        patent: vehicle.patent,
+                                        amount: ticket.importe,
+                                    })
+                                }
+                            })
+                        }
+                    }).catch((error) => {
+                        console.log(error.response.data)
+                    }).finally(() => {
+                        if (loggedUser.user.tickets[0] != null) {
+                            setHaveTickets(true)
+                        }
+                    })
+                })
+            }
         }
+        FindTickets();
     }, []);
 
     return (
