@@ -10,10 +10,10 @@ import {
 import HeaderPage from "../components/HeaderPage";
 import { ScaledSheet } from "react-native-size-matters";
 import { Feather } from "@expo/vector-icons";
-import loggedUser from "../objects/user"
+import loggedUser from "../objects/user";
 import constants from "../constants/constants";
 
-const AnnouncementsScreen = ({navigation}) => {
+const AnnouncementsScreen = ({ navigation }) => {
     const [haveTickets, setHaveTickets] = useState(false);
 
     const handleButtonPressMenu = () => {
@@ -21,45 +21,60 @@ const AnnouncementsScreen = ({navigation}) => {
     };
 
     useEffect(() => {
-        const FindTickets = () => {
-            loggedUser.user.tickets = []
-            if (loggedUser.user.vehicles != []) {
-                loggedUser.user.vehicles.forEach(async(vehicle) => {
-                    await constants.AXIOS_INST({
-                        method: "post",
-                        url: "ticket/mostrar",
-                        headers: {
-                            Authorization: `bearer ${loggedUser.user.token}`,
-                        },
-                        data: {
-                            ticket: {
-                                patente: vehicle.patent,
-                            }
-                        },
-                    }).then((resp) => {
-                        const listTickets = resp.data.mensaje
-                        if (listTickets != undefined) {
-                            listTickets.forEach((ticket) => {
-                                if (ticket.estado == 0) {
-                                    loggedUser.user.tickets.push({
-                                        id: ticket.idTicket,
-                                        patent: vehicle.patent,
-                                        amount: ticket.importe,
-                                    })
-                                }
-                            })
-                        }
-                    }).catch((error) => {
-                        console.log(error.response.data)
-                    }).finally(() => {
-                        if (loggedUser.user.tickets[0] != null) {
-                            setHaveTickets(true)
-                        }
-                    })
-                })
-            }
+        // const FindTickets = () => {
+        //     loggedUser.user.tickets = [];
+        //     if (loggedUser.user.vehicles != []) {
+        //         loggedUser.user.vehicles.forEach(async (vehicle) => {
+        //             await constants
+        //                 .AXIOS_INST({
+        //                     method: "post",
+        //                     url: "ticket/mostrar",
+        //                     headers: {
+        //                         Authorization: `bearer ${loggedUser.user.token}`,
+        //                     },
+        //                     data: {
+        //                         ticket: {
+        //                             patente: vehicle.patent,
+        //                         },
+        //                     },
+        //                 })
+        //                 .then((resp) => {
+        //                     const listTickets = resp.data.mensaje;
+        //                     if (listTickets != undefined) {
+        //                         listTickets.forEach((ticket) => {
+        //                             if (ticket.estado == 0) {
+        //                                 const dateString = ticket.fecha;
+        //                                 const dateObject = new Date(dateString);
+        //                                 const day = dateObject.getDate();
+        //                                 const month = dateObject.getMonth() + 1;
+        //                                 const year = dateObject.getFullYear();
+        //                                 const timeString = dateString.slice(11, 16);
+        //                                 const formattedDate = `${day}-${month}-${year} ${timeString}`;
+        //                                 loggedUser.user.tickets.push({
+        //                                     id: ticket.idTicket,
+        //                                     patent: vehicle.patent,
+        //                                     amount: ticket.importe,
+        //                                     date: formattedDate,
+        //                                 });
+        //                             }
+        //                         });
+        //                     }
+        //                 })
+        //                 .catch((error) => {
+        //                     console.log(error.response.data);
+        //                 })
+        //                 .finally(() => {
+        //                     if (loggedUser.user.tickets[0] != null) {
+        //                         setHaveTickets(true);
+        //                     }
+        //                 });
+        //         });
+        //     }
+        // };
+        // FindTickets();
+        if (loggedUser.user.tickets[0] != null) {
+            setHaveTickets(true);
         }
-        FindTickets();
     }, []);
 
     return (
@@ -83,9 +98,10 @@ const AnnouncementsScreen = ({navigation}) => {
                     />
                     <Text style={styles.textProfile}>Avisos</Text>
                 </Stack>
-                {haveTickets ? (<>
+                {haveTickets ? (
+                    <>
                         <VStack space="sm">
-                            <HStack minW="85%">
+                            <HStack>
                                 <Stack
                                     style={[
                                         styles.tableContainer,
@@ -93,7 +109,27 @@ const AnnouncementsScreen = ({navigation}) => {
                                     ]}
                                 >
                                     <Text style={styles.textTableHeader}>
+                                        Nº
+                                    </Text>
+                                </Stack>
+                                <Stack
+                                    style={[
+                                        styles.tableContainer,
+                                        styles.tableContainerCenter,
+                                    ]}
+                                >
+                                    <Text style={styles.textTableHeader}>
                                         Patente
+                                    </Text>
+                                </Stack>
+                                <Stack
+                                    style={[
+                                        styles.tableContainer,
+                                        styles.tableContainerCenter,
+                                    ]}
+                                >
+                                    <Text style={styles.textTableHeader}>
+                                        Fecha
                                     </Text>
                                 </Stack>
                                 <Stack
@@ -114,7 +150,7 @@ const AnnouncementsScreen = ({navigation}) => {
                                 <VStack space="sm">
                                     {loggedUser.user.tickets.map(
                                         (ticket, index) => (
-                                            <HStack minW="85%" key={index}>
+                                            <HStack minW="99%" key={index}>
                                                 <Stack
                                                     style={[
                                                         styles.tableContainer,
@@ -126,9 +162,37 @@ const AnnouncementsScreen = ({navigation}) => {
                                                             styles.textTableItems
                                                         }
                                                     >
-                                                        {ticket.patent}
+                                                        {ticket.id}
                                                     </Text>
                                                 </Stack>
+                                                <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {ticket.patent}
+                                                </Text>
+                                            </Stack>
+                                            <Stack
+                                                style={[
+                                                    styles.tableContainer,
+                                                    styles.tableContainerCenter,
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={
+                                                        styles.textTableItems
+                                                    }
+                                                >
+                                                    {ticket.date}
+                                                </Text>
+                                            </Stack>
                                                 <Stack
                                                     style={[
                                                         styles.tableContainer,
@@ -149,9 +213,13 @@ const AnnouncementsScreen = ({navigation}) => {
                                 </VStack>
                             </ScrollView>
                         </VStack>
-                    </>) : (<Stack style={styles.containerWithoutAnnouncements}>
-                    <Text style={styles.textWithoutAnnouncements}>No hay avisos</Text>
-                </Stack>
+                    </>
+                ) : (
+                    <Stack style={styles.containerWithoutAnnouncements}>
+                        <Text style={styles.textWithoutAnnouncements}>
+                            No hay avisos
+                        </Text>
+                    </Stack>
                 )}
             </VStack>
         </NativeBaseProvider>
@@ -222,8 +290,13 @@ const styles = ScaledSheet.create({
     tableContainer: {
         justifyContent: "center",
         alignItems: "center",
-        flex: "1@ms",
+        flex: 1,
         borderColor: "#d3d3d3",
         paddingVertical: "3%",
+    },
+    tableContainerCenter: {
+        borderRadius: 0,
+        borderWidth: "1@ms",
+        borderRightWidth: 0,
     },
 });

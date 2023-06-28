@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     AlertDialog,
     Button,
@@ -14,13 +14,73 @@ import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
 import loggedUser from "../objects/user";
 import constants from "../constants/constants";
 import { saveUserInformation } from "../functions/saveUserInformation";
-import AlertError from "./Alerts/AlertError"
-import AlertNotice from "./Alerts/AlertNotice"
+import AlertError from "./Alerts/AlertError";
+import AlertNotice from "./Alerts/AlertNotice";
 
 const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
+    useEffect(() => {
+        loggedUser.user.tickets.forEach((ticket) => {
+            if (ticket.patent === patent) {
+                setHaveTicket(true);
+            }
+        });
+        // const FindTickets = () => {
+        //     loggedUser.user.tickets = [];
+        //     if (loggedUser.user.vehicles != []) {
+        //         loggedUser.user.vehicles.forEach(async (vehicle) => {
+        //             await constants
+        //                 .AXIOS_INST({
+        //                     method: "post",
+        //                     url: "ticket/mostrar",
+        //                     headers: {
+        //                         Authorization: `bearer ${loggedUser.user.token}`,
+        //                     },
+        //                     data: {
+        //                         ticket: {
+        //                             patente: vehicle.patent,
+        //                         },
+        //                     },
+        //                 })
+        //                 .then((resp) => {
+        //                     const listTickets = resp.data.mensaje;
+        //                     if (listTickets != undefined) {
+        //                         listTickets.forEach((ticket) => {
+        //                             if (ticket.estado == 0) {
+        //                                 const dateString = ticket.fecha;
+        //                                 const dateObject = new Date(dateString);
+        //                                 const day = dateObject.getDate();
+        //                                 const month = dateObject.getMonth() + 1;
+        //                                 const year = dateObject.getFullYear();
+        //                                 const timeString = dateString.slice(
+        //                                     11,
+        //                                     16
+        //                                 );
+        //                                 const formattedDate = `${day}-${month}-${year} ${timeString}`;
+        //                                 loggedUser.user.tickets.push({
+        //                                     id: ticket.idTicket,
+        //                                     patent: vehicle.patent,
+        //                                     amount: ticket.importe,
+        //                                     date: formattedDate,
+        //                                 });
+        //                             }
+        //                         });
+        //                     }
+        //                 })
+        //                 .catch((error) => {
+        //                     console.log(error.response.data);
+        //                 });
+        //         });
+        //     }
+        // };
+        // FindTickets();
+    }, []);
+
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice);  refreshScreen();};
+    const onCloseAlertNotice = () => {
+        setIsOpenAlertNotice(!isOpenAlertNotice);
+        refreshScreen();
+    };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
@@ -34,25 +94,30 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
     const onCloseAlertNoticeFunction = () =>
         setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
+    const [haveTicket, setHaveTicket] = useState(false);
+
     const deletePatent = async () => {
         onCloseAlertNoticeFunction();
 
-        const vehicleSelected = loggedUser.user.vehicles.find((vehicle) => vehicle.patent === patent);
+        const vehicleSelected = loggedUser.user.vehicles.find(
+            (vehicle) => vehicle.patent === patent
+        );
 
-        if (!vehicleSelected.parked) {
-            await constants.AXIOS_INST({
-                method: "delete",
-                url: "vehiculo/eliminar",
-                headers: {
-                    Authorization: `bearer ${loggedUser.user.token}`,
-                },
-                data: {
-                    vehiculo: {
-                        idUsuario: loggedUser.user.idUser,
-                        patente: patent,
+        if (!vehicleSelected.parked && !haveTicket) {
+            await constants
+                .AXIOS_INST({
+                    method: "delete",
+                    url: "vehiculo/eliminar",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
                     },
-                },
-            })
+                    data: {
+                        vehiculo: {
+                            idUsuario: loggedUser.user.idUser,
+                            patente: patent,
+                        },
+                    },
+                })
                 .then((response) => {
                     deleteVehicle();
                     setMessageAlertNotice("Vehículo Eliminado");
@@ -61,28 +126,41 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
                 .catch((error) => {
                     setMessageAlertError(error.response.data.mensaje);
                     setIsOpenAlertError(true);
-                    console.error(error.response.data.mensaje)
+                    console.error(error.response.data.mensaje);
                 });
         } else {
-            setMessageAlertError("No se puede eliminar un vehículo estacionado");
-            setIsOpenAlertError(true);
+            if (haveTicket) {
+                setMessageAlertError(
+                    "No se puede eliminar un vehículo con un Ticket emitido"
+                );
+                setIsOpenAlertError(true);
+            } else {
+                setMessageAlertError(
+                    "No se puede eliminar un vehículo estacionado"
+                );
+                setIsOpenAlertError(true);
+            }
         }
     };
 
     const deleteVehicle = () => {
-        const list = loggedUser.user.vehicles.filter((vehicle) => vehicle.patent !== patent);
+        const list = loggedUser.user.vehicles.filter(
+            (vehicle) => vehicle.patent !== patent
+        );
         loggedUser.user.vehicles = [];
         loggedUser.user.vehicles = list;
         saveUserInformation();
-    }
+    };
 
     return (
         <>
-            <HStack style={styles.containerPatent} marginBottom="5%" key={index}>
+            <HStack
+                style={styles.containerPatent}
+                marginBottom="5%"
+                key={index}
+            >
                 <Spacer></Spacer>
-                <Text style={styles.textPatent}>
-                    {patent}
-                </Text>
+                <Text style={styles.textPatent}>{patent}</Text>
                 <Spacer></Spacer>
                 <Button
                     style={styles.button}
@@ -100,15 +178,17 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
                 onPressAccept={deletePatent}
             ></AlertNoticeFunction>
             <AlertError
-            isOpen={isOpenAlertError}
-            onClose={onCloseAlertError}
-            message={messageAlertError}
-            cancelRef={cancelRefAlertError}></AlertError>
+                isOpen={isOpenAlertError}
+                onClose={onCloseAlertError}
+                message={messageAlertError}
+                cancelRef={cancelRefAlertError}
+            ></AlertError>
             <AlertNotice
-            isOpen={isOpenAlertNotice}
-            onClose={onCloseAlertNotice}
-            message={messageAlertNotice}
-            cancelRef={cancelRefAlertNotice}></AlertNotice>
+                isOpen={isOpenAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+            ></AlertNotice>
         </>
     );
 };

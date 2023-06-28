@@ -22,6 +22,7 @@ import WelcomeScreen from "../pages/WelcomeScreen";
 import AnnouncementsScreen from "../pages/AnnouncementsScreen";
 import PasswordRecoveryScreen from "../pages/PasswordRecoveryScreen";
 import VehiclePropertyScreen from "../pages/VehiclePropertyScreen";
+import { findTickets } from "../functions/findTickets";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,8 @@ const Navigation = () => {
             loggedUser.user = user.user;
         } catch (error) {
             console.log("Error loading user:", error);
+        } finally {
+            findTickets();
         }
     };
 
