@@ -28,6 +28,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { saveUserInformation } from "../functions/saveUserInformation";
 import { Ionicons } from "@expo/vector-icons";
 import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
+import { findTickets } from "../functions/findTickets";
 
 const { height } = Dimensions.get("screen");
 
@@ -35,7 +36,7 @@ const LogInScreen = ({ navigation, route }) => {
     const { control, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
     const { setLogged, setCurrentData } = route.params;
-    
+
     const [isOpen, setIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const cancelRef = useRef(null);
@@ -49,7 +50,7 @@ const LogInScreen = ({ navigation, route }) => {
         if (loading) {
             return;
         }
-        
+
         setLoading(true);
 
         const logIn = {
@@ -70,7 +71,8 @@ const LogInScreen = ({ navigation, route }) => {
             .catch((error) => {
                 setErrorMessage("Correo y/o contraseña incorrectos");
                 setIsOpen(true);
-            });
+            })
+            .finally(() => findTickets());
         setLoading(false);
     };
 
@@ -80,7 +82,7 @@ const LogInScreen = ({ navigation, route }) => {
 
     const handlePasswordRecovery = () => {
         navigation.navigate("PasswordRecovery");
-    }
+    };
 
     const FillUserData = (data) => {
         const token = data.token;
@@ -92,10 +94,12 @@ const LogInScreen = ({ navigation, route }) => {
         loggedUser.user.firstName = userData.nombrePersona;
         loggedUser.user.lastName = userData.apellido;
         loggedUser.user.numberPhone = userData.numeroTelefono;
-        loggedUser.user.phoneCompany.idPhoneCompany = userData.compania_telefono.idCompaniaTelefono
+        loggedUser.user.phoneCompany.idPhoneCompany =
+            userData.compania_telefono.idCompaniaTelefono;
         loggedUser.user.phoneCompany.name = userData.compania_telefono.nombre;
         loggedUser.user.razonSocial = userData.razonSocial;
-        loggedUser.user.typeDocument.idTypeDocument = userData.tipo_documento.idTipoDocumento;
+        loggedUser.user.typeDocument.idTypeDocument =
+            userData.tipo_documento.idTipoDocumento;
         loggedUser.user.typeDocument.name = userData.tipo_documento.nombre;
         loggedUser.user.userName = userData.nombreUsuario;
         loggedUser.user.token = token;
@@ -188,12 +192,20 @@ const LogInScreen = ({ navigation, route }) => {
                                     placeholder="Contraseña"
                                 ></InputControlledCopyPaste>
                             </HStack>
-                            <TouchableOpacity style={styles.touchVisiblePassword} onPress={() => setHidePassword(!hidePassword)}>
-                                <Ionicons name={hidePassword ? "eye" : "eye-off"} style={styles.icon} />
+                            <TouchableOpacity
+                                style={styles.touchVisiblePassword}
+                                onPress={() => setHidePassword(!hidePassword)}
+                            >
+                                <Ionicons
+                                    name={hidePassword ? "eye" : "eye-off"}
+                                    style={styles.icon}
+                                />
                             </TouchableOpacity>
                         </HStack>
                     </LinearGradient>
-                    <Button variant="link" onPress={handlePasswordRecovery}>¿Olvidó su contraseña?</Button>
+                    <Button variant="link" onPress={handlePasswordRecovery}>
+                        ¿Olvidó su contraseña?
+                    </Button>
                     {loading ? (
                         <Button
                             isLoading
@@ -284,5 +296,5 @@ const styles = ScaledSheet.create({
     },
     touchVisiblePassword: {
         flex: 0.4,
-    },  
+    },
 });

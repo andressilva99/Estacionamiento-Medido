@@ -16,6 +16,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import loggedUser from "../objects/user";
 import PatentCustom from "../components/PatentCustom";
 import HeaderPage from "../components/HeaderPage";
+import { newEnterVehicle } from "../objects/newEnterVehicle";
 
 const ParkingScreen = ({ navigation }) => {
     const [isBalanceNegative, setIsBalanceNegative] = useState(false);
@@ -33,7 +34,7 @@ const ParkingScreen = ({ navigation }) => {
     }, [refresh]);
 
     const handleButtonPressMenu = () => {
-        navigation.navigate("Menu", {refreshParkingScreen});
+        navigation.navigate("Menu", { refreshParkingScreen });
     };
 
     const refreshParkingScreen = () => {
@@ -89,9 +90,14 @@ const ParkingScreen = ({ navigation }) => {
                             <FontAwesome5 name="car" style={styles.icon} />
                         }
                         style={styles.enterVehicleButton}
-                        onPress={() =>
-                            navigation.navigate("EnterVehicle", {refreshParkingScreen})
-                        }
+                        onPress={() => {
+                            newEnterVehicle.color = null;
+                            newEnterVehicle.model = null;
+                            newEnterVehicle.mark = null;
+                            navigation.navigate("EnterVehicle", {
+                                refreshParkingScreen,
+                            });
+                        }}
                     >
                         <Text style={styles.textEnterVehicle}>
                             Ingresar Nuevo Vehículo

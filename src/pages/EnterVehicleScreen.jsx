@@ -307,7 +307,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     <Text style={styles.touchableOpacityLabel}>
-                                        {newEnterVehicle.color
+                                        {newEnterVehicle.color != null
                                             ? newEnterVehicle.color.title
                                             : "Seleccionar Color"}
                                     </Text>
