@@ -23,6 +23,7 @@ import { useRef } from "react";
 import AlertError from "../components/Alerts/AlertError";
 import { deleteUserData } from "../functions/deleteUserData";
 import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction"
+import { findTickets } from "../functions/findTickets";
 
 const { height } = Dimensions.get("screen");
 
@@ -64,11 +65,13 @@ const WelcomeScreen = ({navigation, route }) => {
             .catch((error) => {
                 setErrorMessage(error.response.data.mensaje);
                 setIsOpen(true);
-            });
+            }).finally(async()=> {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                findTickets()});
         setLoading(false);
     };
 
-    const FillUserData = (data) => {
+    const FillUserData = async (data) => {
         const token = data.token;
 
         loggedUser.user.token = token;

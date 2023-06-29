@@ -24,7 +24,7 @@ const DeletePatentScreen = ({ navigation, route }) => {
     const [refresh, setRefresh] = useState(false);
 
     const { refreshParkingScreen } = route.params;
-    
+
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
@@ -63,7 +63,13 @@ const DeletePatentScreen = ({ navigation, route }) => {
                                   patent={vehicle.patent}
                                   id={vehicle.idVehicle}
                                   index={index}
-                                  refreshScreen={() => {refreshScreen(); refreshParkingScreen();}}
+                                  refreshScreen={async () => {
+                                      refreshParkingScreen();
+                                      await new Promise((resolve) =>
+                                          setTimeout(resolve, 250)
+                                      );
+                                      refreshScreen();
+                                  }}
                               ></DeletePatentModule>
                           ))
                         : null}

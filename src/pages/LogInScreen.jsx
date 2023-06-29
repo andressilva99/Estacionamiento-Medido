@@ -72,7 +72,9 @@ const LogInScreen = ({ navigation, route }) => {
                 setErrorMessage("Correo y/o contraseña incorrectos");
                 setIsOpen(true);
             })
-            .finally(() => findTickets());
+            .finally(async() => {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                findTickets()});
         setLoading(false);
     };
 

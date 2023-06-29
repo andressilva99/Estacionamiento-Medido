@@ -275,7 +275,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                     ) : (
                         <HStack style={styles.containerDisabled} maxW={"85%"}>
                             <HStack flex={2} alignItems="center">
-                                <Text style={styles.label}>Marca</Text>
+                                <Text style={styles.label}>Modelo</Text>
                                 <Spacer></Spacer>
                                 <Text style={styles.slash}>l</Text>
                             </HStack>

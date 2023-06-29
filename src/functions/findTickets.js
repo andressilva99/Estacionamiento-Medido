@@ -2,6 +2,7 @@ import constants from "../constants/constants";
 import loggedUser from "../objects/user";
 
 export const findTickets = () => {
+    console.log(loggedUser.user.vehicles)
     loggedUser.user.tickets = [];
     if (loggedUser.user.vehicles != []) {
         loggedUser.user.vehicles.forEach(async (vehicle) => {

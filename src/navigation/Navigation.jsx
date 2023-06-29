@@ -54,8 +54,6 @@ const Navigation = () => {
             loggedUser.user = user.user;
         } catch (error) {
             console.log("Error loading user:", error);
-        } finally {
-            findTickets();
         }
     };
 
