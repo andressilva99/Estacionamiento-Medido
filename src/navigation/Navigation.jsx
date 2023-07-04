@@ -23,6 +23,8 @@ import AnnouncementsScreen from "../pages/AnnouncementsScreen";
 import PasswordRecoveryScreen from "../pages/PasswordRecoveryScreen";
 import VehiclePropertyScreen from "../pages/VehiclePropertyScreen";
 import { findTickets } from "../functions/findTickets";
+import prueba from "../pages/prueba";
+import messaging from "@react-native-firebase/messaging";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,8 +36,73 @@ const Navigation = () => {
     useEffect(() => {
         loadUser();
         logUser();
+        notificationConfiguration();
         initialApp();
     }, []);
+
+    const requestUserPermission = async () => {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+        if (enabled) {
+            console.log("Authorization status:", authStatus);
+        }
+    };
+
+    const notificationConfiguration = () => {
+        try {
+            if (requestUserPermission()) {
+                messaging()
+                    .getToken()
+                    .then((tok) => {
+                        console.log(tok);
+                        loggedUser.user.tokenNotification = tok;
+                    });
+            } else {
+                console.log("Failed token status", authStatus);
+            }
+
+            // Check whether an initial notification is available
+            messaging()
+                .getInitialNotification()
+                .then(async (remoteMessage) => {
+                    if (remoteMessage) {
+                        console.log(
+                            "Notification caused app to open from quit state:",
+                            remoteMessage.notification
+                        );
+                    }
+                });
+
+            // Assume a message-notification contains a "type" property in the data payload of the screen to open
+            messaging().onNotificationOpenedApp(async (remoteMessage) => {
+                console.log(
+                    "Notification caused app to open from background state:",
+                    remoteMessage.notification
+                );
+            });
+            // Register background handler
+            messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+                console.log(
+                    "Message handled in the background!",
+                    remoteMessage
+                );
+            });
+
+            const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+                Alert.alert(
+                    "A new FCM message arrived!",
+                    JSON.stringify(remoteMessage)
+                );
+            });
+
+            return unsubscribe;
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
     const logUser = async () => {
         await AsyncStorage.getItem("loggedUser")
@@ -60,8 +127,9 @@ const Navigation = () => {
     const initialApp = async () => {
         try {
             await new Promise((resolve) => {
-                setTimeout(resolve, 500);
+                setTimeout(resolve, 2000);
             });
+            loggedUser.user.enableParking = true;
         } catch (e) {
             console.log(e);
         } finally {
@@ -129,6 +197,10 @@ const Navigation = () => {
                                 <Stack.Screen
                                     name="VehicleProperty"
                                     component={VehiclePropertyScreen}
+                                ></Stack.Screen>
+                                <Stack.Screen
+                                    name="prueba"
+                                    component={prueba}
                                 ></Stack.Screen>
                             </>
                         ) : (

@@ -31,6 +31,27 @@ const ParkingScreen = ({ navigation }) => {
             }
         };
         verifyBalanceNegative();
+
+        // const repeatFunction = () => {
+        //     console.log(loggedUser.user.enableParking)
+        //     const now = new Date();
+        //     if (loggedUser.user.enableParking && (now.getHours()>= 20 || now.getHours()<=7)) {
+        //         if (loggedUser.user.vehicles != []) {
+        //             loggedUser.user.vehicles.map((vehicle) => ({
+        //                 ...vehicle,
+        //                 parked: false
+        //             }))
+        //             loggedUser.user.enableParking =false;
+        //             refreshParkingScreen();
+        //         }
+        //     } else if (!loggedUser.user.enableParking && (now.getHours()>= 8 && now.getHours()<=19)){
+        //         loggedUser.user.enableParking = true;
+        //     }
+        //     else {
+        //         console.log("No se ejecuta más nada");
+        //     }
+        // };
+
     }, [refresh]);
 
     const handleButtonPressMenu = () => {

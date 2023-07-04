@@ -136,6 +136,8 @@ const MenuScreen = ({ navigation, route }) => {
                                 icon={constants.CREDIT_CARD_ICON}
                                 styleTouchable={{ backgroundColor: "#086EC1" }}
                                 //En desarrollo
+                                onPress={handleButtonPress}
+                                id={"prueba"}
                                 disabled={true}
                             ></PressableCustom>
                         </HStack>

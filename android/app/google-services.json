@@ -1,0 +1,187 @@
+{
+  "project_info": {
+    "project_number": "678956801691",
+    "project_id": "estacionamiento-medido-d64a7",
+    "storage_bucket": "estacionamiento-medido-d64a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678956801691:android:61f984eec02c1ca9bd303e",
+        "android_client_info": {
+          "package_name": "ar.com.griser.estmed.inspector"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqjhgHscwNbl5BG_a53ZIgEzEkJdBJP-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678956801691:android:6ef7380c07c80a18bd303e",
+        "android_client_info": {
+          "package_name": "ar.com.griser.estmed.inspector.sfco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqjhgHscwNbl5BG_a53ZIgEzEkJdBJP-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678956801691:android:0f47430d7b3d9282bd303e",
+        "android_client_info": {
+          "package_name": "com.juanse728.estacionamientomedidofrontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqjhgHscwNbl5BG_a53ZIgEzEkJdBJP-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678956801691:android:1a8b3d9ab728562bbd303e",
+        "android_client_info": {
+          "package_name": "com.juanse728.fcmExample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678956801691-3m2o9rapn5v83kgu3g0v313mt6dssu8m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juanse728.fcmExample",
+            "certificate_hash": "e3a3edfea269a5c957f8da2fb2cf97627e683815"
+          }
+        },
+        {
+          "client_id": "678956801691-irm3gcsn27hgit90j9aaelf5bb7nl3hk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juanse728.fcmExample",
+            "certificate_hash": "06d2eb4b8e6d3fa1088e558a0d9d241ef5f5c09b"
+          }
+        },
+        {
+          "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqjhgHscwNbl5BG_a53ZIgEzEkJdBJP-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678956801691:android:2036c3a32d645710bd303e",
+        "android_client_info": {
+          "package_name": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678956801691-bi6rkoec55a7fvq0lplktn7dc9jnhd4q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso",
+            "certificate_hash": "54195fe9ab2d65bb7f2e84a483c0e365e5bd22a1"
+          }
+        },
+        {
+          "client_id": "678956801691-ln62aef7851tqkevmgs1aq2ugtud9hv7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso",
+            "certificate_hash": "9cf1084f40a6e6efe5b682fee64e0f21235cfa66"
+          }
+        },
+        {
+          "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqjhgHscwNbl5BG_a53ZIgEzEkJdBJP-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678956801691-mu3hrcot0bp8nf3qclv3rrol4ei730f7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

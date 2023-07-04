@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "estacionamiento-medido-frontend",
+    "name": "Estacionamiento Medido San Francisco",
     "slug": "estacionamiento-medido-frontend",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,15 +16,19 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.juanse728.estacionamientomedidofrontend"
+      "bundleIdentifier": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/adaptive-icon.png"
       },
-      "package": "com.juanse728.estacionamientomedidofrontend"
+      "package": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso"
     },
+    "plugins": [
+      "@react-native-firebase/app",
+      "expo-notifications"
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     },

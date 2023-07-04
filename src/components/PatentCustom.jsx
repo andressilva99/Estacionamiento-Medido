@@ -42,6 +42,25 @@ const PatentCustom = ({
     useEffect(() => {
         setButtonStart(!parked);
         setButtonStop(parked);
+        const repeatFunction = async () => {
+            const now = new Date();
+            if (
+                (now.getHours() >= 20 ||
+                    now.getHours() <= 7) &&
+                parked
+            ) {
+                setButtonStart(true);
+                setButtonStop(false);
+                loggedUser.user.vehicles[position].parked = buttonStop;
+                saveUserInformation();
+                parked = false;
+                setRefresh(true);
+            }
+        };
+
+        repeatFunction();
+
+        setInterval(repeatFunction, 5000); // 60000 ms = 1 minuto
     }, []);
 
     const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
@@ -52,7 +71,11 @@ const PatentCustom = ({
 
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => {setIsOpenAlertNotice(!isOpenAlertNotice); saveUserInformation(); setRefresh(true);}
+    const onCloseAlertNotice = () => {
+        setIsOpenAlertNotice(!isOpenAlertNotice);
+        saveUserInformation();
+        setRefresh(true);
+    };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
@@ -88,7 +111,9 @@ const PatentCustom = ({
             },
         };
         if (idButton == "start") {
-            await constants
+            const now = new Date();
+            if (now.getHours() >= 8 && now.getHours <=19) {
+                await constants
                 .AXIOS_INST({
                     method: "post",
                     url: "estacionamiento/activar",
@@ -113,6 +138,11 @@ const PatentCustom = ({
                     setMessageAlertError(error.response.data.mensaje);
                     setIsOpenAlertError(true);
                 });
+            }
+            else {
+                setMessageAlertError("No se puede estacionar fuera de horario");
+                    setIsOpenAlertError(true);
+            }
         } else {
             await constants.AXIOS_INST.put(
                 "estacionamiento/desactivar",

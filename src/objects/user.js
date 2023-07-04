@@ -20,6 +20,8 @@ const user = {
     balance: "",
     password: "",
     tickets: [],
+    tokenNotification: undefined,
+    enableParking: true,
 };
 
 export default {

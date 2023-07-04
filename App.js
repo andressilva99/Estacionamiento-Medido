@@ -16,6 +16,10 @@ import WelcomeScreen from "./src/pages/WelcomeScreen";
 import AnnouncementsScreen from "./src/pages/AnnouncementsScreen";
 import VehiclePropertyScreen from "./src/pages/VehiclePropertyScreen";
 
+import loggedUser from "./src/objects/user";
+
+import { useEffect, useState } from "react";
+
 export default function App() {
     return (
         // <ChangePasswordScreen></ChangePasswordScreen>
@@ -35,6 +39,5 @@ export default function App() {
         // <VehiclePropertyScreen></VehiclePropertyScreen>
 
         <Navigation></Navigation>
-
     );
 }
