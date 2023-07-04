@@ -23,7 +23,7 @@ import AnnouncementsScreen from "../pages/AnnouncementsScreen";
 import PasswordRecoveryScreen from "../pages/PasswordRecoveryScreen";
 import VehiclePropertyScreen from "../pages/VehiclePropertyScreen";
 import { findTickets } from "../functions/findTickets";
-import prueba from "../pages/prueba";
+// import prueba from "../pages/prueba";
 import messaging from "@react-native-firebase/messaging";
 
 const Stack = createNativeStackNavigator();
@@ -126,13 +126,13 @@ const Navigation = () => {
 
     const initialApp = async () => {
         try {
-            await new Promise((resolve) => {
-                setTimeout(resolve, 2000);
-            });
             loggedUser.user.enableParking = true;
         } catch (e) {
             console.log(e);
         } finally {
+            await new Promise((resolve) => {
+                setTimeout(resolve, 2000);
+            });
             setAppIsReady(true);
         }
     };
@@ -198,10 +198,10 @@ const Navigation = () => {
                                     name="VehicleProperty"
                                     component={VehiclePropertyScreen}
                                 ></Stack.Screen>
-                                <Stack.Screen
+                                {/* <Stack.Screen
                                     name="prueba"
                                     component={prueba}
-                                ></Stack.Screen>
+                                ></Stack.Screen> */}
                             </>
                         ) : (
                             <Stack.Screen

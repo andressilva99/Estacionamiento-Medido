@@ -2,7 +2,7 @@
   "expo": {
     "name": "Estacionamiento Medido San Francisco",
     "slug": "estacionamiento-medido-frontend",
-    "version": "1.1.0",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png"
       },
-      "package": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso"
+      "package": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso",
+      "versionCode": 2
     },
     "plugins": [
       "@react-native-firebase/app",

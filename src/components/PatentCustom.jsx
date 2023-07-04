@@ -112,7 +112,7 @@ const PatentCustom = ({
         };
         if (idButton == "start") {
             const now = new Date();
-            if (now.getHours() >= 8 && now.getHours <=19) {
+            if (now.getHours() >= 8 && now.getHours() <=19) {
                 await constants
                 .AXIOS_INST({
                     method: "post",

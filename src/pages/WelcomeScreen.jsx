@@ -60,7 +60,7 @@ const WelcomeScreen = ({navigation, route }) => {
                 const data = response.data.mensaje;
                 console.log(data);
                 FillUserData(data);
-                navigation.navigate("Parking")
+                // navigation.navigate("Parking")
             })
             .catch((error) => {
                 setErrorMessage(error.response.data.mensaje);

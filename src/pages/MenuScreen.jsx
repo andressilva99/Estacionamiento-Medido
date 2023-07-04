@@ -13,6 +13,8 @@ import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
 import { deleteUserData } from "../functions/deleteUserData";
 import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
+import AlertError from "../components/Alerts/AlertError";
+import loggedUser from "../objects/user";
 
 const { height } = Dimensions.get("screen");
 
@@ -26,6 +28,11 @@ const MenuScreen = ({ navigation, route }) => {
     const onCloseAlertNoticeFunction = () =>
         setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
+        const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+        const cancelRefAlertError = useRef(null);
+        const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+        const [messageAlertError, setMessageAlertError] = useState();
+
     const handleButtonPress = (id) => {
         if (id !== "logOut") {
             navigation.navigate(id, { refreshParkingScreen });
@@ -36,9 +43,22 @@ const MenuScreen = ({ navigation, route }) => {
     };
 
     const logOut = () => {
-        deleteUserData();
-        setLogged(false);
-        setSubMenu(false);
+        let logOutUser = true;
+        loggedUser.user.vehicles.forEach((vehicle) => {
+            if (vehicle.parked) {
+                logOutUser = false;
+                return;
+            }
+        });
+        if (logOutUser) {
+            deleteUserData();
+            setLogged(false);
+            setSubMenu(false);
+        } else {
+            onCloseAlertNoticeFunction();
+            setMessageAlertError("No se puede cerrar sesión con un vehículo estacionado");
+            setIsOpenAlertError(true);
+        }
     };
 
     return (
@@ -204,6 +224,11 @@ const MenuScreen = ({ navigation, route }) => {
                 message={"¿Está seguro que desea Cerrar Sesión?"}
                 onPressAccept={logOut}
             ></AlertNoticeFunction>
+            <AlertError
+            isOpen={isOpenAlertError}
+            onClose={onCloseAlertError}
+            message={messageAlertError}
+            cancelRef={cancelRefAlertError}></AlertError>
         </NativeBaseProvider>
     );
 };
