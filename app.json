@@ -19,7 +19,7 @@
         "foregroundImage": "./assets/adaptive-icon.png"
       },
       "package": "com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso",
-      "versionCode": 4
+      "versionCode": 5
     },
     "plugins": [
       "@react-native-firebase/app",
