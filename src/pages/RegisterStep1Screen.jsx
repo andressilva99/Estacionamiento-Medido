@@ -118,15 +118,15 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     ))}
                                 </Select>
                             </HStack>
-                            {invalidTypeDocument  ? (
+                            {invalidTypeDocument ? (
                                 <Stack>
-                                <Text style={styles.error}>
-                                    <Ionicons
-                                        name="warning-outline"
-                                        style={styles.iconError}
-                                    />
-                                    {"Seleccione un tipo de Documento"}
-                                </Text>
+                                    <Text style={styles.error}>
+                                        <Ionicons
+                                            name="warning-outline"
+                                            style={styles.iconError}
+                                        />
+                                        {" Seleccione un tipo de Documento"}
+                                    </Text>
                                 </Stack>
                             ) : null}
                             <InputControlled
@@ -137,8 +137,11 @@ const RegisterStep1Screen = ({ navigation }) => {
                                 width="85%"
                                 rules={{
                                     required: " Número de Documento requerido",
-                                    minLength: 6,
-                                    maxLength: 12,
+                                    pattern: {
+                                        value: /^[0-9]{7,11}$/,
+                                        message:
+                                            " El número de documento debe contener 7 u 11 dígitos numéricos",
+                                    },
                                 }}
                             ></InputControlled>
                             <InputControlled
@@ -146,21 +149,61 @@ const RegisterStep1Screen = ({ navigation }) => {
                                 placeholder="Nombre"
                                 control={control}
                                 width="85%"
-                                rules={{ required: " Nombre requerido" }}
+                                rules={{
+                                    required: " Nombre requerido",
+                                    minLength: {
+                                        value: 3,
+                                        message:
+                                            " El nombre debe tener al menos 3 caracteres",
+                                    },
+                                    maxLength: {
+                                        value: 30,
+                                        message:
+                                            " El nombre no debe exceder los 30 caracteres",
+                                    },
+                                    pattern: {
+                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                        message:
+                                            "El nombre solo puede contener letras y espacios",
+                                    },
+                                }}
                             ></InputControlled>
                             <InputControlled
                                 name="surname"
                                 placeholder="Apellido"
                                 control={control}
                                 width="85%"
-                                rules={{ required: " Apellido requerido" }}
+                                rules={{
+                                    required: " Apellido requerido",
+                                    minLength: {
+                                        value: 3,
+                                        message:
+                                            " El apellido debe tener al menos 3 caracteres",
+                                    },
+                                    maxLength: {
+                                        value: 30,
+                                        message:
+                                            " El apellido no debe exceder los 30 caracteres",
+                                    },
+                                    pattern: {
+                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                        message:
+                                            " El apellido solo puede contener letras y espacios",
+                                    },
+                                }}
                             ></InputControlled>
                             <InputControlled
                                 name="razonSocial"
                                 placeholder="Razón social"
                                 control={control}
                                 width="85%"
-                                // rules={{ }}
+                                rules={{
+                                    pattern: {
+                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                        message:
+                                            " La razón social solo puede contener letras y espacios",
+                                    },
+                                }}
                             ></InputControlled>
                             <Button
                                 onPress={handleSubmit(NextStep)}

@@ -20,6 +20,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const { height } = Dimensions.get("screen");
 
+const REGEX_EMAIL =
+    /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
+
 const PasswordRecoveryScreen = ({ navigation }) => {
     const { control, handleSubmit } = useForm();
 
@@ -76,6 +79,10 @@ const PasswordRecoveryScreen = ({ navigation }) => {
                             placeholder={"Correo registrado"}
                             rules={{
                                 required: " Correo no ingresado",
+                                pattern: {
+                                        value: REGEX_EMAIL,
+                                        message: " Correo electrónico inválido",
+                                    },
                             }}
                         ></InputControlledCopyPaste>
                     </HStack>

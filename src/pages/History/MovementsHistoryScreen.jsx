@@ -11,7 +11,6 @@ import {
     StatusBar,
     VStack,
 } from "native-base";
-import InputDate from "../../components/InputDate";
 import { ScaledSheet } from "react-native-size-matters";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -20,6 +19,8 @@ import HeaderPage from "../../components/HeaderPage";
 import constants from "../../constants/constants";
 import { Octicons } from "@expo/vector-icons";
 import AlertError from "../../components/Alerts/AlertError";
+import InputDateInitial from "../../components/InputDateInitial";
+import InputDateEnd from "../../components/InputDateEnd";
 
 const { height } = Dimensions.get("screen");
 
@@ -253,16 +254,16 @@ const MovementsHistoryScreen = ({ navigation }) => {
                 ) : (
                     <>
                         <HStack maxW="85%">
-                            <InputDate
+                            <InputDateInitial
                                 text="Desde"
                                 setDateSent={setDateInitial}
-                            ></InputDate>
+                            ></InputDateInitial>
                         </HStack>
                         <HStack maxW="85%">
-                            <InputDate
+                            <InputDateEnd
                                 text="Hasta"
                                 setDateSent={setDateEnd}
-                            ></InputDate>
+                            ></InputDateEnd>
                         </HStack>
                         <HStack style={styles.containerVehicle}>
                             <FontAwesome5 name="car" style={styles.icon} />

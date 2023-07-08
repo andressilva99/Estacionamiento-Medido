@@ -11,7 +11,7 @@ import { TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { AntDesign } from "@expo/vector-icons";
 
-const InputDate = ({text, setDateSent}) => {
+const InputDateEnd = ({text, setDateSent}) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState("date");
     const [show, setShow] = useState(false);
@@ -71,7 +71,7 @@ const InputDate = ({text, setDateSent}) => {
     );
 };
 
-export default InputDate;
+export default InputDateEnd;
 
 const styles = ScaledSheet.create({
     containerText: {

@@ -171,6 +171,11 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                         value: 16,
                                         message: " Máximo 16 caracteres",
                                     },
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9]+$/,
+                                        message:
+                                            " El nombre de usuario solo puede contener letras y números",
+                                    },
                                 }}
                             ></InputControlled>
                             <InputControlled
@@ -230,7 +235,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                             name="warning-outline"
                                             style={styles.iconError}
                                         />
-                                        {"Seleccione compañía de teléfono"}
+                                        {" Seleccione compañía de teléfono"}
                                     </Text>
                                 </Stack>
                             ) : null}
@@ -244,17 +249,18 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                     required: " Número de teléfono requerido",
                                     minLength: {
                                         value: 10,
-                                        message: " Número de teléfono inválido",
+                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                     maxLength: {
                                         value: 10,
-                                        message: " Número de teléfono inválido",
+                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                 }}
                             ></InputControlled>
                             {loading ? (
                                 <Button
                                     isLoading
+                                    marginTop="15%"
                                     style={styles.buttonNextStep}
                                     isLoadingText={
                                         <Text style={styles.textNextStep}>

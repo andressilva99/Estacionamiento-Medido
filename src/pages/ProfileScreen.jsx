@@ -184,7 +184,24 @@ const ProfileScreen = ({ navigation }) => {
                                 placeholder="Nombre"
                                 control={control}
                                 width="85%"
-                                rules={{ required: " Nombre requerido" }}
+                                rules={{
+                                    required: " Nombre requerido",
+                                    minLength: {
+                                        value: 3,
+                                        message:
+                                            " El nombre debe tener al menos 3 caracteres",
+                                    },
+                                    maxLength: {
+                                        value: 30,
+                                        message:
+                                            " El nombre no debe exceder los 30 caracteres",
+                                    },
+                                    pattern: {
+                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                        message:
+                                            "El nombre solo puede contener letras y espacios",
+                                    },
+                                }}
                                 defaultValue={loggedUser.user.firstName}
                                 isDisabled={isDisabled}
                             ></InputControlled>
@@ -195,7 +212,24 @@ const ProfileScreen = ({ navigation }) => {
                                 placeholder="Apellido"
                                 control={control}
                                 width="85%"
-                                rules={{ required: " Apellido requerido" }}
+                                rules={{
+                                    required: " Apellido requerido",
+                                    minLength: {
+                                        value: 3,
+                                        message:
+                                            " El apellido debe tener al menos 3 caracteres",
+                                    },
+                                    maxLength: {
+                                        value: 30,
+                                        message:
+                                            " El apellido no debe exceder los 30 caracteres",
+                                    },
+                                    pattern: {
+                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                        message:
+                                            " El apellido solo puede contener letras y espacios",
+                                    },
+                                }}
                                 defaultValue={loggedUser.user.lastName}
                                 isDisabled={isDisabled}
                             ></InputControlled>
@@ -250,6 +284,11 @@ const ProfileScreen = ({ navigation }) => {
                                 width="85%"
                                 rules={{
                                     required: " Número de Documento requerido",
+                                    pattern: {
+                                        value: /^[0-9]{7,11}$/,
+                                        message:
+                                            " El número de documento debe contener 7 u 11 dígitos numéricos",
+                                    },
                                 }}
                                 defaultValue={loggedUser.user.documentNumber}
                                 isDisabled={isDisabled}
@@ -261,7 +300,13 @@ const ProfileScreen = ({ navigation }) => {
                                 placeholder="Razón social"
                                 control={control}
                                 width="85%"
-                                rules={{}}
+                                rules={{
+                                    pattern: {
+                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                        message:
+                                            " La razón social solo puede contener letras y espacios",
+                                    },
+                                }}
                                 defaultValue={loggedUser.user.razonSocial}
                                 isDisabled={isDisabled}
                             ></InputControlled>
@@ -335,11 +380,11 @@ const ProfileScreen = ({ navigation }) => {
                                     required: " Número de teléfono requerido",
                                     minLength: {
                                         value: 10,
-                                        message: " Número de teléfono inválido",
+                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                     maxLength: {
                                         value: 10,
-                                        message: " Número de teléfono inválido",
+                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                 }}
                                 defaultValue={loggedUser.user.numberPhone}
