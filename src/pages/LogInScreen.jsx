@@ -29,6 +29,7 @@ import { saveUserInformation } from "../functions/saveUserInformation";
 import { Ionicons } from "@expo/vector-icons";
 import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 import { findTickets } from "../functions/findTickets";
+import { sendTokenNotification } from "../functions/sendTokenNotification";
 
 const { height } = Dimensions.get("screen");
 
@@ -74,6 +75,7 @@ const LogInScreen = ({ navigation, route }) => {
             })
             .finally(async() => {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
+                sendTokenNotification();
                 findTickets()});
         setLoading(false);
     };

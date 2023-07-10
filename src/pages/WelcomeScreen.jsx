@@ -22,12 +22,13 @@ import { saveUserInformation } from "../functions/saveUserInformation";
 import { useRef } from "react";
 import AlertError from "../components/Alerts/AlertError";
 import { deleteUserData } from "../functions/deleteUserData";
-import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction"
+import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
 import { findTickets } from "../functions/findTickets";
+import { sendTokenNotification } from "../functions/sendTokenNotification";
 
 const { height } = Dimensions.get("screen");
 
-const WelcomeScreen = ({navigation, route }) => {
+const WelcomeScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const { setCurrentData, setLogged } = route.params;
 
@@ -47,7 +48,7 @@ const WelcomeScreen = ({navigation, route }) => {
             return;
         }
         setLoading(true);
-        
+
         const logIn = {
             usuario: {
                 email: loggedUser.user.email,
@@ -65,9 +66,12 @@ const WelcomeScreen = ({navigation, route }) => {
             .catch((error) => {
                 setErrorMessage(error.response.data.mensaje);
                 setIsOpen(true);
-            }).finally(async()=> {
+            })
+            .finally(async () => {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
-                findTickets()});
+                sendTokenNotification();
+                findTickets();
+            });
         setLoading(false);
     };
 
@@ -76,16 +80,17 @@ const WelcomeScreen = ({navigation, route }) => {
 
         loggedUser.user.token = token;
         loggedUser.user.typeDocument.name = data.usuario.tipo_documento.nombre;
-        loggedUser.user.phoneCompany.name = data.usuario.compania_telefono.nombre;
+        loggedUser.user.phoneCompany.name =
+            data.usuario.compania_telefono.nombre;
         loggedUser.user.balance = data.usuario.saldo;
         saveUserInformation();
         setCurrentData(true);
     };
 
-    const logOut = () =>{
+    const logOut = () => {
         deleteUserData();
         setLogged(false);
-    }
+    };
 
     return (
         <NativeBaseProvider>
@@ -103,7 +108,10 @@ const WelcomeScreen = ({navigation, route }) => {
                     <Stack alignItems="center" flex={0.5}>
                         <Spacer></Spacer>
                         <Text style={styles.text}>Bienvenido</Text>
-                        <Text style={styles.text}>{loggedUser.user.lastName}, {loggedUser.user.firstName}</Text>
+                        <Text style={styles.text}>
+                            {loggedUser.user.lastName},{" "}
+                            {loggedUser.user.firstName}
+                        </Text>
                         <Spacer></Spacer>
                     </Stack>
                     <Stack flex={0.4}>
@@ -130,7 +138,10 @@ const WelcomeScreen = ({navigation, route }) => {
                         )}
                     </Stack>
                     <Stack flex={0.4} justifyContent="flex-end">
-                        <Button style={styles.buttonLogOut} onPress={() => setIsOpenAlertNoticeFunction(true)}>
+                        <Button
+                            style={styles.buttonLogOut}
+                            onPress={() => setIsOpenAlertNoticeFunction(true)}
+                        >
                             <Text style={styles.buttonText}>
                                 Cambiar cuenta
                             </Text>
@@ -153,11 +164,12 @@ const WelcomeScreen = ({navigation, route }) => {
                 message={errorMessage}
             ></AlertError>
             <AlertNoticeFunction
-            isOpen={isOpenAlertNoticeFunction}
-            cancelRef={cancelRefAlertNoticeFunction}
-            onClose={onCloseAlertNoticeFunction}
-            message={"¿Está seguro que desea Cambiar de Usuario?"}
-            onPressAccept={logOut}></AlertNoticeFunction>
+                isOpen={isOpenAlertNoticeFunction}
+                cancelRef={cancelRefAlertNoticeFunction}
+                onClose={onCloseAlertNoticeFunction}
+                message={"¿Está seguro que desea Cambiar de Usuario?"}
+                onPressAccept={logOut}
+            ></AlertNoticeFunction>
         </NativeBaseProvider>
     );
 };

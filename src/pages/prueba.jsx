@@ -1,28 +1,17 @@
-// import React from 'react';
-// import { Button, View } from 'react-native';
-// import firebase from '@react-native-firebase/app';
-// import messaging from '@react-native-firebase/messaging';
+import React from "react";
+import { Button, View } from "react-native";
+import loggedUser from "../objects/user";
 
-// const MyComponent = () => {
-//   const handleButtonPress = () => {
-//     const notification = new firebase.notifications.Notification()
-//       .setNotificationId('notificationId')
-//       .setTitle('Título de la notificación')
-//       .setBody('Contenido de la notificación')
-//       .setData({
-//         // Puedes agregar datos adicionales a la notificación si es necesario
-//       })
-//       .android.setChannelId('channelId')
-//       .android.setSmallIcon('ic_launcher');
+const MyComponent = () => {
+    return (
+        <View>
+            {loggedUser.user.tokenNotification ? (
+                <Text>{loggedUser.user.tokenNotification}</Text>
+            ) : (
+                <Text>Sin Token</Text>
+            )}
+        </View>
+    );
+};
 
-//     firebase.notifications().displayNotification(notification);
-//   };
-
-//   return (
-//     <View>
-//       <Button title="Enviar notificación" onPress={handleButtonPress} />
-//     </View>
-//   );
-// };
-
-// export default MyComponent;
+export default MyComponent;
