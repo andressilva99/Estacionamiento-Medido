@@ -16,9 +16,9 @@ import {
     Stack,
     StatusBar,
     VStack,
+    View,
 } from "native-base";
 import { ScaledSheet } from "react-native-size-matters";
-import InputControlled from "../components/InputControlled";
 import { useForm } from "react-hook-form";
 import constants from "../constants/constants";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,7 +29,6 @@ import { saveUserInformation } from "../functions/saveUserInformation";
 import { Ionicons } from "@expo/vector-icons";
 import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 import { findTickets } from "../functions/findTickets";
-import { sendTokenNotification } from "../functions/sendTokenNotification";
 
 const { height } = Dimensions.get("screen");
 
@@ -58,6 +57,7 @@ const LogInScreen = ({ navigation, route }) => {
             usuario: {
                 email: user,
                 claveIngresada: password,
+                token: loggedUser.user.tokenNotification,
             },
         };
 
@@ -70,13 +70,14 @@ const LogInScreen = ({ navigation, route }) => {
                 AsyncStorage.setItem("loggedUser", JSON.stringify(logged));
             })
             .catch((error) => {
+                console.log(error.response.data);
                 setErrorMessage("Correo y/o contraseña incorrectos");
                 setIsOpen(true);
             })
-            .finally(async() => {
+            .finally(async () => {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
-                sendTokenNotification();
-                findTickets()});
+                findTickets();
+            });
         setLoading(false);
     };
 
@@ -229,6 +230,14 @@ const LogInScreen = ({ navigation, route }) => {
                             <Text style={styles.textButton}>Ingresar</Text>
                         </Button>
                     )}
+
+                    {/* <View>
+                        {loggedUser.user.tokenNotification ? (
+                            <Text>{loggedUser.user.tokenNotification}</Text>
+                        ) : (
+                            <Text>Sin Token</Text>
+                        )}
+                    </View> */}
 
                     <Text>¿No tienes cuenta?</Text>
                     <Button onPress={Register} style={styles.button}>

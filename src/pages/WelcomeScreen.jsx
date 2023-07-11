@@ -24,7 +24,6 @@ import AlertError from "../components/Alerts/AlertError";
 import { deleteUserData } from "../functions/deleteUserData";
 import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
 import { findTickets } from "../functions/findTickets";
-import { sendTokenNotification } from "../functions/sendTokenNotification";
 
 const { height } = Dimensions.get("screen");
 
@@ -53,6 +52,7 @@ const WelcomeScreen = ({ navigation, route }) => {
             usuario: {
                 email: loggedUser.user.email,
                 claveIngresada: loggedUser.user.password,
+                token: loggedUser.user.tokenNotification,
             },
         };
 
@@ -61,7 +61,6 @@ const WelcomeScreen = ({ navigation, route }) => {
                 const data = response.data.mensaje;
                 console.log(data);
                 FillUserData(data);
-                // navigation.navigate("Parking")
             })
             .catch((error) => {
                 setErrorMessage(error.response.data.mensaje);
@@ -69,7 +68,6 @@ const WelcomeScreen = ({ navigation, route }) => {
             })
             .finally(async () => {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
-                sendTokenNotification();
                 findTickets();
             });
         setLoading(false);

@@ -28,10 +28,10 @@ const MenuScreen = ({ navigation, route }) => {
     const onCloseAlertNoticeFunction = () =>
         setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
-        const [isOpenAlertError, setIsOpenAlertError] = useState(false);
-        const cancelRefAlertError = useRef(null);
-        const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
-        const [messageAlertError, setMessageAlertError] = useState();
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
 
     const handleButtonPress = (id) => {
         if (id !== "logOut") {
@@ -42,7 +42,7 @@ const MenuScreen = ({ navigation, route }) => {
         }
     };
 
-    const logOut = () => {
+    const logOut = async () => {
         let logOutUser = true;
         loggedUser.user.vehicles.forEach((vehicle) => {
             if (vehicle.parked) {
@@ -51,12 +51,33 @@ const MenuScreen = ({ navigation, route }) => {
             }
         });
         if (logOutUser) {
-            deleteUserData();
-            setLogged(false);
-            setSubMenu(false);
+            await constants
+                .AXIOS_INST({
+                    method: "post",
+                    url: "usuario/logOut",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
+                    },
+                    data: {
+                        usuario: {
+                            idUsuario: loggedUser.user.idUser,
+                        },
+                    },
+                })
+                .then((resp) => {
+                    deleteUserData();
+                    setLogged(false);
+                    setSubMenu(false);
+                })
+                .catch((error) => {
+                    setIsOpenAlertError(true);
+                    setMessageAlertError(error.response.data.mensaje);
+                });
         } else {
             onCloseAlertNoticeFunction();
-            setMessageAlertError("No se puede cerrar sesión con un vehículo estacionado");
+            setMessageAlertError(
+                "No se puede cerrar sesión con un vehículo estacionado"
+            );
             setIsOpenAlertError(true);
         }
     };
@@ -225,10 +246,11 @@ const MenuScreen = ({ navigation, route }) => {
                 onPressAccept={logOut}
             ></AlertNoticeFunction>
             <AlertError
-            isOpen={isOpenAlertError}
-            onClose={onCloseAlertError}
-            message={messageAlertError}
-            cancelRef={cancelRefAlertError}></AlertError>
+                isOpen={isOpenAlertError}
+                onClose={onCloseAlertError}
+                message={messageAlertError}
+                cancelRef={cancelRefAlertError}
+            ></AlertError>
         </NativeBaseProvider>
     );
 };
