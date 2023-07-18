@@ -1,16 +1,13 @@
-import React from "react";
-import { Button, View } from "react-native";
-import loggedUser from "../objects/user";
+import React, { useEffect } from "react";
+import { NativeBaseProvider, Center, Button } from "native-base";
 
 const MyComponent = () => {
     return (
-        <View>
-            {loggedUser.user.tokenNotification ? (
-                <Text>{loggedUser.user.tokenNotification}</Text>
-            ) : (
-                <Text>Sin Token</Text>
-            )}
-        </View>
+        <NativeBaseProvider>
+            <Center>
+                <Button>Enviar Notificación</Button>
+            </Center>
+        </NativeBaseProvider>
     );
 };
 

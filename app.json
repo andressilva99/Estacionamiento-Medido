@@ -23,7 +23,8 @@
     },
     "plugins": [
       "@react-native-firebase/app",
-      "expo-notifications"
+      "expo-notifications",
+      "@notifee/react-native"
     ],
     "web": {
       "favicon": "./assets/favicon.png"

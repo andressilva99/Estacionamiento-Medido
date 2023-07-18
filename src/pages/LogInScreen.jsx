@@ -29,6 +29,7 @@ import { saveUserInformation } from "../functions/saveUserInformation";
 import { Ionicons } from "@expo/vector-icons";
 import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 import { findTickets } from "../functions/findTickets";
+import notifee from "@notifee/react-native";
 
 const { height } = Dimensions.get("screen");
 
@@ -124,6 +125,32 @@ const LogInScreen = ({ navigation, route }) => {
         saveUserInformation();
         setLogged(true);
         setCurrentData(true);
+    };
+
+    const onDisplayNotification = async () => {
+        // Request permissions (required for iOS)
+        await notifee.requestPermission();
+
+        // Create a channel (required for Android)
+        const channelId = await notifee.createChannel({
+            id: "default",
+            name: "Default Channel",
+        });
+
+        // Display a notification
+        await notifee.displayNotification({
+            title: "Hola soy LA NOTIFICACION",
+            body: "AL FIN TIENES TU PUTA NOTIFICACION LOCAL",
+            android: {
+                channelId,
+                largeIcon: constants.PARKING_ICON,
+                smallIcon: "ic_small_icon",
+                // pressAction is needed if you want the notification to open the app when pressed
+                pressAction: {
+                    id: "default",
+                },
+            },
+        });
     };
 
     return (
@@ -230,15 +257,6 @@ const LogInScreen = ({ navigation, route }) => {
                             <Text style={styles.textButton}>Ingresar</Text>
                         </Button>
                     )}
-
-                    {/* <View>
-                        {loggedUser.user.tokenNotification ? (
-                            <Text>{loggedUser.user.tokenNotification}</Text>
-                        ) : (
-                            <Text>Sin Token</Text>
-                        )}
-                    </View> */}
-
                     <Text>¿No tienes cuenta?</Text>
                     <Button onPress={Register} style={styles.button}>
                         <Text style={styles.textButton}>Registrarse</Text>

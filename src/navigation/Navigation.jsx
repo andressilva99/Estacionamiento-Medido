@@ -23,7 +23,7 @@ import AnnouncementsScreen from "../pages/AnnouncementsScreen";
 import PasswordRecoveryScreen from "../pages/PasswordRecoveryScreen";
 import VehiclePropertyScreen from "../pages/VehiclePropertyScreen";
 import { findTickets } from "../functions/findTickets";
-// import prueba from "../pages/prueba";
+import prueba from "../pages/prueba";
 import messaging from "@react-native-firebase/messaging";
 
 const Stack = createNativeStackNavigator();
@@ -198,10 +198,10 @@ const Navigation = () => {
                                     name="VehicleProperty"
                                     component={VehiclePropertyScreen}
                                 ></Stack.Screen>
-                                {/* <Stack.Screen
+                                <Stack.Screen
                                     name="prueba"
                                     component={prueba}
-                                ></Stack.Screen> */}
+                                ></Stack.Screen>
                             </>
                         ) : (
                             <Stack.Screen
