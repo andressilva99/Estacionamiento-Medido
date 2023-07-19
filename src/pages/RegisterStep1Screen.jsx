@@ -37,7 +37,14 @@ const RegisterStep1Screen = ({ navigation }) => {
                 );
                 setListTypesDocuments(typesDocuments);
             } catch (error) {
-                console.error(error);
+                if (error.response) {
+                    console.log(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log(error);
+                }
+                return;
             }
         };
         obtainDocuments();

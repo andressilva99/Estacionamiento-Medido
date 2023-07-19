@@ -42,7 +42,14 @@ export const findTickets = () => {
                     }
                 })
                 .catch((error) => {
-                    console.log(error.response.data);
+                    if (error.response) {
+                        console.log(error.response.data);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
                 });
         });
     }

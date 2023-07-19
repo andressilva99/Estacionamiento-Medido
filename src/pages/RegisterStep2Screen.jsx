@@ -52,7 +52,15 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 );
                 setListPhoneCompanies(companies);
             } catch (error) {
-                console.error(error);
+                if (error.response) {
+                    console.log(error.response.data);
+                    
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log(error);
+                }
+                return;
             }
         };
         obtainCompanies();
@@ -85,8 +93,20 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 setIsOpenAlertNotice(true);
             })
             .catch((error) => {
-                setMessageAlertError(error.response.data.mensaje);
-                setIsOpenAlertError(true);
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
+                return;
             });
     };
 

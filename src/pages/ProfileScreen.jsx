@@ -65,7 +65,14 @@ const ProfileScreen = ({ navigation }) => {
                 );
                 setListTypesDocuments(typesDocuments);
             } catch (error) {
-                console.error(error);
+                if (error.response) {
+                    console.log(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log(error);
+                }
+                return;
             }
         }
     };
@@ -81,7 +88,14 @@ const ProfileScreen = ({ navigation }) => {
             );
             setListPhoneCompanies(companies);
         } catch (error) {
-            console.error(error);
+            if (error.response) {
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log(error);
+            }
+            return;
         }
     };
 
@@ -144,13 +158,24 @@ const ProfileScreen = ({ navigation }) => {
             .then((response) => {
                 setMessageAlertNotice("Datos Actualizados");
                 setIsOpenAlertNotice(true);
+                modifyUserData(modifyUser);
             })
             .catch((error) => {
-                setMessageAlertError(error.response.data.mensaje);
-                setIsOpenAlertError(true);
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
+                return;
             });
-
-        modifyUserData(modifyUser);
 
         setIsDisabled(!isDisabled);
         setLoading(false);
@@ -380,11 +405,13 @@ const ProfileScreen = ({ navigation }) => {
                                     required: " Número de teléfono requerido",
                                     minLength: {
                                         value: 10,
-                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
+                                        message:
+                                            " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                     maxLength: {
                                         value: 10,
-                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
+                                        message:
+                                            " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                 }}
                                 defaultValue={loggedUser.user.numberPhone}

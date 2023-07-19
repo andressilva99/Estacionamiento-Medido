@@ -23,7 +23,13 @@ export const sendTokenNotification = async () => {
             console.log("Token registrado");
         })
         .catch((error) => {
-            console.error("No se registró el token");
-            console.error(error);
+            if (error.response) {
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log(error);
+            }
+            return;
         });
 };

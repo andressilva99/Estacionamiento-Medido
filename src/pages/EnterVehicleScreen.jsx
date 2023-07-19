@@ -72,7 +72,14 @@ const EnterVehicleScreen = ({ navigation, route }) => {
             }));
             setListMark(marks);
         } catch (error) {
-            console.error(error);
+            if (error.response) {
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log(error);
+            }
+            return;
         }
     };
 
@@ -96,7 +103,13 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                 setEnableModel(true);
             }
         } catch (error) {
-            console.error(error);
+            if (error.response) {
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log(error);
+            }
             setEnableModel(false);
             setEnableColor(false);
         }
@@ -114,7 +127,13 @@ const EnterVehicleScreen = ({ navigation, route }) => {
             setListColor(colors);
             setEnableColor(true);
         } catch (error) {
-            console.error(error.response.data.mensaje);
+            if (error.response) {
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log(error);
+            }
             setEnableColor(false);
         }
     };
@@ -152,8 +171,20 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                 refreshParkingScreen();
             })
             .catch((error) => {
-                setMessageAlertError(error.response.data.mensaje);
-                setIsOpenAlertError(true);
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
+                return;
             });
         setLoading(false);
     };
@@ -214,7 +245,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                             <TouchableOpacity
                                 style={styles.touchableOpacity}
                                 onPress={() => {
-                                    setEnableButton(false)
+                                    setEnableButton(false);
                                     navigation.navigate("VehicleProperty", {
                                         type: "mark",
                                         listElement: listMark,
@@ -249,7 +280,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 <TouchableOpacity
                                     style={styles.touchableOpacity}
                                     onPress={() => {
-                                        setEnableButton(false)
+                                        setEnableButton(false);
                                         navigation.navigate("VehicleProperty", {
                                             type: "model",
                                             listElement: listModel,
@@ -293,7 +324,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 <TouchableOpacity
                                     style={styles.touchableOpacity}
                                     onPress={() => {
-                                        setEnableButton(false)
+                                        setEnableButton(false);
                                         navigation.navigate("VehicleProperty", {
                                             type: "color",
                                             listElement: listColor,

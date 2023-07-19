@@ -52,8 +52,20 @@ const PasswordRecoveryScreen = ({ navigation }) => {
                 setIsOpenAlertNotice(true);
             })
             .catch((error) => {
-                setMessageAlertError("Email no registrado");
-                setIsOpenAlertError(true);
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
+                return;
             });
 
         setLoading(false);

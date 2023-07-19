@@ -16,11 +16,12 @@ const PARKING_ICON = require("../image/Icon/Parking-Icon.png");
 const PROFILE_ICON = require("../image/Icon/Profile-Icon.png");
 const LOGO = require("../image/logo-app.png");
 const CAR_SPLASH = require("../image/car-splash.png");
-const ARROW = require("../image/arrow.png")
-const DELETE_PATENT_ICON = require("../image/Icon/Delete-Patent-Icon.png")
-const PARKING_HISTORY_ICON = require("../image/Icon/Parking-History-Icon.png")
-const RECHARGES_ICON = require("../image/Icon/Recharges-Icon.png")
-const MOVEMENTS_ICON = require("../image/Icon/Movements-Icon.png")
+const ARROW = require("../image/arrow.png");
+const DELETE_PATENT_ICON = require("../image/Icon/Delete-Patent-Icon.png");
+const PARKING_HISTORY_ICON = require("../image/Icon/Parking-History-Icon.png");
+const RECHARGES_ICON = require("../image/Icon/Recharges-Icon.png");
+const MOVEMENTS_ICON = require("../image/Icon/Movements-Icon.png");
+const TIME_OUT = 40000;
 
 export default {
     AXIOS_INST,
@@ -41,4 +42,5 @@ export default {
     PARKING_HISTORY_ICON,
     RECHARGES_ICON,
     MOVEMENTS_ICON,
+    TIME_OUT,
 };

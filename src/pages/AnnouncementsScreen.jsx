@@ -70,8 +70,16 @@ const AnnouncementsScreen = ({ navigation }) => {
                                 }
                             })
                             .catch((error) => {
-                                console.log(error.response.data);
-                            }).finally(() => {
+                                if (error.response) {
+                                    console.log(error.response.data);
+                                } else if (error.request) {
+                                    console.log(error.request);
+                                } else {
+                                    console.log(error);
+                                }
+                                return;
+                            })
+                            .finally(() => {
                                 if (loggedUser.user.tickets[0] != null) {
                                     setHaveTickets(false);
                                     setHaveTickets(true);

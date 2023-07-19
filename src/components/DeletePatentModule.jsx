@@ -124,9 +124,20 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
                     setIsOpenAlertNotice(true);
                 })
                 .catch((error) => {
-                    setMessageAlertError(error.response.data.mensaje);
-                    setIsOpenAlertError(true);
-                    console.error(error.response.data.mensaje);
+                    if (error.response) {
+                        console.log(error.response.data);
+                        setMessageAlertError(error.response.data.mensaje);
+                        setIsOpenAlertError(true);
+                    } else if (error.request) {
+                        console.log(error.request);
+                        setMessageAlertError(
+                            "No se ha obtenido respuesta, intente nuevamente"
+                        );
+                        setIsOpenAlertError(true);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
                 });
         } else {
             if (haveTicket) {

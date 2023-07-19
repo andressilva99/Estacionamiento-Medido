@@ -79,8 +79,20 @@ const MovementsHistoryScreen = ({ navigation }) => {
                     completeListMovements(resp);
                 })
                 .catch((error) => {
-                    setIsOpenAlertError(true);
-                    setMessageAlertError(error.response.data.mensaje);
+                    if (error.response) {
+                        console.log(error.response.data);
+                        setMessageAlertError(error.response.data.mensaje);
+                        setIsOpenAlertError(true);
+                    } else if (error.request) {
+                        console.log(error.request);
+                        setMessageAlertError(
+                            "No se ha obtenido respuesta, intente nuevamente"
+                        );
+                        setIsOpenAlertError(true);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
                 });
         } else {
             setMessageAlertError("Patente no seleccionada");

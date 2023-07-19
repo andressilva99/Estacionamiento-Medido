@@ -76,8 +76,20 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                 setIsOpenAlertNotice(true);
             })
             .catch((error) => {
-                setMessageAlertError(error.response.data.mensaje);
-                setIsOpenAlertError(true);
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
+                return;
             });
 
         setLoading(false);
@@ -88,7 +100,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         setLogged(false);
     };
 
-    const passRepeat = watch("newPassword")
+    const passRepeat = watch("newPassword");
 
     return (
         <NativeBaseProvider>
@@ -140,7 +152,9 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                         width="85%"
                         secureTextEntry={hidePassword2}
                         rules={{
-                            validate: (value) => value === passRepeat || " La contraseña ingresada no es la misma"
+                            validate: (value) =>
+                                value === passRepeat ||
+                                " La contraseña ingresada no es la misma",
                         }}
                     ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>

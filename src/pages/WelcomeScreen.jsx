@@ -63,8 +63,20 @@ const WelcomeScreen = ({ navigation, route }) => {
                 FillUserData(data);
             })
             .catch((error) => {
-                setErrorMessage(error.response.data.mensaje);
-                setIsOpen(true);
+                if (error.response) {
+                    console.log(error.response.data);
+                    setErrorMessage(error.response.data.mensaje);
+                    setIsOpen(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setErrorMessage(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpen(true);
+                } else {
+                    console.log(error);
+                }
+                return;
             })
             .finally(async () => {
                 await new Promise((resolve) => setTimeout(resolve, 2000));

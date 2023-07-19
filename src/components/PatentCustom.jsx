@@ -25,6 +25,7 @@ import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
 import AlertNotice from "./Alerts/AlertNotice";
 import AlertError from "./Alerts/AlertError";
 import { saveUserInformation } from "../functions/saveUserInformation";
+import notifee from "@notifee/react-native";
 
 const PatentCustom = ({
     patent,
@@ -44,11 +45,7 @@ const PatentCustom = ({
         setButtonStop(parked);
         const repeatFunction = async () => {
             const now = new Date();
-            if (
-                (now.getHours() >= 20 ||
-                    now.getHours() <= 7) &&
-                parked
-            ) {
+            if ((now.getHours() >= 20 || now.getHours() <= 7) && parked) {
                 setButtonStart(true);
                 setButtonStop(false);
                 loggedUser.user.vehicles[position].parked = buttonStop;
@@ -62,6 +59,22 @@ const PatentCustom = ({
 
         setInterval(repeatFunction, 5000); // 60000 ms = 1 minuto
     }, []);
+
+    useEffect(() => {
+        let intervalId;
+
+        if (buttonStop) {
+            // Si el vehículo está estacionado, configurar el intervalo para enviar notificaciones cada 12 minutos
+            intervalId = setInterval(() => {
+                enviarNotificacion();
+            }, 12 * 60 * 1000); // 12 * 60 * 1000 = 12 minutos en milisegundos
+        }
+
+        // Al salir del componente o dejar de estar estacionado, limpiar el intervalo
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [buttonStop]);
 
     const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
         useState(false);
@@ -89,6 +102,36 @@ const PatentCustom = ({
         },
     };
 
+    const enviarNotificacion = async() => {
+        // Lógica para enviar la notificación
+        // Aquí puedes llamar a tu función o librería para enviar la notificación
+        // Request permissions (required for iOS)
+        await notifee.requestPermission();
+
+        // Create a channel (required for Android)
+        const channelId = await notifee.createChannel({
+            id: "default",
+            name: "Default Channel",
+        });
+
+        // Display a notification
+        await notifee.displayNotification({
+            title: "Vehículo Estacionado",
+            body: `Aviso el vehículo ${patent} sigue estacionado`,
+            android: {
+                channelId,
+                largeIcon: constants.PARKING_ICON,
+                // smallIcon: "ic_small_icon",
+                // pressAction is needed if you want the notification to open the app when pressed
+                pressAction: {
+                    id: "default",
+                },
+            },
+        });
+        console.log('Notificación enviada');
+
+      };
+
     const updateBalance = async () => {
         await constants.AXIOS_INST.get(
             `usuario/obtener/${loggedUser.user.idUser}`,
@@ -98,7 +141,20 @@ const PatentCustom = ({
                 loggedUser.user.balance = response.data.mensaje.saldo;
             })
             .catch((error) => {
-                console.error(error);
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
+                return;
             });
     };
 
@@ -112,36 +168,47 @@ const PatentCustom = ({
         };
         if (idButton == "start") {
             const now = new Date();
-            if (now.getHours() >= 8 && now.getHours() <=19) {
+            if (now.getHours() >= 8 && now.getHours() <= 19) {
                 await constants
-                .AXIOS_INST({
-                    method: "post",
-                    url: "estacionamiento/activar",
-                    headers: {
-                        Authorization: `bearer ${loggedUser.user.token}`,
-                    },
-                    data: {
-                        estacionamiento: {
-                            idVehiculo: idVehicle,
-                            idUsuario: idUser,
+                    .AXIOS_INST({
+                        method: "post",
+                        url: "estacionamiento/activar",
+                        headers: {
+                            Authorization: `bearer ${loggedUser.user.token}`,
                         },
-                    },
-                })
-                .then((response) => {
-                    setMessageAlertNotice("Estacionameinto Activado");
-                    setIsOpenAlertNotice(true);
-                    setButtonStart(false);
-                    setButtonStop(true);
-                    loggedUser.user.vehicles[position].parked = buttonStart;
-                })
-                .catch((error) => {
-                    setMessageAlertError(error.response.data.mensaje);
-                    setIsOpenAlertError(true);
-                });
-            }
-            else {
+                        data: {
+                            estacionamiento: {
+                                idVehiculo: idVehicle,
+                                idUsuario: idUser,
+                            },
+                        },
+                    })
+                    .then((response) => {
+                        setMessageAlertNotice("Estacionameinto Activado");
+                        setIsOpenAlertNotice(true);
+                        setButtonStart(false);
+                        setButtonStop(true);
+                        loggedUser.user.vehicles[position].parked = buttonStart;
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            console.log(error.response.data);
+                            setMessageAlertError(error.response.data.mensaje);
+                            setIsOpenAlertError(true);
+                        } else if (error.request) {
+                            console.log(error.request);
+                            setMessageAlertError(
+                                "No se ha obtenido respuesta, intente nuevamente"
+                            );
+                            setIsOpenAlertError(true);
+                        } else {
+                            console.log(error);
+                        }
+                        return;
+                    });
+            } else {
                 setMessageAlertError("No se puede estacionar fuera de horario");
-                    setIsOpenAlertError(true);
+                setIsOpenAlertError(true);
             }
         } else {
             await constants.AXIOS_INST.put(
@@ -158,8 +225,20 @@ const PatentCustom = ({
                     updateBalance();
                 })
                 .catch((error) => {
-                    setMessageAlertError(error.response.data.mensaje);
-                    setIsOpenAlertError(true);
+                    if (error.response) {
+                        console.log(error.response.data);
+                        setMessageAlertError(error.response.data.mensaje);
+                        setIsOpenAlertError(true);
+                    } else if (error.request) {
+                        console.log(error.request);
+                        setMessageAlertError(
+                            "No se ha obtenido respuesta, intente nuevamente"
+                        );
+                        setIsOpenAlertError(true);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
                 });
         }
     };
