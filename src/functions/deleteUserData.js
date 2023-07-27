@@ -7,10 +7,8 @@ export const deleteUserData = async () => {
     loggedUser.user.firstName = "";
     loggedUser.user.lastName = "";
     loggedUser.user.razonSocial = "";
-    loggedUser.user.userName = "";
     loggedUser.user.email = "";
     loggedUser.user.numberPhone = "";
-    loggedUser.user.phoneCompany.name = "";
     loggedUser.user.typeDocument.name = "";
     loggedUser.user.vehicles = [];
     loggedUser.user.token = "";

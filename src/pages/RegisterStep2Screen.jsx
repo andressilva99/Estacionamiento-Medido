@@ -54,7 +54,6 @@ const RegisterStep2Screen = ({ route, navigation }) => {
             } catch (error) {
                 if (error.response) {
                     console.log(error.response.data);
-                    
                 } else if (error.request) {
                     console.log(error.request);
                 } else {
@@ -69,18 +68,17 @@ const RegisterStep2Screen = ({ route, navigation }) => {
     const { control, handleSubmit, watch } = useForm();
 
     const Register = async (data) => {
-        const { user, email, phone } = data;
+        const { email, phone } = data;
 
         const information = {
             usuario: {
                 idTipoDocumento: typeDocument,
                 idCompaniaTelefono: phoneCompanie,
                 numeroDocumento: numberDocument.toString(),
-                nombrePersona: name,
-                apellido: surname,
-                nombreUsuario: user,
-                razonSocial: razonSocial,
-                email: email,
+                nombrePersona: name.trim(),
+                apellido: surname.trim(),
+                razonSocial: razonSocial ? razonSocial.trim() : null,
+                email: email.trim(),
                 numeroTelefono: phone,
             },
         };
@@ -177,31 +175,10 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                 </Text>
                             </HStack>
                             <InputControlled
-                                name="user"
-                                placeholder="Nombre de usuario"
-                                control={control}
-                                width="85%"
-                                rules={{
-                                    required: " Nombre de usuario requerido",
-                                    minLength: {
-                                        value: 5,
-                                        message: " Mínimo 5 caracteres",
-                                    },
-                                    maxLength: {
-                                        value: 16,
-                                        message: " Máximo 16 caracteres",
-                                    },
-                                    pattern: {
-                                        value: /^[a-zA-Z0-9]+$/,
-                                        message:
-                                            " El nombre de usuario solo puede contener letras y números",
-                                    },
-                                }}
-                            ></InputControlled>
-                            <InputControlled
                                 name="email"
                                 placeholder="Correo electrónico"
                                 control={control}
+                                autoCapitalize="none"
                                 width="85%"
                                 rules={{
                                     required: " Correo electrónico requerido",
@@ -215,6 +192,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                 name="confirmEmail"
                                 placeholder="Confirmar correo electrónico"
                                 control={control}
+                                autoCapitalize="none"
                                 width="85%"
                                 rules={{
                                     validate: (value) =>
@@ -269,14 +247,19 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                     required: " Número de teléfono requerido",
                                     minLength: {
                                         value: 10,
-                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
+                                        message:
+                                            " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                     maxLength: {
                                         value: 10,
-                                        message: " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
+                                        message:
+                                            " Número inválido, debe ingresarse con la característica completa y sin el 15 (Ej.: 3564112233)",
                                     },
                                 }}
                             ></InputControlled>
+                            <Text style={styles.textNote}>
+                                *Ej: 3564112233, sin el "0" y sin el "15"
+                            </Text>
                             {loading ? (
                                 <Button
                                     isLoading
@@ -355,21 +338,21 @@ const styles = ScaledSheet.create({
         paddingLeft: "8.5%",
         borderEndWidth: 0,
     },
-    textPhoneCompanie: {
-        fontSize: "15@ms",
-    },
     buttonNextStep: {
         borderRadius: "30@ms",
         backgroundColor: "#04467C",
+    },
+    textPhoneCompanie: {
+        fontSize: "15@ms",
+    },
+    selectPhoneCompanie: {
+        fontSize: "15@ms",
+        height: "45@ms",
     },
     textNextStep: {
         fontSize: "20@ms",
         fontWeight: "bold",
         color: "white",
-    },
-    selectPhoneCompanie: {
-        fontSize: "15@ms",
-        height: "45@ms",
     },
     error: {
         color: "red",
@@ -378,5 +361,8 @@ const styles = ScaledSheet.create({
     iconError: {
         color: "red",
         fontSize: "24@ms",
+    },
+    textNote: {
+        paddingLeft: "20@ms",
     },
 });

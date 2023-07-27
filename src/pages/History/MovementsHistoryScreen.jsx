@@ -25,7 +25,11 @@ import InputDateEnd from "../../components/InputDateEnd";
 const { height } = Dimensions.get("screen");
 
 const MovementsHistoryScreen = ({ navigation }) => {
-    const [dateInitial, setDateInitial] = useState(new Date());
+    const [dateInitial, setDateInitial] = useState(() => {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDay() - 15);
+        return currentDate;
+    });
     const [dateEnd, setDateEnd] = useState(new Date());
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
@@ -120,6 +124,7 @@ const MovementsHistoryScreen = ({ navigation }) => {
             }
         });
         if (list[0] != undefined) {
+            list.reverse();
             setListMovements(list);
             setConsult(!consult);
         } else {
@@ -211,42 +216,54 @@ const MovementsHistoryScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.tableContainer,
                                                     styles.tableContainerCenter,
+                                                    {
+                                                        alignItems: "flex-end",
+                                                    },
                                                 ]}
                                             >
                                                 <Text
-                                                    style={
-                                                        styles.textTableItems
-                                                    }
+                                                    style={[
+                                                        styles.textTableItems,
+                                                        { paddingRight: 8 },
+                                                    ]}
                                                 >
-                                                    {movement.debit}
+                                                    {"$ " + movement.debit}
                                                 </Text>
                                             </Stack>
                                             <Stack
                                                 style={[
                                                     styles.tableContainer,
                                                     styles.tableContainerCenter,
+                                                    {
+                                                        alignItems: "flex-end",
+                                                    },
                                                 ]}
                                             >
                                                 <Text
-                                                    style={
-                                                        styles.textTableItems
-                                                    }
+                                                    style={[
+                                                        styles.textTableItems,
+                                                        { paddingRight: 8 },
+                                                    ]}
                                                 >
-                                                    {movement.credit}
+                                                    {"$ " + movement.credit}
                                                 </Text>
                                             </Stack>
                                             <Stack
                                                 style={[
                                                     styles.tableContainer,
                                                     styles.tableContainerRight,
+                                                    {
+                                                        alignItems: "flex-end",
+                                                    },
                                                 ]}
                                             >
                                                 <Text
-                                                    style={
-                                                        styles.textTableItems
-                                                    }
+                                                    style={[
+                                                        styles.textTableItems,
+                                                        { paddingRight: 8 },
+                                                    ]}
                                                 >
-                                                    {movement.amount}
+                                                    {"$ " + movement.amount}
                                                 </Text>
                                             </Stack>
                                         </HStack>
@@ -277,22 +294,21 @@ const MovementsHistoryScreen = ({ navigation }) => {
                                 setDateSent={setDateEnd}
                             ></InputDateEnd>
                         </HStack>
-                        <HStack style={styles.containerVehicle}>
-                            <FontAwesome5 name="car" style={styles.icon} />
-                            <Text style={styles.text}>Vehículo</Text>
-                            <Spacer></Spacer>
-                            <FontAwesome
-                                name="chevron-down"
-                                style={styles.icon}
-                            />
-                        </HStack>
                         <Stack style={styles.select}>
                             <Select
                                 borderWidth={0}
                                 selectedValue={patentSelected}
                                 style={styles.text}
-                                marginLeft="10%"
+                                marginX="5%"
                                 onValueChange={setPatentSelected}
+                                placeholderTextColor="white"
+                                placeholder="Seleccionar patente"
+                                dropdownIcon={
+                                    <FontAwesome
+                                        name="chevron-down"
+                                        style={styles.icon}
+                                    />
+                                }
                             >
                                 {loggedUser.user.vehicles.map((vehicle) => (
                                     <Select.Item
@@ -341,15 +357,6 @@ const styles = ScaledSheet.create({
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
     },
-    containerVehicle: {
-        minWidth: "85%",
-        backgroundColor: "#7bb6de",
-        borderWidth: 1,
-        borderColor: "#dadadc",
-        borderRadius: 30,
-        paddingVertical: "3%",
-        paddingHorizontal: "5%",
-    },
     text: {
         fontSize: "19@ms",
         fontWeight: "bold",
@@ -362,11 +369,11 @@ const styles = ScaledSheet.create({
     },
     select: {
         minWidth: "85%",
-        backgroundColor: "#bbbcc0",
-        borderWidth: 1,
+        backgroundColor: "#7bb6de",
+        borderWidth: "1@ms",
         borderColor: "#dadadc",
-        borderRadius: 30,
-        minHeight: "6%",
+        borderRadius: "30@ms",
+        minHeight: "45@ms",
     },
     button: {
         minWidth: "85%",
@@ -374,7 +381,7 @@ const styles = ScaledSheet.create({
         borderWidth: 1,
         borderColor: "#dadadc",
         borderRadius: 30,
-        minHeight: "6%",
+        minHeight: "45@ms",
     },
     textButton: {
         color: "#1290c0",

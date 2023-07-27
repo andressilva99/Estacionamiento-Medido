@@ -3,6 +3,7 @@ import backgroundInit from "../image/fondo-app.png";
 
 // const PATH_INST = "https://sem1.onrender.com/api/";
 const PATH_INST = "https://estacionamiento.sanfrancisco.gov.ar/api/";
+// const PATH_INST = "https://estacionamientotest.sanfrancisco.gov.ar/api/";
 const AXIOS_INST = axios.create({ baseURL: PATH_INST });
 const BACKGROUND_INIT = backgroundInit;
 const CLOSE_ICON = require("../image/Icon/Close-Icon.png");
@@ -21,7 +22,9 @@ const DELETE_PATENT_ICON = require("../image/Icon/Delete-Patent-Icon.png");
 const PARKING_HISTORY_ICON = require("../image/Icon/Parking-History-Icon.png");
 const RECHARGES_ICON = require("../image/Icon/Recharges-Icon.png");
 const MOVEMENTS_ICON = require("../image/Icon/Movements-Icon.png");
+const DELETE_ACOUNT_ICON = require("../image/Icon/Delete-Acount-Icon.png");
 const TIME_OUT = 40000;
+const LINK_DELETE_ACOUNT = "https://estacionamientotest.sanfrancisco.gov.ar/api/usuario/eliminar";
 
 export default {
     AXIOS_INST,
@@ -43,4 +46,6 @@ export default {
     RECHARGES_ICON,
     MOVEMENTS_ICON,
     TIME_OUT,
+    LINK_DELETE_ACOUNT,
+    DELETE_ACOUNT_ICON,
 };

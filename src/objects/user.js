@@ -4,13 +4,8 @@ const user = {
     firstName: "",
     lastName: "",
     razonSocial: "",
-    userName: "",
     email: "",
     numberPhone: "",
-    phoneCompany: {
-        idPhoneCompany: undefined,
-        name: "",
-    },
     typeDocument: {
         idTypeDocument: undefined,
         name: "",

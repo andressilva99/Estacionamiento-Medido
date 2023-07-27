@@ -24,7 +24,11 @@ import InputDateEnd from "../../components/InputDateEnd";
 const { height } = Dimensions.get("screen");
 
 const ParkingHistoryScreen = ({ navigation }) => {
-    const [dateInitial, setDateInitial] = useState(new Date());
+    const [dateInitial, setDateInitial] = useState(() => {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDay() - 15);
+        return currentDate;
+    });
     const [dateEnd, setDateEnd] = useState(new Date());
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
@@ -132,9 +136,7 @@ const ParkingHistoryScreen = ({ navigation }) => {
             setConsult(!consult);
         } else {
             setIsOpenAlertError(true);
-            setMessageAlertError(
-                "No se encontraron Estacionamientos"
-            );
+            setMessageAlertError("No se encontraron Estacionamientos");
         }
     };
 
@@ -252,14 +254,18 @@ const ParkingHistoryScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.tableContainer,
                                                     styles.tableContainerRight,
+                                                    {
+                                                        alignItems: "flex-end",
+                                                    },
                                                 ]}
                                             >
                                                 <Text
-                                                    style={
-                                                        styles.textTableItems
-                                                    }
+                                                    style={[
+                                                        styles.textTableItems,
+                                                        { paddingRight: 8 },
+                                                    ]}
                                                 >
-                                                    {parking.cost}
+                                                    {"$ " + parking.cost}
                                                 </Text>
                                             </Stack>
                                         </HStack>
@@ -290,22 +296,21 @@ const ParkingHistoryScreen = ({ navigation }) => {
                                 setDateSent={setDateEnd}
                             ></InputDateEnd>
                         </HStack>
-                        <HStack style={styles.containerVehicle}>
-                            <FontAwesome5 name="car" style={styles.icon} />
-                            <Text style={styles.text}>Vehículo</Text>
-                            <Spacer></Spacer>
-                            <FontAwesome
-                                name="chevron-down"
-                                style={styles.icon}
-                            />
-                        </HStack>
                         <Stack style={styles.select}>
                             <Select
                                 borderWidth={0}
                                 selectedValue={patentSelected}
                                 style={styles.text}
-                                marginLeft="10%"
+                                marginX="5%"
                                 onValueChange={setPatentSelected}
+                                placeholderTextColor="white"
+                                placeholder="Seleccionar patente"
+                                dropdownIcon={
+                                    <FontAwesome
+                                        name="chevron-down"
+                                        style={styles.icon}
+                                    />
+                                }
                             >
                                 {loggedUser.user.vehicles.map((vehicle) => (
                                     <Select.Item
@@ -354,16 +359,6 @@ const styles = ScaledSheet.create({
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
     },
-    containerVehicle: {
-        minWidth: "85%",
-        backgroundColor: "#7bb6de",
-        borderWidth: "1@ms",
-        borderColor: "#dadadc",
-        borderRadius: "30@ms",
-        height: "45@ms",
-        paddingHorizontal: "5%",
-        alignItems: "center",
-    },
     parkingIcon: {
         color: "#515ba3",
         fontSize: "25@ms",
@@ -381,7 +376,7 @@ const styles = ScaledSheet.create({
     },
     select: {
         minWidth: "85%",
-        backgroundColor: "#bbbcc0",
+        backgroundColor: "#7bb6de",
         borderWidth: "1@ms",
         borderColor: "#dadadc",
         borderRadius: "30@ms",

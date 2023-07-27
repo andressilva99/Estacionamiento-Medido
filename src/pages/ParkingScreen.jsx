@@ -51,7 +51,6 @@ const ParkingScreen = ({ navigation }) => {
         //         console.log("No se ejecuta más nada");
         //     }
         // };
-
     }, [refresh]);
 
     const handleButtonPressMenu = () => {
@@ -125,7 +124,7 @@ const ParkingScreen = ({ navigation }) => {
                         </Text>
                     </Button>
                 </Stack>
-                <HStack style={styles.parking}>
+                {/* <HStack style={styles.parking}>
                     <FontAwesome5 name="car" style={styles.icon} />
                     <Text style={styles.textParkingVehicle}>Estacionar</Text>
                     <Spacer></Spacer>
@@ -133,6 +132,10 @@ const ParkingScreen = ({ navigation }) => {
                         name="chevron-down"
                         style={[styles.icon, { paddingRight: "6%" }]}
                     />
+                </HStack> */}
+                <HStack space="md" style={styles.parking}>
+                    <FontAwesome5 name="car" style={[styles.icon, {color: "#3f60af"}]} />
+                    <Text style={styles.textParkingVehicle}>Veículos Registrados</Text>
                 </HStack>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {loggedUser.user.vehicles
@@ -208,11 +211,8 @@ const styles = ScaledSheet.create({
     parking: {
         minHeight: "45@ms",
         minWidth: "85%",
-        borderRadius: "30@ms",
-        paddingLeft: "20@ms",
-        backgroundColor: "#53be88",
-        justifyContent: "flex-start",
         alignItems: "center",
+        justifyContent: "center",
     },
     textEnterVehicle: {
         fontWeight: "bold",
@@ -223,8 +223,7 @@ const styles = ScaledSheet.create({
     textParkingVehicle: {
         fontWeight: "bold",
         fontSize: "20@ms",
-        color: "white",
-        marginLeft: "15@ms",
+        color: "#3f60af",
     },
     icon: {
         color: "white",

@@ -25,7 +25,11 @@ import InputDateEnd from "../../components/InputDateEnd";
 const { height } = Dimensions.get("screen");
 
 const AnnouncementsHistoryScreen = ({ navigation }) => {
-    const [dateInitial, setDateInitial] = useState(new Date());
+    const [dateInitial, setDateInitial] = useState(() => {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDay() - 15);
+        return currentDate;
+    });
     const [dateEnd, setDateEnd] = useState(new Date());
     const [patentSelected, setPatentSelected] = useState();
     const [consult, setConsult] = useState(false);
@@ -113,6 +117,7 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                 list.push({
                     date: formattedDate,
                     amount: announcement.importe,
+                    status: statusText(announcement.estado),
                 });
             }
         });
@@ -123,6 +128,25 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
         } else {
             setIsOpenAlertError(true);
             setMessageAlertError("No se encontraron Avisos");
+        }
+    };
+
+    const statusText = (status) => {
+        switch (status) {
+            case 0:
+                return "Generado";
+
+            case 1:
+                return "Anulado";
+
+            case 2:
+                return "Informado a TAF";
+
+            case 3:
+                return "Pagado";
+
+            default:
+                return "Otro";
         }
     };
 
@@ -166,7 +190,7 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                                     ]}
                                 >
                                     <Text style={styles.textTableHeader}>
-                                        Importe
+                                        Estado
                                     </Text>
                                 </Stack>
                             </HStack>
@@ -203,7 +227,7 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                                                             styles.textTableItems
                                                         }
                                                     >
-                                                        {announcement.amount}
+                                                        {announcement.status}
                                                     </Text>
                                                 </Stack>
                                             </HStack>
@@ -235,22 +259,21 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                                 setDateSent={setDateEnd}
                             ></InputDateEnd>
                         </HStack>
-                        <HStack style={styles.containerVehicle}>
-                            <FontAwesome5 name="car" style={styles.icon} />
-                            <Text style={styles.text}>Vehículo</Text>
-                            <Spacer></Spacer>
-                            <FontAwesome
-                                name="chevron-down"
-                                style={styles.icon}
-                            />
-                        </HStack>
                         <Stack style={styles.select}>
                             <Select
                                 borderWidth={0}
                                 selectedValue={patentSelected}
                                 style={styles.text}
-                                marginLeft="10%"
+                                marginX="5%"
                                 onValueChange={setPatentSelected}
+                                placeholderTextColor="white"
+                                placeholder="Seleccionar patente"
+                                dropdownIcon={
+                                    <FontAwesome
+                                        name="chevron-down"
+                                        style={styles.icon}
+                                    />
+                                }
                             >
                                 {loggedUser.user.vehicles.map((vehicle) => (
                                     <Select.Item
@@ -299,16 +322,6 @@ const styles = ScaledSheet.create({
     backgroundContainer: {
         backgroundColor: "#f2f2f4",
     },
-    containerVehicle: {
-        minWidth: "85%",
-        backgroundColor: "#7bb6de",
-        borderWidth: "1@ms",
-        borderColor: "#dadadc",
-        borderRadius: "30@ms",
-        height: "45@ms",
-        alignItems: "center",
-        paddingHorizontal: "5%",
-    },
     text: {
         fontSize: "19@ms",
         fontWeight: "bold",
@@ -321,7 +334,7 @@ const styles = ScaledSheet.create({
     },
     select: {
         minWidth: "85%",
-        backgroundColor: "#bbbcc0",
+        backgroundColor: "#7bb6de",
         borderWidth: "1@ms",
         borderColor: "#dadadc",
         borderRadius: "30@ms",

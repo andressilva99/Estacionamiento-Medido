@@ -52,43 +52,50 @@ const LogInScreen = ({ navigation, route }) => {
         }
 
         setLoading(true);
-
-        const logIn = {
-            usuario: {
-                email: user,
-                claveIngresada: password,
-                token: loggedUser.user.tokenNotification,
-            },
-        };
-
-        await constants.AXIOS_INST.post("usuario/logIn", logIn)
-            .then((response) => {
-                const data = response.data.mensaje;
-                loggedUser.user.password = password;
-                FillUserData(data);
-                const logged = true;
-                AsyncStorage.setItem("loggedUser", JSON.stringify(logged));
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data);
-                    setErrorMessage(error.response.data.mensaje);
-                    setIsOpen(true);
-                } else if (error.request) {
-                    console.log(error.request);
-                    setErrorMessage(
-                        "No se ha obtenido respuesta, intente nuevamente"
-                    );
-                    setIsOpen(true);
-                } else {
-                    console.log(error);
-                }
-                return;
-            })
-            .finally(async () => {
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                findTickets();
-            });
+        if (user != null && password != null) {
+            const logIn = {
+                usuario: {
+                    email: user.trim(),
+                    claveIngresada: password.trim(),
+                    token: loggedUser.user.tokenNotification,
+                },
+            };
+    
+            await constants.AXIOS_INST.post("usuario/logIn", logIn)
+                .then((response) => {
+                    const data = response.data.mensaje;
+                    loggedUser.user.password = password;
+                    FillUserData(data);
+                    const logged = true;
+                    AsyncStorage.setItem("loggedUser", JSON.stringify(logged));
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error.response.data);
+                        setErrorMessage(error.response.data.mensaje);
+                        setIsOpen(true);
+                    } else if (error.request) {
+                        console.log(error.request);
+                        setErrorMessage(
+                            "No se ha obtenido respuesta, intente nuevamente"
+                        );
+                        setIsOpen(true);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
+                })
+                .finally(async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
+                    findTickets();
+                });
+        } else {
+            setErrorMessage(
+                "Correo y/o Contraseña no ingresados"
+            );
+            setIsOpen(true);
+        }
+        
         setLoading(false);
     };
 
@@ -110,14 +117,10 @@ const LogInScreen = ({ navigation, route }) => {
         loggedUser.user.firstName = userData.nombrePersona;
         loggedUser.user.lastName = userData.apellido;
         loggedUser.user.numberPhone = userData.numeroTelefono;
-        loggedUser.user.phoneCompany.idPhoneCompany =
-            userData.compania_telefono.idCompaniaTelefono;
-        loggedUser.user.phoneCompany.name = userData.compania_telefono.nombre;
         loggedUser.user.razonSocial = userData.razonSocial;
         loggedUser.user.typeDocument.idTypeDocument =
             userData.tipo_documento.idTipoDocumento;
         loggedUser.user.typeDocument.name = userData.tipo_documento.nombre;
-        loggedUser.user.userName = userData.nombreUsuario;
         loggedUser.user.token = token;
         loggedUser.user.balance = userData.saldo;
         if (userData.usuario_vehiculo != undefined) {
@@ -154,8 +157,8 @@ const LogInScreen = ({ navigation, route }) => {
                     <Image
                         source={require("../image/logIn-icon-start.png")}
                         alt="logIn-icon-start"
-                        size="20%"
-                        resizeMode="center"
+                        resizeMode="contain"
+                        style={styles.iconLogIn}
                     ></Image>
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
@@ -179,6 +182,7 @@ const LogInScreen = ({ navigation, route }) => {
                                     style={styles.input}
                                     variant="unstiled"
                                     placeholder="Correo"
+                                    autoCapitalize="none"
                                 ></InputControlledCopyPaste>
                             </HStack>
                         </HStack>
@@ -206,6 +210,7 @@ const LogInScreen = ({ navigation, route }) => {
                                     secureTextEntry={hidePassword}
                                     variant="unstiled"
                                     placeholder="Contraseña"
+                                    autoCapitalize="none"
                                 ></InputControlledCopyPaste>
                             </HStack>
                             <TouchableOpacity
@@ -267,8 +272,8 @@ export default LogInScreen;
 
 const styles = ScaledSheet.create({
     iconLogIn: {
-        fontSize: "40@ms",
-        color: "white",
+        height: "70@ms",
+        marginBottom: "20@ms",
     },
     inputContainer: {
         margin: "2%",

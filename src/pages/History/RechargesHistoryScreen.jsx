@@ -25,7 +25,11 @@ import InputDateEnd from "../../components/InputDateEnd";
 const { height } = Dimensions.get("screen");
 
 const RechargesHistoryScreen = ({ navigation }) => {
-    const [dateInitial, setDateInitial] = useState(new Date());
+    const [dateInitial, setDateInitial] = useState(() => {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDay() - 15);
+        return currentDate;
+    });
     const [dateEnd, setDateEnd] = useState(new Date());
     const [consult, setConsult] = useState(false);
 
@@ -110,6 +114,7 @@ const RechargesHistoryScreen = ({ navigation }) => {
             });
         });
         if (list[0] != undefined) {
+            list.reverse();
             setListRecharges(list);
             setConsult(!consult);
         } else {
@@ -197,28 +202,36 @@ const RechargesHistoryScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.tableContainer,
                                                     styles.tableContainerCenter,
+                                                    {
+                                                        alignItems: "flex-end",
+                                                    },
                                                 ]}
                                             >
                                                 <Text
-                                                    style={
-                                                        styles.textTableItems
-                                                    }
+                                                    style={[
+                                                        styles.textTableItems,
+                                                        { paddingRight: 8 },
+                                                    ]}
                                                 >
-                                                    {recharge.cost}
+                                                    {"$ " + recharge.cost}
                                                 </Text>
                                             </Stack>
                                             <Stack
                                                 style={[
                                                     styles.tableContainer,
                                                     styles.tableContainerRight,
+                                                    {
+                                                        alignItems: "flex-end",
+                                                    },
                                                 ]}
                                             >
                                                 <Text
-                                                    style={
-                                                        styles.textTableItems
-                                                    }
+                                                    style={[
+                                                        styles.textTableItems,
+                                                        { paddingRight: 8 },
+                                                    ]}
                                                 >
-                                                    {recharge.amount}
+                                                    {"$ " + recharge.amount}
                                                 </Text>
                                             </Stack>
                                         </HStack>

@@ -1,26 +1,24 @@
 |Nº|Tipo|Solucionado|
 |-|-|-|
-|1|LOS BOTONES INGRESAR Y CAMBIAR CUENTA DEBERIAN TENER DISTINTOS FONDOS Y ESTAR MAS SEPARADOS, PARA EVITAR APRETARSE ACCIDENTALMENTE|No|
-|2|TAMBIEN EL BOTON CAMBIAR CUENTA ANTES DE SALIR DEBERIA APARECERLE UN CARTEL DE ADVERTENCIA EN ROJO, DE CONFIRMACION SI ESTA SEGURO DE SALIR, SI LO HACE TENDRA QUE PONER USUARIO Y CLAVE NUEVAMENTE, QUE NOTIFIQUE AL USUARIO DE ESO|No|
-|3|LA LISTA DESPLEGABLE TENDRIA QUE SALIR PARA ARRIBA YA QUE EN ALGUNOS TELEFONOS NO SE VE PORQUE LO TAPA EL TECLADO FLOTANTE QUE APARECE CADA VEZ QUE HACEN CLIC EN EL LUGAR DONDE TIENEN QUE ESCRIBIR|No|
-|4|TAMBIEN SI TIENE ALGUN ERROR COMO QUE LA PATENTE NO ESTA DENTRO DE LAS VALIDACIONES POSIBLES O EL COLOR NO ESTA REGISTRADO, SOLO SALTA ERROR, NO DICE QUE TIPO DE ERROR Y SI NO CONOCEN MUCHO, VA A GENERAR PROBLEMAS|No|
-|5|LA PALABRA INICIAR / FINALIZAR o INICIAR / SALIR DEBERIAN ESTAR DESTACADAS, MAS GRANDES, NEGRITAS, SEPARADAS, OTRO COLOR, ETC CUALQUIERA DE LAS OPCIONES O TODAS, PARA QUE EL USUARIO LE PRESTE ATENCION, POR EJEMPLO INICIAR EN VERDE, SALIR EN ROJO|No|
-|6|EL BOTON DEL MENU, ESTA MUY CLARO Y CASI ESCONDIDO QUE NO SE VE|No|
-|7|LA CAMPANITA DE ESTACIONAMIENTO PROGRAMADO NO FUNCIONA, DEBERIA PODER UTILIZARCE LUEGO DE HABER ESTACIONADO EL VEHICULO|No|
-|8|SOLO VALIDA EL MAIL, ENVIANDO LA CLAVE POR MAIL, PERO NO VALIDA EL NUMERO DE TELEFONO, DEBERIA VALIDAR EL TELEFONO YA QUE ES PARTE IMPORTANTE PARA PODER COMUNICARNOS CON LOS USUARIOS VIA WHATSAPP O LLAMADAS,|No|
-|9|DEBERIA PEDIR DIRECTAMENTE QUE CAMBIE LA CLAVE, PARA QUE PONGA UNA CLAVE QUE SE ACUERDE y ASI EVITAR O DISMINUIR EL QUE POR ERROR LO SAQUEN Y DE ESA MANERA SEA MAS FACTIBLE QUE SE LO ACUERDEN|No|
-|10|*Advertencia de iniciar, parar estacionamiento y eliminar patente: Se dice "¿Está seguro que desea iniciar estacionamiento para la patente....?". "evitar el dequeísmo" y optar por usar la palabra "desea" en vez de "quiere".
-|No|
-|11|*Aviso de estacionamiento activado, en iniciar y detener, poner cada primera letra en mayúsculas, por ejemplo: "Estacionamiento Activado".|No|
-|12|*En el botón dice "Parar" y en la advertencia "detener", se podría usar el mismo término.|No|
-|13|*En Perfil: debería aumentarse el tamaño de la fuente en los campos a cargar.|No|
-|14|*Cuando se cambia la clave: No hay aviso de clave modificada correctamente.|No|
-|15|*Al eliminar patente, no se ve si se hace correctamente el proceso, ni si hay confirmación que se ha eliminado, porque se selecciona la opción de "Cancelar".|No|
-|16|*Historial: ¿para qué sirve el combo "Móvil"? ¿Qué opciones tiene?, porque no se despliega nada, y si "Móvil" se refiere a Vehículo, debería mencionarse de esa forma, porque Móvil no está en otro lado.|No|
-|17|*Historial: No se ve el resultado de las búsquedas.|No|
-|18|*Recargas: Dice "Regargas", corregir.|No|
-|19|*Recargas: No se ve el resultado del proceso.|No|
-|20|*Acerca de: Sí, corregir, es "Acerca de". Además, el teléfono va con "-" no con "/" y los horarios no coinciden con lo que dice la app actual. Enviamos captura. Igual esto lo definirán desde la oficina de Estacionamiento Medido.|No|
-|21|*Ingresar Nuevo vehículo: Falta texto en el cuadro superior que indique que ahí se debe ingresar la patente.|No|
-|22|*Ingresar Nuevo vehículo: Cuando termina de cargar la nueva patente y vuelve, no se ve la nueva cargada (antes de cerrar y abrir la app).|No|
+|1|Corregir "Estacionameinto Activado"|Si|
+|2|Probé cargar cualquier texto en la patente, marca y color, no modelo y se quedó "Ingresando vehículo..........". No cargó nada.|Si|
+|3|Cambiar el diseño de Estacionar en ParkingScreen|Si|
+|4|Cambiar el diseño de Vehículo en los historiales|Si|
+|5|Historial. La alineación debería estar a la derecha, se pide así en la mayoría de los sistemas en los que haya importes. Y aclarar arriba o ver dónde que es $|Si|
+|6|En Historial -> Avisos, si no hay da este mensaje de Error. Creo que deberían advertir como lo hicieron  en la siguiente imagen: No se encontraron avisos|No|
+|7|No dejar estacionar con saldo negativo|Si|
+|8|Otra cosa, el mail al ingresarlo te lleva automáticamente a cargar la primera en mayúsculas, y al hacerlo de esa manera, da error. Habría que ponerlo que te lleve a escribir en minúsculas directamente.|Si|
+|9|Otro detalle. En la mayoría de los sistemas, al cambiar la clave primero se ingresa la actual, luego la nueva y por último se repite la nueva.|Si|
+|10|Intento Ingresar sin datos y me da este error. Validar el ingreso|Si|
+|11|Ver renderizado iOS|No|
+|12|Permitir estacionar en horarios no válidos (la validación lo hace el backend)|Si|
+|13|A la hora de completar, los datos, en los campos no hay nada que vaya aclarando los datos a poner, por ejemplo en teléfono no dice que es sin el 0 y sin el 15, osea al hacer click te debería aparecer el formato del teléfono como nota|Si|
+|14|Agregar el campo de ELIMINAR CUENTA.|Si|
+|15|Cuando tienen tickets abiertos, no te deja eliminar los autos. Eso está bien, pero tendría que dejar eliminar un auto luego de 5 días de pasado el ticket. Cambiar un poco la validación|No|
+|16|En los avisos de tickets (notificaciones), no figura el campo de Estado (PAGADO, INFORMADO, ETC), y el orden de los tickets tiene que ser de manera descendente, el más reciente primero.|No|
+|17|Quitar el campo de proveedor de celular (si el backend lo termina)|Probar|
+|18|Redireccionar a la pagina web al eliminar la cuenta y cerrar sesion|Si|
+|19|Cuando en cualquier campo, dejas un espacio en blanco, te da un error.|Si|
+|20|Si elegís DNI, que aparezcan los campos de las personas. Si elegís CUIT, solo la razón social.|Si|
+|21|Eliminar campo Usuario|Probar|
 

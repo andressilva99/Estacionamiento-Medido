@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import MenuScreen from "./src/pages/MenuScreen";
 import ChangePasswordScreen from "./src/pages/ChangePasswordScreen";
 import ParkingScreen from "./src/pages/ParkingScreen";
@@ -15,10 +14,10 @@ import SplashScreen from "./src/pages/SplashScreen";
 import WelcomeScreen from "./src/pages/WelcomeScreen";
 import AnnouncementsScreen from "./src/pages/AnnouncementsScreen";
 import VehiclePropertyScreen from "./src/pages/VehiclePropertyScreen";
+import AnnouncementsHistoryScreen from "./src/pages/History/AnnouncementsHistoryScreen";
+import RechargesHistoryScreen from "./src/pages/History/RechargesHistoryScreen";
+import MovementsHistoryScreen from "./src/pages/History/MovementsHistoryScreen";
 
-import loggedUser from "./src/objects/user";
-
-import { useEffect, useState } from "react";
 
 export default function App() {
     return (
@@ -33,6 +32,9 @@ export default function App() {
         // <PressableCustom></PressableCustom>
         // <InformationScreen></InformationScreen>
         // <ParkingHistoryScreen></ParkingHistoryScreen>
+        // <AnnouncementsHistoryScreen></AnnouncementsHistoryScreen>
+        // <RechargesHistoryScreen></RechargesHistoryScreen>
+        // <MovementsHistoryScreen></MovementsHistoryScreen>
         // <SplashScreen></SplashScreen>
         // <WelcomeScreen></WelcomeScreen>
         // <AnnouncementsScreen></AnnouncementsScreen>

@@ -6,7 +6,14 @@ import {
     View,
 } from "react-native";
 import React from "react";
-import { Image, NativeBaseProvider, Spacer, Stack, StatusBar } from "native-base";
+import {
+    Image,
+    NativeBaseProvider,
+    Spacer,
+    Stack,
+    StatusBar,
+    VStack,
+} from "native-base";
 import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
 
@@ -20,32 +27,33 @@ const SplashScreen = () => {
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
             >
-                <View
-                    height={height}
-                >
-                    <Stack flex={2} paddingX={"10%"}>
+                <VStack height={height} alignItems={"center"}>
+                    <Spacer></Spacer>
+                    <Stack>
                         <Image
                             source={constants.LOGO}
                             alt="logo"
-                            resizeMode="center"
-                            flex={1}
+                            resizeMode="contain"
+                            style={styles.logo}
                         ></Image>
                     </Stack>
-                    <Stack flex={1} paddingX={"30%"} paddingBottom={"15%"} alignItems={"center"}>
+                    <Spacer></Spacer>
+                    <Stack alignItems={"center"}>
                         <Image
                             source={constants.CAR_SPLASH}
                             alt="logo"
-                            resizeMode="center"
-                            flex={1}
+                            resizeMode="contain"
+                            style={styles.car}
                         ></Image>
                         <Image
-                        source={constants.ARROW}
-                        alt="arrow"
-                        resizeMode="center"
-                        flex={1}
+                            source={constants.ARROW}
+                            alt="arrow"
+                            resizeMode="contain"
+                            style={styles.arrow}
                         ></Image>
                     </Stack>
-                </View>
+                    <Spacer></Spacer>
+                </VStack>
             </ImageBackground>
         </NativeBaseProvider>
     );
@@ -54,5 +62,15 @@ const SplashScreen = () => {
 export default SplashScreen;
 
 const styles = ScaledSheet.create({
-    logo: {},
+    logo: {
+        height: "200@ms",
+        width: "320@ms",
+    },
+    car: {
+        height: "180@ms",
+    },
+    arrow: {
+        height: "60@ms",
+        width: "60@ms",
+    },
 });

@@ -167,8 +167,7 @@ const PatentCustom = ({
             },
         };
         if (idButton == "start") {
-            const now = new Date();
-            if (now.getHours() >= 8 && now.getHours() <= 19) {
+            if (loggedUser.user.balance >= 1) {
                 await constants
                     .AXIOS_INST({
                         method: "post",
@@ -184,7 +183,7 @@ const PatentCustom = ({
                         },
                     })
                     .then((response) => {
-                        setMessageAlertNotice("Estacionameinto Activado");
+                        setMessageAlertNotice("Estacionamiento Activado");
                         setIsOpenAlertNotice(true);
                         setButtonStart(false);
                         setButtonStop(true);
@@ -207,7 +206,7 @@ const PatentCustom = ({
                         return;
                     });
             } else {
-                setMessageAlertError("No se puede estacionar fuera de horario");
+                setMessageAlertError("Saldo insuficiente para estacionar");
                 setIsOpenAlertError(true);
             }
         } else {
@@ -244,8 +243,8 @@ const PatentCustom = ({
     };
 
     return (
-        <NativeBaseProvider key={idVehicle}>
-            <Flex mb={4}>
+        <>
+            <Flex mb={4} key={idVehicle}>
                 <Flex direction="row" justifyContent="center">
                     <Stack minW="75%">
                         <ImageBackground
@@ -353,7 +352,7 @@ const PatentCustom = ({
                 onClose={onCloseAlertError}
                 message={messageAlertError}
             ></AlertError>
-        </NativeBaseProvider>
+        </>
     );
 };
 

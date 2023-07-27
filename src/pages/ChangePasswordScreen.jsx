@@ -128,6 +128,24 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                 </Stack>
                 <HStack maxW="85%">
                     <InputControlledCopyPaste
+                        name="oldPassword"
+                        placeholder="Clave Actual"
+                        control={control}
+                        width="85%"
+                        secureTextEntry={hidePassword3}
+                        // rules={}
+                    ></InputControlledCopyPaste>
+                    <TouchableOpacity style={styles.touchVisiblePassword}>
+                        <Ionicons
+                            name={hidePassword3 ? "eye" : "eye-off"}
+                            style={styles.icon}
+                            color="#3f60af"
+                            onPress={() => setHidePassword3(!hidePassword3)}
+                        />
+                    </TouchableOpacity>
+                </HStack>
+                <HStack maxW="85%">
+                    <InputControlledCopyPaste
                         name="newPassword"
                         placeholder="Nueva Clave"
                         control={control}
@@ -163,24 +181,6 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                             style={styles.icon}
                             color="#3f60af"
                             onPress={() => setHidePassword2(!hidePassword2)}
-                        />
-                    </TouchableOpacity>
-                </HStack>
-                <HStack maxW="85%">
-                    <InputControlledCopyPaste
-                        name="oldPassword"
-                        placeholder="Clave Actual"
-                        control={control}
-                        width="85%"
-                        secureTextEntry={hidePassword3}
-                        // rules={}
-                    ></InputControlledCopyPaste>
-                    <TouchableOpacity style={styles.touchVisiblePassword}>
-                        <Ionicons
-                            name={hidePassword3 ? "eye" : "eye-off"}
-                            style={styles.icon}
-                            color="#3f60af"
-                            onPress={() => setHidePassword3(!hidePassword3)}
                         />
                     </TouchableOpacity>
                 </HStack>

@@ -34,10 +34,6 @@ const ProfileScreen = ({ navigation }) => {
     const [typeDocument, setTypeDocument] = useState(
         loggedUser.user.typeDocument.idTypeDocument
     );
-    const [listPhoneCompanies, setListPhoneCompanies] = useState([]);
-    const [phoneCompanie, setPhoneCompanie] = useState(
-        loggedUser.user.phoneCompany.idPhoneCompany
-    );
 
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
@@ -77,28 +73,6 @@ const ProfileScreen = ({ navigation }) => {
         }
     };
 
-    const obtainCompanies = async () => {
-        try {
-            const result = await constants.AXIOS_INST.get("companiasTelefono");
-            const companies = result.data.mensaje.map(
-                ({ idCompaniaTelefono, nombre }) => ({
-                    value: idCompaniaTelefono,
-                    label: nombre,
-                })
-            );
-            setListPhoneCompanies(companies);
-        } catch (error) {
-            if (error.response) {
-                console.log(error.response.data);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log(error);
-            }
-            return;
-        }
-    };
-
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
@@ -109,13 +83,12 @@ const ProfileScreen = ({ navigation }) => {
 
     const modifyUserData = (modifyUser) => {
         loggedUser.user.documentNumber = modifyUser.usuario.numeroDocumento;
-        loggedUser.user.email = modifyUser.usuario.email;
-        loggedUser.user.firstName = modifyUser.usuario.nombrePersona;
-        loggedUser.user.lastName = modifyUser.usuario.apellido;
+        loggedUser.user.email = modifyUser.usuario.email.trim();
+        loggedUser.user.firstName = modifyUser.usuario.nombrePersona.trim();
+        loggedUser.user.lastName = modifyUser.usuario.apellido.trim();
         loggedUser.user.numberPhone = modifyUser.usuario.numeroTelefono;
-        loggedUser.user.razonSocial = modifyUser.usuario.razonSocial;
+        loggedUser.user.razonSocial = modifyUser.usuario.razonSocial.trim();
         loggedUser.user.typeDocument.idTypeDocument = typeDocument;
-        loggedUser.user.phoneCompany.idPhoneCompany = phoneCompanie;
 
         saveUserInformation();
     };
@@ -129,17 +102,15 @@ const ProfileScreen = ({ navigation }) => {
             usuario: {
                 idUsuario: loggedUser.user.idUser,
                 idTipoDocumento: typeDocument,
-                idCompaniaTelefono: phoneCompanie,
                 numeroDocumento: numberDocument
                     ? numberDocument
                     : loggedUser.user.documentNumber,
-                nombrePersona: name ? name : loggedUser.user.firstName,
-                apellido: surname ? surname : loggedUser.user.lastName,
-                nombreUsuario: loggedUser.user.userName,
+                nombrePersona: name ? name.trim() : loggedUser.user.firstName,
+                apellido: surname ? surname.trim() : loggedUser.user.lastName,
                 razonSocial: razonSocial
-                    ? razonSocial
+                    ? razonSocial.trim()
                     : loggedUser.user.razonSocial,
-                email: email ? email : loggedUser.user.email,
+                email: email ? email.trim() : loggedUser.user.email,
                 numeroTelefono: phone ? phone : loggedUser.user.numberPhone,
             },
         };
@@ -319,23 +290,27 @@ const ProfileScreen = ({ navigation }) => {
                                 isDisabled={isDisabled}
                             ></InputControlled>
                         </HStack>
-                        <HStack>
-                            <InputControlled
-                                name="razonSocial"
-                                placeholder="Razón social"
-                                control={control}
-                                width="85%"
-                                rules={{
-                                    pattern: {
-                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
-                                        message:
-                                            " La razón social solo puede contener letras y espacios",
-                                    },
-                                }}
-                                defaultValue={loggedUser.user.razonSocial}
-                                isDisabled={isDisabled}
-                            ></InputControlled>
-                        </HStack>
+                        {typeDocument == 2 ? (
+                            <HStack>
+                                <InputControlled
+                                    name="razonSocial"
+                                    placeholder="Razón social"
+                                    control={control}
+                                    width="85%"
+                                    rules={{
+                                        required:
+                                            " La Razón Social es requerida",
+                                        pattern: {
+                                            value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                            message:
+                                                " La razón social solo puede contener letras y espacios",
+                                        },
+                                    }}
+                                    defaultValue={loggedUser.user.razonSocial}
+                                    isDisabled={isDisabled}
+                                ></InputControlled>
+                            </HStack>
+                        ) : null}
                         <HStack>
                             <InputControlled
                                 name="email"
@@ -352,47 +327,6 @@ const ProfileScreen = ({ navigation }) => {
                                 defaultValue={loggedUser.user.email}
                                 isDisabled={isDisabled}
                             ></InputControlled>
-                        </HStack>
-                        <HStack flex={1} isDisabled={isDisabled}>
-                            <Stack
-                                style={
-                                    isDisabled
-                                        ? styles.containerTypeDocumentDisable
-                                        : styles.containerTypeDocumentEnable
-                                }
-                            >
-                                <Text
-                                    style={
-                                        isDisabled
-                                            ? styles.textTypeDocumentDisable
-                                            : styles.textTypeDocumentEnable
-                                    }
-                                >
-                                    Companía Teléfono
-                                </Text>
-                            </Stack>
-                            <Select
-                                backgroundColor="white"
-                                borderBottomLeftRadius={0}
-                                borderTopLeftRadius={0}
-                                borderTopRightRadius={30}
-                                borderBottomRightRadius={30}
-                                flex={1}
-                                isDisabled={isDisabled}
-                                placeholder={loggedUser.user.phoneCompany.name}
-                                style={styles.selectTypeDocument}
-                                borderColor={"gray.400"}
-                                selectedValue={phoneCompanie}
-                                onValueChange={setPhoneCompanie}
-                            >
-                                {listPhoneCompanies.map((phone) => (
-                                    <Select.Item
-                                        key={phone.value}
-                                        label={phone.label}
-                                        value={phone.value}
-                                    ></Select.Item>
-                                ))}
-                            </Select>
                         </HStack>
                         <HStack>
                             <InputControlled
@@ -430,7 +364,6 @@ const ProfileScreen = ({ navigation }) => {
                                 style={styles.buttonChangePassword}
                                 onPress={() => {
                                     obtainDocuments();
-                                    obtainCompanies();
                                     setIsDisabled(!isDisabled);
                                 }}
                             >

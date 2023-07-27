@@ -199,19 +199,20 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     },
                                 }}
                             ></InputControlled>
-                            <InputControlled
+                            {typeDocument == 2 ? (<InputControlled
                                 name="razonSocial"
                                 placeholder="Razón social"
                                 control={control}
                                 width="85%"
                                 rules={{
+                                    required: " Razón Social requerida",
                                     pattern: {
                                         value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
                                         message:
                                             " La razón social solo puede contener letras y espacios",
                                     },
                                 }}
-                            ></InputControlled>
+                            ></InputControlled>) : null}
                             <Button
                                 onPress={handleSubmit(NextStep)}
                                 marginTop="15%"

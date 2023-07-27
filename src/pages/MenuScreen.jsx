@@ -1,4 +1,4 @@
-import { Dimensions, ImageBackground, StatusBar } from "react-native";
+import { Dimensions, ImageBackground, Linking, StatusBar } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
     HStack,
@@ -28,18 +28,38 @@ const MenuScreen = ({ navigation, route }) => {
     const onCloseAlertNoticeFunction = () =>
         setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
+    const [
+        isOpenAlertNoticeFunctionDelAcount,
+        setIsOpenAlertNoticeFunctionDelAcount,
+    ] = useState(false);
+    const cancelRefAlertNoticeFunctionDelAcount = useRef(null);
+    const onCloseAlertNoticeFunctionDelAcount = () =>
+        setIsOpenAlertNoticeFunctionDelAcount(
+            !isOpenAlertNoticeFunctionDelAcount
+        );
+
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
 
     const handleButtonPress = (id) => {
-        if (id !== "logOut") {
+        if (id == "logOut") {
+            setIsOpenAlertNoticeFunction(true);
+        } else if (id == "deleteAcount") {
+            setIsOpenAlertNoticeFunctionDelAcount(true);
+        } else {
             navigation.navigate(id, { refreshParkingScreen });
             setSubMenu(false);
-        } else {
-            setIsOpenAlertNoticeFunction(true);
         }
+    };
+
+    const deleteAcount = async () => {
+        setIsOpenAlertNoticeFunctionDelAcount(false);
+        Linking.openURL(constants.LINK_DELETE_ACOUNT).catch((error) => {
+            console.error("Error al abrir el enlace:", error);
+        });
+        await logOut();
     };
 
     const logOut = async () => {
@@ -239,6 +259,15 @@ const MenuScreen = ({ navigation, route }) => {
                                 id={"logOut"}
                             ></PressableCustom>
                         </HStack>
+                        <HStack style={styles.containerPressable}>
+                            <PressableCustom
+                                text={"Eliminar cuenta"}
+                                icon={constants.DELETE_ACOUNT_ICON}
+                                styleTouchable={{ backgroundColor: "#009FE3" }}
+                                onPress={handleButtonPress}
+                                id={"deleteAcount"}
+                            ></PressableCustom>
+                        </HStack>
                         <Spacer></Spacer>
                         <Image
                             source={constants.LOGO}
@@ -256,6 +285,15 @@ const MenuScreen = ({ navigation, route }) => {
                 onClose={onCloseAlertNoticeFunction}
                 message={"¿Está seguro que desea Cerrar Sesión?"}
                 onPressAccept={logOut}
+            ></AlertNoticeFunction>
+            <AlertNoticeFunction
+                isOpen={isOpenAlertNoticeFunctionDelAcount}
+                cancelRef={cancelRefAlertNoticeFunctionDelAcount}
+                onClose={onCloseAlertNoticeFunctionDelAcount}
+                message={
+                    '¿Está seguro que desea Eliminar la Cuenta? Si pulsa "Aceptar" se redireccionará a la página correspondiente y se cerrará la sesión'
+                }
+                onPressAccept={deleteAcount}
             ></AlertNoticeFunction>
             <AlertError
                 isOpen={isOpenAlertError}
@@ -286,9 +324,9 @@ const styles = ScaledSheet.create({
     },
     textButton: {
         color: "white",
-        fontSize: 20,
+        fontSize: "20@ms",
         fontWeight: "bold",
-        paddingLeft: 8,
+        paddingLeft: "8@ms",
     },
     textMenu: {
         fontWeight: "bold",

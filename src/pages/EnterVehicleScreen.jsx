@@ -232,6 +232,11 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                             placeholder="Patente"
                             rules={{
                                 required: " Patente Requerida",
+                                pattern: {
+                                    value: /^[A-Z]{3}\d{3}$|^[A-Z]{2}\d{3}[A-Z]{2}$/,
+                                    message:
+                                        ' La patente debe tener el formato "LLLNNN" o "LLNNNLL" (L: letra, N: número)',
+                                },
                             }}
                         ></InputControlled>
                     </HStack>
