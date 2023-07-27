@@ -79,6 +79,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 apellido: surname.trim(),
                 razonSocial: razonSocial ? razonSocial.trim() : null,
                 email: email.trim(),
+                nombreUsuario: email.trim(),
                 numeroTelefono: phone,
             },
         };
