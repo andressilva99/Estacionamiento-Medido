@@ -34,6 +34,10 @@ const ProfileScreen = ({ navigation }) => {
     const [typeDocument, setTypeDocument] = useState(
         loggedUser.user.typeDocument.idTypeDocument
     );
+    const [listPhoneCompanies, setListPhoneCompanies] = useState([]);
+    const [phoneCompanie, setPhoneCompanie] = useState(
+        loggedUser.user.phoneCompany.idPhoneCompany
+    );
 
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
@@ -73,6 +77,28 @@ const ProfileScreen = ({ navigation }) => {
         }
     };
 
+    const obtainCompanies = async () => {
+        try {
+            const result = await constants.AXIOS_INST.get("companiasTelefono");
+            const companies = result.data.mensaje.map(
+                ({ idCompaniaTelefono, nombre }) => ({
+                    value: idCompaniaTelefono,
+                    label: nombre,
+                })
+            );
+            setListPhoneCompanies(companies);
+        } catch (error) {
+            if (error.response) {
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log(error);
+            }
+            return;
+        }
+    };
+
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
@@ -89,6 +115,7 @@ const ProfileScreen = ({ navigation }) => {
         loggedUser.user.numberPhone = modifyUser.usuario.numeroTelefono;
         loggedUser.user.razonSocial = modifyUser.usuario.razonSocial.trim();
         loggedUser.user.typeDocument.idTypeDocument = typeDocument;
+        loggedUser.user.phoneCompany.idPhoneCompany = phoneCompanie;
 
         saveUserInformation();
     };
@@ -102,6 +129,7 @@ const ProfileScreen = ({ navigation }) => {
             usuario: {
                 idUsuario: loggedUser.user.idUser,
                 idTipoDocumento: typeDocument,
+                idCompaniaTelefono: phoneCompanie,
                 numeroDocumento: numberDocument
                     ? numberDocument
                     : loggedUser.user.documentNumber,
@@ -112,6 +140,7 @@ const ProfileScreen = ({ navigation }) => {
                     : loggedUser.user.razonSocial,
                 email: email ? email.trim() : loggedUser.user.email,
                 numeroTelefono: phone ? phone : loggedUser.user.numberPhone,
+                nombreUsuario: email ? email.trim() : loggedUser.user.email,
             },
         };
 
@@ -328,6 +357,47 @@ const ProfileScreen = ({ navigation }) => {
                                 isDisabled={isDisabled}
                             ></InputControlled>
                         </HStack>
+                        <HStack flex={1} isDisabled={isDisabled}>
+                            <Stack
+                                style={
+                                    isDisabled
+                                        ? styles.containerTypeDocumentDisable
+                                        : styles.containerTypeDocumentEnable
+                                }
+                            >
+                                <Text
+                                    style={
+                                        isDisabled
+                                            ? styles.textTypeDocumentDisable
+                                            : styles.textTypeDocumentEnable
+                                    }
+                                >
+                                    Companía Teléfono
+                                </Text>
+                            </Stack>
+                            <Select
+                                backgroundColor="white"
+                                borderBottomLeftRadius={0}
+                                borderTopLeftRadius={0}
+                                borderTopRightRadius={30}
+                                borderBottomRightRadius={30}
+                                flex={1}
+                                isDisabled={isDisabled}
+                                placeholder={loggedUser.user.phoneCompany.name}
+                                style={styles.selectTypeDocument}
+                                borderColor={"gray.400"}
+                                selectedValue={phoneCompanie}
+                                onValueChange={setPhoneCompanie}
+                            >
+                                {listPhoneCompanies.map((phone) => (
+                                    <Select.Item
+                                        key={phone.value}
+                                        label={phone.label}
+                                        value={phone.value}
+                                    ></Select.Item>
+                                ))}
+                            </Select>
+                        </HStack>
                         <HStack>
                             <InputControlled
                                 keyboardType="numeric"
@@ -364,6 +434,7 @@ const ProfileScreen = ({ navigation }) => {
                                 style={styles.buttonChangePassword}
                                 onPress={() => {
                                     obtainDocuments();
+                                    obtainCompanies();
                                     setIsDisabled(!isDisabled);
                                 }}
                             >

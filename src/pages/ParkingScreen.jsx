@@ -135,7 +135,7 @@ const ParkingScreen = ({ navigation }) => {
                 </HStack> */}
                 <HStack space="md" style={styles.parking}>
                     <FontAwesome5 name="car" style={[styles.icon, {color: "#3f60af"}]} />
-                    <Text style={styles.textParkingVehicle}>Veículos Registrados</Text>
+                    <Text style={styles.textParkingVehicle}>Vehículos Registrados</Text>
                 </HStack>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {loggedUser.user.vehicles

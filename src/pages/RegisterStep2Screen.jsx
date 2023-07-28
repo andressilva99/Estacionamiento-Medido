@@ -25,6 +25,7 @@ import constants from "../constants/constants";
 import AlertNotice from "../components/Alerts/AlertNotice";
 import { Ionicons } from "@expo/vector-icons";
 import AlertError from "../components/Alerts/AlertError";
+import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 
 const { height } = Dimensions.get("screen");
 
@@ -83,7 +84,8 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 numeroTelefono: phone,
             },
         };
-        await constants.AXIOS_INST.post("usuario/registrar", information)
+        try {
+            await constants.AXIOS_INST.post("usuario/registrar", information)
             .then((response) => {
                 console.log(response.data.mensaje);
                 setMessageAlertNotice(
@@ -107,6 +109,10 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 }
                 return;
             });
+        } catch (error) {
+            setMessageAlertError("Se ha producido un error al registrarse");
+            setIsOpenAlertError(true);
+        }
     };
 
     const [invalidPhoneCompanie, setInvalidPhoneCompanie] = useState(false);
@@ -175,7 +181,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                     Registro
                                 </Text>
                             </HStack>
-                            <InputControlled
+                            <InputControlledCopyPaste
                                 name="email"
                                 placeholder="Correo electrónico"
                                 control={control}
@@ -188,8 +194,8 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                         message: " Correo electrónico inválido",
                                     },
                                 }}
-                            ></InputControlled>
-                            <InputControlled
+                            ></InputControlledCopyPaste>
+                            <InputControlledCopyPaste
                                 name="confirmEmail"
                                 placeholder="Confirmar correo electrónico"
                                 control={control}
@@ -200,7 +206,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                         value === emailRepeat ||
                                         " El correo electrónico no es el mismo",
                                 }}
-                            ></InputControlled>
+                            ></InputControlledCopyPaste>
                             <HStack flex={1} minW="85%">
                                 <Stack style={styles.containerPhoneCompanie}>
                                     <Text style={styles.textPhoneCompanie}>

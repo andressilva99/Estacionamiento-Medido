@@ -51,9 +51,9 @@ const InformationScreen = ({ navigation }) => {
                     />
                     <Text style={styles.textBold}>Acerca de</Text>
                 </HStack>
-                <VStack space="sm">
+                <VStack space="sm" width={"85%"}>
                     <Stack>
-                        <Text style={styles.textBold}>Oficina SEM</Text>
+                        <Text style={styles.textBold}>Oficina Estacionamiento Medido San Francisco</Text>
                         <Text style={styles.textNormal}>9 de Julio 1880</Text>
                     </Stack>
                     <Stack>
@@ -71,7 +71,7 @@ const InformationScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </Stack>
                     <Stack>
-                        <Text style={styles.textBold}>Horario</Text>
+                        <Text style={styles.textBold}>Horario de atención al público</Text>
                         <Text style={styles.textNormal}>Lunes a Viernes</Text>
                         <Text style={styles.textNormal}>
                             7:30 a 13:00 hs. - 14:00 a 19:30 hs.
