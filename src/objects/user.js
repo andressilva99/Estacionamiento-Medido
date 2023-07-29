@@ -6,6 +6,10 @@ const user = {
     razonSocial: "",
     email: "",
     numberPhone: "",
+    phoneCompany: {
+        idPhoneCompany: undefined,
+        name: "",
+    },
     typeDocument: {
         idTypeDocument: undefined,
         name: "",

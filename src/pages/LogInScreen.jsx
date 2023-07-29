@@ -60,7 +60,7 @@ const LogInScreen = ({ navigation, route }) => {
                     token: loggedUser.user.tokenNotification,
                 },
             };
-    
+
             await constants.AXIOS_INST.post("usuario/logIn", logIn)
                 .then((response) => {
                     const data = response.data.mensaje;
@@ -90,12 +90,10 @@ const LogInScreen = ({ navigation, route }) => {
                     findTickets();
                 });
         } else {
-            setErrorMessage(
-                "Correo y/o Contraseña no ingresados"
-            );
+            setErrorMessage("Correo y/o Contraseña no ingresados");
             setIsOpen(true);
         }
-        
+
         setLoading(false);
     };
 
@@ -122,6 +120,9 @@ const LogInScreen = ({ navigation, route }) => {
             userData.tipo_documento.idTipoDocumento;
         loggedUser.user.typeDocument.name = userData.tipo_documento.nombre;
         loggedUser.user.token = token;
+        loggedUser.user.phoneCompany.idPhoneCompany =
+            userData.compania_telefono.idCompaniaTelefono;
+        loggedUser.user.phoneCompany.name = userData.compania_telefono.nombre;
         loggedUser.user.balance = userData.saldo;
         if (userData.usuario_vehiculo != undefined) {
             userData.usuario_vehiculo.forEach((vehicle) => {
