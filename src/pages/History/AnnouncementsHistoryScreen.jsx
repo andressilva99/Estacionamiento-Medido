@@ -21,6 +21,7 @@ import constants from "../../constants/constants";
 import AlertError from "../../components/Alerts/AlertError";
 import InputDateInitial from "../../components/InputDateInitial";
 import InputDateEnd from "../../components/InputDateEnd";
+import AlertNotice from "../../components/Alerts/AlertNotice";
 
 const { height } = Dimensions.get("screen");
 
@@ -40,6 +41,11 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
+
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [loaging, setLoaging] = useState(false);
 
@@ -126,8 +132,8 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
             setListAnnouncements(list);
             setConsult(!consult);
         } else {
-            setIsOpenAlertError(true);
-            setMessageAlertError("No se encontraron Avisos");
+            setIsOpenAlertNotice(true);
+            setMessageAlertNotice("No se encontraron Avisos");
         }
     };
 
@@ -160,7 +166,10 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                 space="sm"
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
+                    <HeaderPage
+                        onPress={handleButtonPressMenu}
+                        navigation={navigation}
+                    ></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
                     <MaterialCommunityIcons
@@ -312,6 +321,12 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
                 message={messageAlertError}
                 cancelRef={cancelRefAlertError}
             ></AlertError>
+            <AlertNotice
+                isOpen={isOpenAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+            ></AlertNotice>
         </NativeBaseProvider>
     );
 };

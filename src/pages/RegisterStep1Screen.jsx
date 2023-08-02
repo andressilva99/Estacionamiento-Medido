@@ -15,6 +15,7 @@ import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import constants from "../constants/constants";
 import { Ionicons } from "@expo/vector-icons";
+import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
@@ -85,6 +86,9 @@ const RegisterStep1Screen = ({ navigation }) => {
                     safeAreaTop={true}
                     height={"100%"}
                 >
+                    <HeaderButtonGoBack
+                        navigation={navigation}
+                    ></HeaderButtonGoBack>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <Stack space="sm">
                             <HStack
@@ -92,7 +96,6 @@ const RegisterStep1Screen = ({ navigation }) => {
                                 space="sm"
                                 alignItems="center"
                                 justifyContent="center"
-                                marginY="7.5%"
                             >
                                 <Entypo name="add-user" style={styles.icon} />
                                 <Text style={styles.textHeaderRegister}>
@@ -199,20 +202,22 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     },
                                 }}
                             ></InputControlled>
-                            {typeDocument == 2 ? (<InputControlled
-                                name="razonSocial"
-                                placeholder="Razón social"
-                                control={control}
-                                width="85%"
-                                rules={{
-                                    required: " Razón Social requerida",
-                                    pattern: {
-                                        value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
-                                        message:
-                                            " La razón social solo puede contener letras y espacios",
-                                    },
-                                }}
-                            ></InputControlled>) : null}
+                            {typeDocument == 2 ? (
+                                <InputControlled
+                                    name="razonSocial"
+                                    placeholder="Razón social"
+                                    control={control}
+                                    width="85%"
+                                    rules={{
+                                        required: " Razón Social requerida",
+                                        pattern: {
+                                            value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
+                                            message:
+                                                " La razón social solo puede contener letras y espacios",
+                                        },
+                                    }}
+                                ></InputControlled>
+                            ) : null}
                             <Button
                                 onPress={handleSubmit(NextStep)}
                                 marginTop="15%"

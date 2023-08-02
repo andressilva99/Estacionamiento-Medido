@@ -53,6 +53,12 @@ const ParkingScreen = ({ navigation }) => {
         // };
     }, [refresh]);
 
+    useEffect(() => {
+        if (loggedUser.user.changePass) {
+            navigation.navigate("ChangePassword");
+        }
+    }, []);
+
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu", { refreshParkingScreen });
     };
@@ -72,7 +78,7 @@ const ParkingScreen = ({ navigation }) => {
                 safeAreaTop={true}
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
+                    <HeaderPage onPress={handleButtonPressMenu} navigation={navigation} exitApp={true}></HeaderPage>
                 </HStack>
                 <VStack style={styles.containerUser}>
                     <Text

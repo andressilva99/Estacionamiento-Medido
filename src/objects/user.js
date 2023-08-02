@@ -21,6 +21,7 @@ const user = {
     tickets: [],
     tokenNotification: undefined,
     enableParking: true,
+    changePass: false,
 };
 
 export default {

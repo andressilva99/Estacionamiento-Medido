@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { BackHandler, Text } from "react-native";
 import React from "react";
 import {
     Button,
@@ -11,11 +11,23 @@ import {
 import { Feather } from "@expo/vector-icons";
 import constants from "../constants/constants";
 import { ScaledSheet } from "react-native-size-matters";
+import { AntDesign } from "@expo/vector-icons";
 
-const HeaderPage = ({ onPress, dissableButtonMenu }) => {
+const HeaderPage = ({ onPress, dissableButtonMenu, navigation, exitApp }) => {
+    const goBack = () => {
+        navigation.goBack();
+    };
+
+    const exitApplication = () => {
+        BackHandler.exitApp();
+    };
+
     return (
         <NativeBaseProvider>
             <HStack style={styles.containerHeader}>
+                <Button variant={"ghost"} onPress={() => {exitApp ? exitApplication() : goBack()}} flex={0.3}>
+                    <AntDesign name="arrowleft" style={styles.iconBack} />
+                </Button>
                 <Image
                     source={constants.PARKING_ICON}
                     alt={"Parking"}
@@ -24,14 +36,12 @@ const HeaderPage = ({ onPress, dissableButtonMenu }) => {
                     flex={0.4}
                 ></Image>
                 {/* <Spacer></Spacer> */}
-                <Stack>
-                    <Text style={styles.textHeader}>
-                        Estacionamiento medido
-                    </Text>
+                <Stack flex={1}>
+                    <Text style={styles.textHeader}>E. Medido</Text>
                 </Stack>
                 {/* <Spacer></Spacer> */}
                 {dissableButtonMenu ? null : (
-                    <Button variant="ghost" onPress={onPress} flex={1}>
+                    <Button variant="ghost" onPress={onPress} flex={0.4}>
                         <Feather name="menu" style={styles.iconMenu} />
                     </Button>
                 )}
@@ -54,7 +64,7 @@ const styles = ScaledSheet.create({
         fontSize: "20@ms",
         fontWeight: "bold",
         color: "white",
-        paddingLeft: "15@ms"
+        paddingLeft: "15@ms",
     },
     icon: {
         width: "35@ms",
@@ -63,6 +73,10 @@ const styles = ScaledSheet.create({
     },
     iconMenu: {
         color: "white",
-        fontSize: "35@ms",
+        fontSize: "37@ms",
+    },
+    iconBack: {
+        color: "white",
+        fontSize: "32@ms",
     },
 });

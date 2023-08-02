@@ -42,7 +42,7 @@ const InformationScreen = ({ navigation }) => {
                 safeAreaTop={true}
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
+                    <HeaderPage onPress={handleButtonPressMenu} navigation={navigation}></HeaderPage>
                 </HStack>
                 <HStack justifyItems="flex-start" minW="85%">
                     <Ionicons

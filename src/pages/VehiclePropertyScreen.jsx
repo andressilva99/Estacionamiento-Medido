@@ -4,6 +4,7 @@ import { HStack, NativeBaseProvider, Stack, VStack } from "native-base";
 import EnterVehicleComboBox from "../components/EnterVehicleComboBox";
 import { ScaledSheet } from "react-native-size-matters";
 import { newEnterVehicle } from "../objects/newEnterVehicle";
+import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
@@ -45,6 +46,7 @@ const VehiclePropertyScreen = ({ navigation, route }) => {
     return (
         <NativeBaseProvider>
             <VStack height={height} alignItems={"center"} space={"lg"}>
+                <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
                 <Stack style={styles.container}>
                     <Text>*Nota: Escriba y seleccione</Text>
                 </Stack>

@@ -24,6 +24,7 @@ import AlertError from "../components/Alerts/AlertError";
 import { deleteUserData } from "../functions/deleteUserData";
 import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
 import { findTickets } from "../functions/findTickets";
+import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
@@ -91,6 +92,19 @@ const WelcomeScreen = ({ navigation, route }) => {
         loggedUser.user.token = token;
         loggedUser.user.typeDocument.name = data.usuario.tipo_documento.nombre;
         loggedUser.user.balance = data.usuario.saldo;
+        loggedUser.user.vehicles = [];
+        if (data.usuario.usuario_vehiculo != undefined) {
+            data.usuario.usuario_vehiculo.forEach((vehicle) => {
+                loggedUser.user.vehicles.push({
+                    mark: vehicle.vehiculo.marca.nombre,
+                    model: vehicle.vehiculo.modelo.nombre,
+                    patent: vehicle.vehiculo.patente,
+                    color: vehicle.vehiculo.color.nombre,
+                    idVehicle: vehicle.vehiculo.idVehiculo,
+                    parked: false,
+                });
+            });
+        }
         saveUserInformation();
         setCurrentData(true);
     };
@@ -113,6 +127,10 @@ const WelcomeScreen = ({ navigation, route }) => {
                     safeAreaTop={true}
                     alignItems="center"
                 >
+                    <HeaderButtonGoBack
+                        navigation={navigation}
+                        exitApp={true}
+                    ></HeaderButtonGoBack>
                     <Stack alignItems="center" flex={0.5}>
                         <Spacer></Spacer>
                         <Text style={styles.text}>Bienvenido</Text>

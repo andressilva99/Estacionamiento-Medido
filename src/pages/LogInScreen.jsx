@@ -29,6 +29,7 @@ import { saveUserInformation } from "../functions/saveUserInformation";
 import { Ionicons } from "@expo/vector-icons";
 import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 import { findTickets } from "../functions/findTickets";
+import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
@@ -110,6 +111,7 @@ const LogInScreen = ({ navigation, route }) => {
         const userData = data.usuario;
 
         loggedUser.user.idUser = userData.idUsuario;
+        loggedUser.user.changePass = userData.cambiarClave;
         loggedUser.user.documentNumber = userData.numeroDocumento;
         loggedUser.user.email = userData.email;
         loggedUser.user.firstName = userData.nombrePersona;
@@ -153,8 +155,12 @@ const LogInScreen = ({ navigation, route }) => {
                     height={height}
                     alignItems="center"
                     safeAreaTop={true}
-                    justifyContent="center"
+                    // justifyContent="center"
                 >
+                    <HeaderButtonGoBack
+                        navigation={navigation}
+                        exitApp={true}
+                    ></HeaderButtonGoBack>
                     <Image
                         source={require("../image/logIn-icon-start.png")}
                         alt="logIn-icon-start"

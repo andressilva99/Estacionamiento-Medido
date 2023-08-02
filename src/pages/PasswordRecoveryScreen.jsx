@@ -17,6 +17,7 @@ import AlertNotice from "../components/Alerts/AlertNotice";
 import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
 import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
@@ -79,6 +80,7 @@ const PasswordRecoveryScreen = ({ navigation }) => {
                 resizeMode="stretch"
             >
                 <VStack space="lg" height={height} alignItems="center">
+                    <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
                     <HStack>
                         <Text style={styles.textHeader}>
                             Recuperar contraseña
@@ -148,7 +150,6 @@ const styles = ScaledSheet.create({
         fontSize: "30@ms",
         fontWeight: "bold",
         color: "#04467C",
-        paddingTop: "50@ms",
     },
     button: {
         borderRadius: "30@ms",

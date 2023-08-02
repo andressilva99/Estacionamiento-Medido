@@ -26,6 +26,7 @@ import AlertNotice from "../components/Alerts/AlertNotice";
 import { Ionicons } from "@expo/vector-icons";
 import AlertError from "../components/Alerts/AlertError";
 import InputControlledCopyPaste from "../components/InputControlledCopyPaste";
+import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
@@ -167,6 +168,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                     alignItems="center"
                     safeAreaTop={true}
                 >
+                    <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <Stack space="sm">
                             <HStack
@@ -174,7 +176,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                 space="sm"
                                 alignItems="center"
                                 justifyContent="center"
-                                marginY="7.5%"
+                                marginBottom="7.5%"
                             >
                                 <Entypo name="add-user" style={styles.icon} />
                                 <Text style={styles.textHeaderRegister}>

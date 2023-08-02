@@ -23,6 +23,7 @@ import constants from "../constants/constants";
 import { saveUserInformation } from "../functions/saveUserInformation";
 import AlertNotice from "../components/Alerts/AlertNotice";
 import AlertError from "../components/Alerts/AlertError";
+import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
 
 const REGEX_EMAIL =
     /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
@@ -50,6 +51,82 @@ const ProfileScreen = ({ navigation }) => {
     const [messageAlertError, setMessageAlertError] = useState();
 
     const [loading, setLoading] = useState(false);
+
+    const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
+        useState(false);
+    const cancelRefAlertNoticeFunction = useRef(null);
+    const onCloseAlertNoticeFunction = () =>
+        setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
+
+    const [
+        isOpenAlertNoticeFunctionDelAcount,
+        setIsOpenAlertNoticeFunctionDelAcount,
+    ] = useState(false);
+    const cancelRefAlertNoticeFunctionDelAcount = useRef(null);
+    const onCloseAlertNoticeFunctionDelAcount = () =>
+        setIsOpenAlertNoticeFunctionDelAcount(
+            !isOpenAlertNoticeFunctionDelAcount
+        );
+
+    const deleteAcount = async () => {
+        setIsOpenAlertNoticeFunctionDelAcount(false);
+        Linking.openURL(constants.LINK_DELETE_ACOUNT).catch((error) => {
+            console.error("Error al abrir el enlace:", error);
+        });
+        await logOut();
+    };
+
+    const logOut = async () => {
+        let logOutUser = true;
+        loggedUser.user.vehicles.forEach((vehicle) => {
+            if (vehicle.parked) {
+                logOutUser = false;
+                return;
+            }
+        });
+        if (logOutUser) {
+            await constants
+                .AXIOS_INST({
+                    method: "post",
+                    url: "usuario/logOut",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
+                    },
+                    data: {
+                        usuario: {
+                            idUsuario: loggedUser.user.idUser,
+                        },
+                    },
+                })
+                .then((resp) => {
+                    deleteUserData();
+                    setLogged(false);
+                    setSubMenu(false);
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error.response.data);
+                        setMessageAlertError(error.response.data.mensaje);
+                        setIsOpenAlertError(true);
+                    } else if (error.request) {
+                        console.log(error.request);
+                        setMessageAlertError(
+                            "No se ha obtenido respuesta, intente nuevamente"
+                        );
+                        setIsOpenAlertError(true);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
+                });
+        } else {
+            onCloseAlertNoticeFunction();
+            setMessageAlertError(
+                "No se puede cerrar sesión con un vehículo estacionado"
+            );
+            setIsOpenAlertError(true);
+        }
+    };
 
     const obtainDocuments = async () => {
         if (listTypesDocuments != []) {
@@ -191,7 +268,10 @@ const ProfileScreen = ({ navigation }) => {
                 safeAreaTop={true}
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
+                    <HeaderPage
+                        onPress={handleButtonPressMenu}
+                        navigation={navigation}
+                    ></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>
                     <Ionicons
@@ -354,7 +434,7 @@ const ProfileScreen = ({ navigation }) => {
                                     },
                                 }}
                                 defaultValue={loggedUser.user.email}
-                                isDisabled={isDisabled}
+                                isDisabled={true}
                             ></InputControlled>
                         </HStack>
                         <HStack flex={1} isDisabled={isDisabled}>
@@ -431,7 +511,7 @@ const ProfileScreen = ({ navigation }) => {
                                         color="white"
                                     />
                                 }
-                                style={styles.buttonChangePassword}
+                                style={[styles.buttonChangePassword, {backgroundColor: "#009FE3"}]}
                                 onPress={() => {
                                     obtainDocuments();
                                     obtainCompanies();
@@ -504,11 +584,26 @@ const ProfileScreen = ({ navigation }) => {
                                     color="white"
                                 />
                             }
-                            style={styles.buttonChangePassword}
+                            style={[styles.buttonChangePassword, {backgroundColor: "#086EC1"}]}
                             onPress={handleChangePasswordPress}
                         >
                             <Text style={styles.textChangePassword}>
                                 Cambiar Clave
+                            </Text>
+                        </Button>
+                        <Button
+                            startIcon={
+                                <FontAwesome5
+                                    name="user-alt-slash"
+                                    style={styles.icon}
+                                    color="white"
+                                />
+                            }
+                            style={[styles.buttonChangePassword, {backgroundColor: "#05509C"}]}
+                            onPress={() => setIsOpenAlertNoticeFunctionDelAcount(true)}
+                        >
+                            <Text style={styles.textChangePassword}>
+                                Eliminar cuenta
                             </Text>
                         </Button>
                     </Stack>
@@ -526,6 +621,15 @@ const ProfileScreen = ({ navigation }) => {
                 message={messageAlertNotice}
                 cancelRef={cancelRefAlertNotice}
             ></AlertNotice>
+            <AlertNoticeFunction
+                isOpen={isOpenAlertNoticeFunctionDelAcount}
+                cancelRef={cancelRefAlertNoticeFunctionDelAcount}
+                onClose={onCloseAlertNoticeFunctionDelAcount}
+                message={
+                    '¿Está seguro que desea Eliminar la Cuenta? Si pulsa "Aceptar" se redireccionará a la página correspondiente y se cerrará la sesión'
+                }
+                onPressAccept={deleteAcount}
+            ></AlertNoticeFunction>
         </NativeBaseProvider>
     );
 };

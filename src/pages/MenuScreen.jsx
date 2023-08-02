@@ -15,6 +15,7 @@ import { deleteUserData } from "../functions/deleteUserData";
 import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
 import AlertError from "../components/Alerts/AlertError";
 import loggedUser from "../objects/user";
+import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
@@ -28,16 +29,6 @@ const MenuScreen = ({ navigation, route }) => {
     const onCloseAlertNoticeFunction = () =>
         setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
-    const [
-        isOpenAlertNoticeFunctionDelAcount,
-        setIsOpenAlertNoticeFunctionDelAcount,
-    ] = useState(false);
-    const cancelRefAlertNoticeFunctionDelAcount = useRef(null);
-    const onCloseAlertNoticeFunctionDelAcount = () =>
-        setIsOpenAlertNoticeFunctionDelAcount(
-            !isOpenAlertNoticeFunctionDelAcount
-        );
-
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
@@ -46,20 +37,10 @@ const MenuScreen = ({ navigation, route }) => {
     const handleButtonPress = (id) => {
         if (id == "logOut") {
             setIsOpenAlertNoticeFunction(true);
-        } else if (id == "deleteAcount") {
-            setIsOpenAlertNoticeFunctionDelAcount(true);
         } else {
             navigation.navigate(id, { refreshParkingScreen });
             setSubMenu(false);
         }
-    };
-
-    const deleteAcount = async () => {
-        setIsOpenAlertNoticeFunctionDelAcount(false);
-        Linking.openURL(constants.LINK_DELETE_ACOUNT).catch((error) => {
-            console.error("Error al abrir el enlace:", error);
-        });
-        await logOut();
     };
 
     const logOut = async () => {
@@ -121,6 +102,7 @@ const MenuScreen = ({ navigation, route }) => {
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
             >
+                <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
                 <ScrollView
                     height={height}
                     showsVerticalScrollIndicator={false}
@@ -259,16 +241,6 @@ const MenuScreen = ({ navigation, route }) => {
                                 id={"logOut"}
                             ></PressableCustom>
                         </HStack>
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Eliminar cuenta"}
-                                icon={constants.DELETE_ACOUNT_ICON}
-                                styleTouchable={{ backgroundColor: "#009FE3" }}
-                                onPress={handleButtonPress}
-                                id={"deleteAcount"}
-                            ></PressableCustom>
-                        </HStack>
-                        <Spacer></Spacer>
                         <Image
                             source={constants.LOGO}
                             alt="logo-app"
@@ -286,15 +258,6 @@ const MenuScreen = ({ navigation, route }) => {
                 message={"¿Está seguro que desea Cerrar Sesión?"}
                 onPressAccept={logOut}
             ></AlertNoticeFunction>
-            <AlertNoticeFunction
-                isOpen={isOpenAlertNoticeFunctionDelAcount}
-                cancelRef={cancelRefAlertNoticeFunctionDelAcount}
-                onClose={onCloseAlertNoticeFunctionDelAcount}
-                message={
-                    '¿Está seguro que desea Eliminar la Cuenta? Si pulsa "Aceptar" se redireccionará a la página correspondiente y se cerrará la sesión'
-                }
-                onPressAccept={deleteAcount}
-            ></AlertNoticeFunction>
             <AlertError
                 isOpen={isOpenAlertError}
                 onClose={onCloseAlertError}
@@ -310,8 +273,7 @@ export default MenuScreen;
 const styles = ScaledSheet.create({
     backgroundContainer: {
         alignItems: "center",
-        paddingTop: "4%",
-        paddingBottom: "8%",
+        paddingBottom: "70@ms",
     },
     containerPressable: {
         minWidth: "100%",

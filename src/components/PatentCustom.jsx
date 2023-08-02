@@ -86,7 +86,7 @@ const PatentCustom = ({
     const cancelRefAlertNotice = useRef(null);
     const onCloseAlertNotice = () => {
         setIsOpenAlertNotice(!isOpenAlertNotice);
-        saveUserInformation();
+        // saveUserInformation();
         setRefresh(true);
     };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
@@ -102,7 +102,7 @@ const PatentCustom = ({
         },
     };
 
-    const enviarNotificacion = async() => {
+    const enviarNotificacion = async () => {
         // Lógica para enviar la notificación
         // Aquí puedes llamar a tu función o librería para enviar la notificación
         // Request permissions (required for iOS)
@@ -128,9 +128,8 @@ const PatentCustom = ({
                 },
             },
         });
-        console.log('Notificación enviada');
-
-      };
+        console.log("Notificación enviada");
+    };
 
     const updateBalance = async () => {
         await constants.AXIOS_INST.get(
@@ -204,6 +203,9 @@ const PatentCustom = ({
                             console.log(error);
                         }
                         return;
+                    })
+                    .finally(() => {
+                        saveUserInformation();
                     });
             } else {
                 setMessageAlertError("Saldo insuficiente para estacionar");
@@ -238,6 +240,9 @@ const PatentCustom = ({
                         console.log(error);
                     }
                     return;
+                })
+                .finally(() => {
+                    saveUserInformation();
                 });
         }
     };

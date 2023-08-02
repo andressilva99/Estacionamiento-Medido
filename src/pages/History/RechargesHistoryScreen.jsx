@@ -21,6 +21,7 @@ import constants from "../../constants/constants";
 import AlertError from "../../components/Alerts/AlertError";
 import InputDateInitial from "../../components/InputDateInitial";
 import InputDateEnd from "../../components/InputDateEnd";
+import AlertNotice from "../../components/Alerts/AlertNotice";
 
 const { height } = Dimensions.get("screen");
 
@@ -41,6 +42,11 @@ const RechargesHistoryScreen = ({ navigation }) => {
     const [listRecharges, setListRecharges] = useState([]);
 
     const [loaging, setLoaging] = useState(false);
+
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
@@ -118,8 +124,8 @@ const RechargesHistoryScreen = ({ navigation }) => {
             setListRecharges(list);
             setConsult(!consult);
         } else {
-            setIsOpenAlertError(true);
-            setMessageAlertError("No se encontraron Recargas");
+            setIsOpenAlertNotice(true);
+            setMessageAlertNotice("No se encontraron Recargas");
         }
     };
 
@@ -133,7 +139,7 @@ const RechargesHistoryScreen = ({ navigation }) => {
                 space="sm"
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
+                    <HeaderPage onPress={handleButtonPressMenu} navigation={navigation}></HeaderPage>
                 </HStack>
                 <HStack alignItems="flex-start" minW="85%">
                     <MaterialCommunityIcons
@@ -290,6 +296,12 @@ const RechargesHistoryScreen = ({ navigation }) => {
                 isOpen={isOpenAlertError}
                 cancelRef={cancelRefAlertError}
             ></AlertError>
+            <AlertNotice
+                isOpen={isOpenAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+            ></AlertNotice>
         </NativeBaseProvider>
     );
 };

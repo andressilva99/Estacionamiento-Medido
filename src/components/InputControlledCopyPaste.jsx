@@ -19,8 +19,6 @@ const InputControlledCopyPaste = ({
     autoCapitalize,
     isDisabled,
 }) => {
-    
-    
     return (
         <NativeBaseProvider>
             <Controller
@@ -66,7 +64,6 @@ const InputControlledCopyPaste = ({
 export default InputControlledCopyPaste;
 
 const styles = ScaledSheet.create({
-
     input: {
         minHeight: "45@ms",
         backgroundColor: "white",
@@ -75,10 +72,10 @@ const styles = ScaledSheet.create({
     },
     error: {
         color: "red",
-        fontSize: "15@ms"
+        fontSize: "15@ms",
     },
     iconError: {
         color: "red",
         fontSize: "24@ms",
-    }
+    },
 });

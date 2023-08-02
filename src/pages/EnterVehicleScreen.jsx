@@ -216,7 +216,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                     safeAreaTop={true}
                 >
                     <HStack>
-                        <HeaderPage dissableButtonMenu={true}></HeaderPage>
+                        <HeaderPage dissableButtonMenu={true} navigation={navigation}></HeaderPage>
                     </HStack>
                     <Stack flexDirection="row" style={styles.containerProfile}>
                         <FontAwesome5 name="car" size={24} color="#3f60af" />

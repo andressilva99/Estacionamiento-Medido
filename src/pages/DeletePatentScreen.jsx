@@ -46,7 +46,7 @@ const DeletePatentScreen = ({ navigation, route }) => {
                 safeAreaTop={true}
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu}></HeaderPage>
+                    <HeaderPage onPress={handleButtonPressMenu} navigation={navigation}></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>
                     <MaterialCommunityIcons

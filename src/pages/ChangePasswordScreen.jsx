@@ -20,6 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AlertError from "../components/Alerts/AlertError";
 import AlertNotice from "../components/Alerts/AlertNotice";
 import { deleteUserData } from "../functions/deleteUserData";
+import { useEffect } from "react";
 
 const { height } = Dimensions.get("screen");
 
@@ -46,6 +47,16 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (loggedUser.user.changePass) {
+            setMessageAlertNotice(
+                "Antes de continuar, debe cambiar la contraseña predeterminada por una contraseña que la pueda recordar"
+            );
+            setIsOpenAlertNotice(true);
+            loggedUser.user.changePass = false;
+        }
+    }, []);
 
     const config = {
         headers: {
@@ -113,7 +124,10 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                 safeAreaTop={true}
             >
                 <HStack>
-                    <HeaderPage dissableButtonMenu={true}></HeaderPage>
+                    <HeaderPage
+                        dissableButtonMenu={true}
+                        navigation={navigation}
+                    ></HeaderPage>
                 </HStack>
                 <Stack
                     flexDirection="row"
@@ -133,6 +147,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                         control={control}
                         width="85%"
                         secureTextEntry={hidePassword3}
+                        autoCapitalize="none"
                         // rules={}
                     ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
@@ -151,6 +166,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                         control={control}
                         width="85%"
                         secureTextEntry={hidePassword1}
+                        autoCapitalize={"none"}
                         // rules={}
                     ></InputControlledCopyPaste>
                     <TouchableOpacity style={styles.touchVisiblePassword}>
@@ -169,6 +185,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                         control={control}
                         width="85%"
                         secureTextEntry={hidePassword2}
+                        autoCapitalize={"none"}
                         rules={{
                             validate: (value) =>
                                 value === passRepeat ||
