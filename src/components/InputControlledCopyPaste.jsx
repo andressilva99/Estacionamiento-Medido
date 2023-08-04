@@ -18,6 +18,7 @@ const InputControlledCopyPaste = ({
     variant,
     autoCapitalize,
     isDisabled,
+    autoComplete,
 }) => {
     return (
         <NativeBaseProvider>
@@ -44,6 +45,7 @@ const InputControlledCopyPaste = ({
                             variant={variant}
                             autoCapitalize={autoCapitalize}
                             isDisabled={isDisabled}
+                            autoComplete={autoComplete}
                         ></Input>
                         {error && (
                             <Text style={styles.error}>

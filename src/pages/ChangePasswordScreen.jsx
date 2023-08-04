@@ -46,15 +46,21 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
 
+    const [isOpenAlertNoticeChangePass, setIsOpenAlertNoticeChangePass] = useState(false);
+    const cancelRefAlertNoticeChangePass = useRef(null);
+    const onCloseAlertNoticeChangePass = () => {
+        setIsOpenAlertNoticeChangePass(!isOpenAlertNoticeChangePass);
+    };
+    const [messageAlertNoticeChangePass, setMessageAlertNoticeChangePass] = useState();
+
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (loggedUser.user.changePass) {
-            setMessageAlertNotice(
+        if (loggedUser.user.changePass == 1) {
+            setMessageAlertNoticeChangePass(
                 "Antes de continuar, debe cambiar la contraseña predeterminada por una contraseña que la pueda recordar"
             );
-            setIsOpenAlertNotice(true);
-            loggedUser.user.changePass = false;
+            setIsOpenAlertNoticeChangePass(true);
         }
     }, []);
 
@@ -248,6 +254,12 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                 onClose={onCloseAlertNotice}
                 message={messageAlertNotice}
                 cancelRef={cancelRefAlertNotice}
+            ></AlertNotice>
+            <AlertNotice
+                isOpen={isOpenAlertNoticeChangePass}
+                onClose={onCloseAlertNoticeChangePass}
+                message={messageAlertNoticeChangePass}
+                cancelRef={cancelRefAlertNoticeChangePass}
             ></AlertNotice>
             <AlertError
                 isOpen={isOpenAlertError}

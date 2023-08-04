@@ -87,8 +87,9 @@ const LogInScreen = ({ navigation, route }) => {
                     return;
                 })
                 .finally(async () => {
-                    await new Promise((resolve) => setTimeout(resolve, 2000));
-                    findTickets();
+                    if (loggedUser.user.changePass == 1) {
+                        navigation.navigate("ChangePassword");
+                    }
                 });
         } else {
             setErrorMessage("Correo y/o Contraseña no ingresados");
@@ -190,6 +191,7 @@ const LogInScreen = ({ navigation, route }) => {
                                     variant="unstiled"
                                     placeholder="Correo"
                                     autoCapitalize="none"
+                                    autoComplete="email"
                                 ></InputControlledCopyPaste>
                             </HStack>
                         </HStack>
