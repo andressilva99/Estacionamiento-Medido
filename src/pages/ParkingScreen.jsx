@@ -53,12 +53,6 @@ const ParkingScreen = ({ navigation }) => {
         // };
     }, [refresh]);
 
-    useEffect(() => {
-        if (loggedUser.user.changePass) {
-            navigation.navigate("ChangePassword");
-        }
-    }, []);
-
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu", { refreshParkingScreen });
     };

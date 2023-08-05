@@ -166,51 +166,46 @@ const PatentCustom = ({
             },
         };
         if (idButton == "start") {
-            if (loggedUser.user.balance >= 1) {
-                await constants
-                    .AXIOS_INST({
-                        method: "post",
-                        url: "estacionamiento/activar",
-                        headers: {
-                            Authorization: `bearer ${loggedUser.user.token}`,
+            await constants
+                .AXIOS_INST({
+                    method: "post",
+                    url: "estacionamiento/activar",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
+                    },
+                    data: {
+                        estacionamiento: {
+                            idVehiculo: idVehicle,
+                            idUsuario: idUser,
                         },
-                        data: {
-                            estacionamiento: {
-                                idVehiculo: idVehicle,
-                                idUsuario: idUser,
-                            },
-                        },
-                    })
-                    .then((response) => {
-                        setMessageAlertNotice("Estacionamiento Activado");
-                        setIsOpenAlertNotice(true);
-                        setButtonStart(false);
-                        setButtonStop(true);
-                        loggedUser.user.vehicles[position].parked = buttonStart;
-                    })
-                    .catch((error) => {
-                        if (error.response) {
-                            console.log(error.response.data);
-                            setMessageAlertError(error.response.data.mensaje);
-                            setIsOpenAlertError(true);
-                        } else if (error.request) {
-                            console.log(error.request);
-                            setMessageAlertError(
-                                "No se ha obtenido respuesta, intente nuevamente"
-                            );
-                            setIsOpenAlertError(true);
-                        } else {
-                            console.log(error);
-                        }
-                        return;
-                    })
-                    .finally(() => {
-                        saveUserInformation();
-                    });
-            } else {
-                setMessageAlertError("Saldo insuficiente para estacionar");
-                setIsOpenAlertError(true);
-            }
+                    },
+                })
+                .then((response) => {
+                    setMessageAlertNotice("Estacionamiento Activado");
+                    setIsOpenAlertNotice(true);
+                    setButtonStart(false);
+                    setButtonStop(true);
+                    loggedUser.user.vehicles[position].parked = buttonStart;
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error.response.data);
+                        setMessageAlertError(error.response.data.mensaje);
+                        setIsOpenAlertError(true);
+                    } else if (error.request) {
+                        console.log(error.request);
+                        setMessageAlertError(
+                            "No se ha obtenido respuesta, intente nuevamente"
+                        );
+                        setIsOpenAlertError(true);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
+                })
+                .finally(() => {
+                    saveUserInformation();
+                });
         } else {
             await constants.AXIOS_INST.put(
                 "estacionamiento/desactivar",

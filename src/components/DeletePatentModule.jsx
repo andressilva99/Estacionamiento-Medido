@@ -18,63 +18,6 @@ import AlertError from "./Alerts/AlertError";
 import AlertNotice from "./Alerts/AlertNotice";
 
 const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
-    useEffect(() => {
-        loggedUser.user.tickets.forEach((ticket) => {
-            if (ticket.patent === patent) {
-                setHaveTicket(true);
-            }
-        });
-        // const FindTickets = () => {
-        //     loggedUser.user.tickets = [];
-        //     if (loggedUser.user.vehicles != []) {
-        //         loggedUser.user.vehicles.forEach(async (vehicle) => {
-        //             await constants
-        //                 .AXIOS_INST({
-        //                     method: "post",
-        //                     url: "ticket/mostrar",
-        //                     headers: {
-        //                         Authorization: `bearer ${loggedUser.user.token}`,
-        //                     },
-        //                     data: {
-        //                         ticket: {
-        //                             patente: vehicle.patent,
-        //                         },
-        //                     },
-        //                 })
-        //                 .then((resp) => {
-        //                     const listTickets = resp.data.mensaje;
-        //                     if (listTickets != undefined) {
-        //                         listTickets.forEach((ticket) => {
-        //                             if (ticket.estado == 0) {
-        //                                 const dateString = ticket.fecha;
-        //                                 const dateObject = new Date(dateString);
-        //                                 const day = dateObject.getDate();
-        //                                 const month = dateObject.getMonth() + 1;
-        //                                 const year = dateObject.getFullYear();
-        //                                 const timeString = dateString.slice(
-        //                                     11,
-        //                                     16
-        //                                 );
-        //                                 const formattedDate = `${day}-${month}-${year} ${timeString}`;
-        //                                 loggedUser.user.tickets.push({
-        //                                     id: ticket.idTicket,
-        //                                     patent: vehicle.patent,
-        //                                     amount: ticket.importe,
-        //                                     date: formattedDate,
-        //                                 });
-        //                             }
-        //                         });
-        //                     }
-        //                 })
-        //                 .catch((error) => {
-        //                     console.log(error.response.data);
-        //                 });
-        //         });
-        //     }
-        // };
-        // FindTickets();
-    }, []);
-
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
     const onCloseAlertNotice = () => {
@@ -94,64 +37,43 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
     const onCloseAlertNoticeFunction = () =>
         setIsOpenAlertNoticeFunction(!isOpenAlertNoticeFunction);
 
-    const [haveTicket, setHaveTicket] = useState(false);
-
     const deletePatent = async () => {
         onCloseAlertNoticeFunction();
-
-        const vehicleSelected = loggedUser.user.vehicles.find(
-            (vehicle) => vehicle.patent === patent
-        );
-
-        if (!vehicleSelected.parked && !haveTicket) {
-            await constants
-                .AXIOS_INST({
-                    method: "delete",
-                    url: "vehiculo/eliminar",
-                    headers: {
-                        Authorization: `bearer ${loggedUser.user.token}`,
+        await constants
+            .AXIOS_INST({
+                method: "delete",
+                url: "vehiculo/eliminar",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+                data: {
+                    vehiculo: {
+                        idUsuario: loggedUser.user.idUser,
+                        patente: patent,
                     },
-                    data: {
-                        vehiculo: {
-                            idUsuario: loggedUser.user.idUser,
-                            patente: patent,
-                        },
-                    },
-                })
-                .then((response) => {
-                    deleteVehicle();
-                    setMessageAlertNotice("Vehículo Eliminado");
-                    setIsOpenAlertNotice(true);
-                })
-                .catch((error) => {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        setMessageAlertError(error.response.data.mensaje);
-                        setIsOpenAlertError(true);
-                    } else if (error.request) {
-                        console.log(error.request);
-                        setMessageAlertError(
-                            "No se ha obtenido respuesta, intente nuevamente"
-                        );
-                        setIsOpenAlertError(true);
-                    } else {
-                        console.log(error);
-                    }
-                    return;
-                });
-        } else {
-            if (haveTicket) {
-                setMessageAlertError(
-                    "No se puede eliminar un vehículo con un Ticket emitido"
-                );
-                setIsOpenAlertError(true);
-            } else {
-                setMessageAlertError(
-                    "No se puede eliminar un vehículo estacionado"
-                );
-                setIsOpenAlertError(true);
-            }
-        }
+                },
+            })
+            .then((response) => {
+                deleteVehicle();
+                setMessageAlertNotice("Vehículo Eliminado");
+                setIsOpenAlertNotice(true);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
+                return;
+            });
     };
 
     const deleteVehicle = () => {

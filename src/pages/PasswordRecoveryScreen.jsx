@@ -98,6 +98,7 @@ const PasswordRecoveryScreen = ({ navigation }) => {
                                         message: " Correo electrónico inválido",
                                     },
                             }}
+                            autoComplete="email"
                         ></InputControlledCopyPaste>
                     </HStack>
                     {loading ? (

@@ -31,7 +31,7 @@ import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 const { height } = Dimensions.get("screen");
 
 const REGEX_EMAIL =
-    /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
+    /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}\s*$/i;
 
 const RegisterStep2Screen = ({ route, navigation }) => {
     const { typeDocument, numberDocument, name, surname, razonSocial } =
@@ -87,29 +87,29 @@ const RegisterStep2Screen = ({ route, navigation }) => {
         };
         try {
             await constants.AXIOS_INST.post("usuario/registrar", information)
-            .then((response) => {
-                console.log(response.data.mensaje);
-                setMessageAlertNotice(
-                    "Su contraseña ha sido enviada a su correo electrónico. Registrado con éxito"
-                );
-                setIsOpenAlertNotice(true);
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data);
-                    setMessageAlertError(error.response.data.mensaje);
-                    setIsOpenAlertError(true);
-                } else if (error.request) {
-                    console.log(error.request);
-                    setMessageAlertError(
-                        "No se ha obtenido respuesta, intente nuevamente"
+                .then((response) => {
+                    console.log(response.data.mensaje);
+                    setMessageAlertNotice(
+                        "Su contraseña ha sido enviada a su correo electrónico. Registrado con éxito"
                     );
-                    setIsOpenAlertError(true);
-                } else {
-                    console.log(error);
-                }
-                return;
-            });
+                    setIsOpenAlertNotice(true);
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error.response.data);
+                        setMessageAlertError(error.response.data.mensaje);
+                        setIsOpenAlertError(true);
+                    } else if (error.request) {
+                        console.log(error.request);
+                        setMessageAlertError(
+                            "No se ha obtenido respuesta, intente nuevamente"
+                        );
+                        setIsOpenAlertError(true);
+                    } else {
+                        console.log(error);
+                    }
+                    return;
+                });
         } catch (error) {
             setMessageAlertError("Se ha producido un error al registrarse");
             setIsOpenAlertError(true);
@@ -168,7 +168,9 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                     alignItems="center"
                     safeAreaTop={true}
                 >
-                    <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
+                    <HeaderButtonGoBack
+                        navigation={navigation}
+                    ></HeaderButtonGoBack>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <Stack space="sm">
                             <HStack
@@ -196,6 +198,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                         message: " Correo electrónico inválido",
                                     },
                                 }}
+                                autoComplete="email"
                             ></InputControlledCopyPaste>
                             <InputControlledCopyPaste
                                 name="confirmEmail"
@@ -208,6 +211,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                         value === emailRepeat ||
                                         " El correo electrónico no es el mismo",
                                 }}
+                                autoComplete="email"
                             ></InputControlledCopyPaste>
                             <HStack flex={1} minW="85%">
                                 <Stack style={styles.containerPhoneCompanie}>

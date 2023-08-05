@@ -26,7 +26,7 @@ import AlertError from "../components/Alerts/AlertError";
 import AlertNoticeFunction from "../components/Alerts/AlertNoticeFunction";
 
 const REGEX_EMAIL =
-    /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
+    /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}\s*$/i;
 
 const ProfileScreen = ({ navigation }) => {
     const { control, handleSubmit } = useForm();
@@ -511,7 +511,10 @@ const ProfileScreen = ({ navigation }) => {
                                         color="white"
                                     />
                                 }
-                                style={[styles.buttonChangePassword, {backgroundColor: "#009FE3"}]}
+                                style={[
+                                    styles.buttonChangePassword,
+                                    { backgroundColor: "#009FE3" },
+                                ]}
                                 onPress={() => {
                                     obtainDocuments();
                                     obtainCompanies();
@@ -584,7 +587,10 @@ const ProfileScreen = ({ navigation }) => {
                                     color="white"
                                 />
                             }
-                            style={[styles.buttonChangePassword, {backgroundColor: "#086EC1"}]}
+                            style={[
+                                styles.buttonChangePassword,
+                                { backgroundColor: "#086EC1" },
+                            ]}
                             onPress={handleChangePasswordPress}
                         >
                             <Text style={styles.textChangePassword}>
@@ -599,8 +605,13 @@ const ProfileScreen = ({ navigation }) => {
                                     color="white"
                                 />
                             }
-                            style={[styles.buttonChangePassword, {backgroundColor: "#05509C"}]}
-                            onPress={() => setIsOpenAlertNoticeFunctionDelAcount(true)}
+                            style={[
+                                styles.buttonChangePassword,
+                                { backgroundColor: "#05509C" },
+                            ]}
+                            onPress={() =>
+                                setIsOpenAlertNoticeFunctionDelAcount(true)
+                            }
                         >
                             <Text style={styles.textChangePassword}>
                                 Eliminar cuenta
