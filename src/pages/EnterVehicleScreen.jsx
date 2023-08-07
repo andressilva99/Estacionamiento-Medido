@@ -60,8 +60,17 @@ const EnterVehicleScreen = ({ navigation, route }) => {
     };
 
     useEffect(() => {
+        handleFocus();
         obtainMarks();
     }, []);
+
+    const inputFocus = useRef(null);
+
+    const handleFocus = () => {
+        if (inputFocus.current) {
+          inputFocus.current.focus();
+        }
+      };
 
     const obtainMarks = async () => {
         try {
@@ -238,8 +247,14 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                         ' La patente debe tener el formato "LLLNNN" o "LLNNNLL" (L: letra, N: número)',
                                 },
                             }}
+                            inputFocus={inputFocus}
                         ></InputControlled>
                     </HStack>
+                    <Stack maxW={"85%"}>
+                        <Text>
+                            *Formato ej.: "ABC123", "AB123CD"
+                        </Text>
+                    </Stack>
                     <HStack style={styles.containerEnabled} maxW={"85%"}>
                         <HStack flex={2} alignItems="center">
                             <Text style={styles.label}>Marca</Text>

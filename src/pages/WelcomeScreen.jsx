@@ -96,6 +96,7 @@ const WelcomeScreen = ({ navigation, route }) => {
         loggedUser.user.vehicles = [];
         if (data.usuario.usuario_vehiculo != undefined) {
             data.usuario.usuario_vehiculo.forEach((vehicle) => {
+                console.log(vehicle.vehiculo);
                 loggedUser.user.vehicles.push({
                     mark: vehicle.vehiculo.marca.nombre,
                     model: vehicle.vehiculo.modelo.nombre,

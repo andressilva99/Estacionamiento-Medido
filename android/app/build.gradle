@@ -118,8 +118,8 @@ android {
         applicationId 'com.sanfrancisco.gov.ar.EstacionamientoMedidoSanFranciso'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "1.3.1"
+        versionCode 10
+        versionName "1.3.4"
     }
 
     splits {

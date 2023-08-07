@@ -19,6 +19,7 @@ const InputControlled = ({
     autoCapitalize,
     isDisabled,
     autoComplete,
+    inputFocus,
 }) => {
     const [changeText, setChangeText] = useState(false);
     
@@ -48,6 +49,7 @@ const InputControlled = ({
                             autoCapitalize={autoCapitalize}
                             isDisabled={isDisabled}
                             autoComplete={autoComplete}
+                            ref={inputFocus}
                         ></Input>
                         {error && (
                             <Text style={styles.error}>
