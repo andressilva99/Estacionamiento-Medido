@@ -185,7 +185,6 @@ const PatentCustom = ({
                     setIsOpenAlertNotice(true);
                     setButtonStart(false);
                     setButtonStop(true);
-                    loggedUser.user.vehicles[position].parked = buttonStart;
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -202,23 +201,25 @@ const PatentCustom = ({
                         console.log(error);
                     }
                     return;
+                }).finally(()=>{
+                    loggedUser.user.vehicles[position].parked = buttonStart;
+                    console.log(loggedUser.user.vehicles[position])
+                    // saveUserInformation();
                 })
-                .finally(() => {
-                    saveUserInformation();
-                });
         } else {
             await constants.AXIOS_INST.put(
                 "estacionamiento/desactivar",
                 parking,
                 config
             )
-                .then((response) => {
+                .then(async (response) => {
                     setMessageAlertNotice("Estacionamiento Desactivado");
                     setIsOpenAlertNotice(true);
                     setButtonStart(true);
                     setButtonStop(false);
                     loggedUser.user.vehicles[position].parked = buttonStart;
-                    updateBalance();
+                    await updateBalance();
+                    saveUserInformation();
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -236,9 +237,6 @@ const PatentCustom = ({
                     }
                     return;
                 })
-                .finally(() => {
-                    saveUserInformation();
-                });
         }
     };
 

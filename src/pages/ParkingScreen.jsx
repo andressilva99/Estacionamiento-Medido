@@ -17,11 +17,15 @@ import loggedUser from "../objects/user";
 import PatentCustom from "../components/PatentCustom";
 import HeaderPage from "../components/HeaderPage";
 import { newEnterVehicle } from "../objects/newEnterVehicle";
+import constants from "../constants/constants";
+import { saveUserInformation } from "../functions/saveUserInformation";
 
 const ParkingScreen = ({ navigation }) => {
     const [isBalanceNegative, setIsBalanceNegative] = useState(false);
 
     const [refresh, setRefresh] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const verifyBalanceNegative = () => {
@@ -31,26 +35,6 @@ const ParkingScreen = ({ navigation }) => {
             }
         };
         verifyBalanceNegative();
-
-        // const repeatFunction = () => {
-        //     console.log(loggedUser.user.enableParking)
-        //     const now = new Date();
-        //     if (loggedUser.user.enableParking && (now.getHours()>= 20 || now.getHours()<=7)) {
-        //         if (loggedUser.user.vehicles != []) {
-        //             loggedUser.user.vehicles.map((vehicle) => ({
-        //                 ...vehicle,
-        //                 parked: false
-        //             }))
-        //             loggedUser.user.enableParking =false;
-        //             refreshParkingScreen();
-        //         }
-        //     } else if (!loggedUser.user.enableParking && (now.getHours()>= 8 && now.getHours()<=19)){
-        //         loggedUser.user.enableParking = true;
-        //     }
-        //     else {
-        //         console.log("No se ejecuta más nada");
-        //     }
-        // };
     }, [refresh]);
 
     const handleButtonPressMenu = () => {
@@ -60,6 +44,62 @@ const ParkingScreen = ({ navigation }) => {
     const refreshParkingScreen = () => {
         setRefresh(!refresh);
         console.log("Parking screen actualizado");
+    };
+
+    const refreshData = async () => {
+        setLoading(true);
+        await constants
+            .AXIOS_INST({
+                method: "get",
+                url: `usuario/obtener/${loggedUser.user.idUser}`,
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+            })
+            .then((response) => {
+                FillUserData(response.data.mensaje);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log(error);
+                }
+                return;
+            });
+        setLoading(false);
+    };
+
+    const FillUserData = async (data) => {
+        loggedUser.user.idUser = data.idUsuario;
+        loggedUser.user.changePass = data.cambiarClave;
+        loggedUser.user.documentNumber = data.numeroDocumento;
+        loggedUser.user.email = data.email;
+        loggedUser.user.firstName = data.nombrePersona;
+        loggedUser.user.lastName = data.apellido;
+        loggedUser.user.numberPhone = data.numeroTelefono;
+        loggedUser.user.razonSocial = data.razonSocial;
+        loggedUser.user.phoneCompany.idPhoneCompany =
+            data.compania_telefono.idCompaniaTelefono;
+        loggedUser.user.phoneCompany.name = data.compania_telefono.nombre;
+        loggedUser.user.balance = data.saldo;
+        loggedUser.user.vehicles = [];
+        if (data.usuario_vehiculo != undefined) {
+            data.usuario_vehiculo.forEach((vehicle) => {
+                loggedUser.user.vehicles.push({
+                    mark: vehicle.vehiculo.marca.nombre,
+                    model: vehicle.vehiculo.modelo.nombre,
+                    patent: vehicle.vehiculo.patente,
+                    color: vehicle.vehiculo.color.nombre,
+                    idVehicle: vehicle.vehiculo.idVehiculo,
+                    parked: false,
+                });
+            });
+        }
+        await saveUserInformation();
+        refreshParkingScreen();
     };
 
     return (
@@ -72,16 +112,42 @@ const ParkingScreen = ({ navigation }) => {
                 safeAreaTop={true}
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu} navigation={navigation} exitApp={true}></HeaderPage>
+                    <HeaderPage
+                        onPress={handleButtonPressMenu}
+                        navigation={navigation}
+                        exitApp={true}
+                    ></HeaderPage>
                 </HStack>
-                <VStack style={styles.containerUser}>
-                    <Text
-                        style={styles.textName}
-                    >{`${loggedUser.user.lastName}, ${loggedUser.user.firstName}`}</Text>
-                    <Text style={styles.textAccount}>
-                        Cuenta Nro: {loggedUser.user.idUser}
-                    </Text>
-                </VStack>
+                <HStack>
+                    <VStack style={styles.containerUser}>
+                        <Text
+                            style={styles.textName}
+                        >{`${loggedUser.user.lastName}, ${loggedUser.user.firstName}`}</Text>
+                        <Text style={styles.textAccount}>
+                            Cuenta Nro: {loggedUser.user.idUser}
+                        </Text>
+                    </VStack>
+                    {loading ? (
+                        <Button
+                            variant={"ghost"}
+                            style={styles.buttonRefresh}
+                            isLoading
+                            spinnerPlacement="start"
+                            _spinner={{ color: "#3f60af", size: "lg" }}
+                        ></Button>
+                    ) : (
+                        <Button
+                            variant={"ghost"}
+                            style={styles.buttonRefresh}
+                            onPress={refreshData}
+                        >
+                            <FontAwesome
+                                name="refresh"
+                                style={styles.iconRefresh}
+                            />
+                        </Button>
+                    )}
+                </HStack>
                 <HStack style={styles.containerBalance}>
                     <AntDesign
                         name="wallet"
@@ -124,18 +190,14 @@ const ParkingScreen = ({ navigation }) => {
                         </Text>
                     </Button>
                 </Stack>
-                {/* <HStack style={styles.parking}>
-                    <FontAwesome5 name="car" style={styles.icon} />
-                    <Text style={styles.textParkingVehicle}>Estacionar</Text>
-                    <Spacer></Spacer>
-                    <FontAwesome
-                        name="chevron-down"
-                        style={[styles.icon, { paddingRight: "6%" }]}
-                    />
-                </HStack> */}
                 <HStack space="md" style={styles.parking}>
-                    <FontAwesome5 name="car" style={[styles.icon, {color: "#3f60af"}]} />
-                    <Text style={styles.textParkingVehicle}>Vehículos Registrados</Text>
+                    <FontAwesome5
+                        name="car"
+                        style={[styles.icon, { color: "#3f60af" }]}
+                    />
+                    <Text style={styles.textParkingVehicle}>
+                        Vehículos Registrados
+                    </Text>
                 </HStack>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {loggedUser.user.vehicles
@@ -168,9 +230,10 @@ const styles = ScaledSheet.create({
     },
     containerUser: {
         minHeight: "45@ms",
-        minWidth: "85%",
+        minWidth: "60%",
         borderRadius: "30@ms",
         paddingLeft: "20@ms",
+        paddingRight: "20@ms",
         backgroundColor: "#c4e5f8",
     },
     containerBalance: {
@@ -231,5 +294,12 @@ const styles = ScaledSheet.create({
     },
     textBalanceNegative: {
         color: "red",
+    },
+    buttonRefresh: {
+        minWidth: "80@ms",
+    },
+    iconRefresh: {
+        color: "#3f60af",
+        fontSize: "35@ms",
     },
 });

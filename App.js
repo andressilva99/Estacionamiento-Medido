@@ -16,7 +16,6 @@ import AnnouncementsScreen from "./src/pages/AnnouncementsScreen";
 import VehiclePropertyScreen from "./src/pages/VehiclePropertyScreen";
 import AnnouncementsHistoryScreen from "./src/pages/History/AnnouncementsHistoryScreen";
 import RechargesHistoryScreen from "./src/pages/History/RechargesHistoryScreen";
-import MovementsHistoryScreen from "./src/pages/History/MovementsHistoryScreen";
 
 
 export default function App() {
