@@ -58,6 +58,7 @@ const styles = ScaledSheet.create({
         borderRadius: "5@ms",
         paddingLeft: "10@ms",
         backgroundColor: "#3f60af",
+        // backgroundColor: "red",
         alignItems: "center",
     },
     textHeader: {

@@ -4,6 +4,7 @@ import { NativeBaseProvider, Input } from "native-base";
 import { Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
+import { useEffect } from "react";
 
 const InputControlled = ({
     defaultValue,
@@ -28,7 +29,7 @@ const InputControlled = ({
             <Controller
                 control={control}
                 name={name}
-                rules={!changeText && (defaultValue != null) ? null : rules}
+                rules={rules}
                 render={({
                     field: { value, onChange, onBlur },
                     fieldState: { error },

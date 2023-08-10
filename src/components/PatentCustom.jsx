@@ -25,7 +25,6 @@ import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
 import AlertNotice from "./Alerts/AlertNotice";
 import AlertError from "./Alerts/AlertError";
 import { saveUserInformation } from "../functions/saveUserInformation";
-import notifee from "@notifee/react-native";
 
 const PatentCustom = ({
     patent,
@@ -60,21 +59,6 @@ const PatentCustom = ({
         setInterval(repeatFunction, 5000); // 60000 ms = 1 minuto
     }, []);
 
-    useEffect(() => {
-        let intervalId;
-
-        if (buttonStop) {
-            // Si el vehículo está estacionado, configurar el intervalo para enviar notificaciones cada 12 minutos
-            intervalId = setInterval(() => {
-                enviarNotificacion();
-            }, 12 * 60 * 1000); // 12 * 60 * 1000 = 12 minutos en milisegundos
-        }
-
-        // Al salir del componente o dejar de estar estacionado, limpiar el intervalo
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [buttonStop]);
 
     const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
         useState(false);
@@ -100,35 +84,6 @@ const PatentCustom = ({
         headers: {
             Authorization: `bearer ${loggedUser.user.token}`,
         },
-    };
-
-    const enviarNotificacion = async () => {
-        // Lógica para enviar la notificación
-        // Aquí puedes llamar a tu función o librería para enviar la notificación
-        // Request permissions (required for iOS)
-        await notifee.requestPermission();
-
-        // Create a channel (required for Android)
-        const channelId = await notifee.createChannel({
-            id: "default",
-            name: "Default Channel",
-        });
-
-        // Display a notification
-        await notifee.displayNotification({
-            title: "Vehículo Estacionado",
-            body: `Aviso el vehículo ${patent} sigue estacionado`,
-            android: {
-                channelId,
-                largeIcon: constants.PARKING_ICON,
-                // smallIcon: "ic_small_icon",
-                // pressAction is needed if you want the notification to open the app when pressed
-                pressAction: {
-                    id: "default",
-                },
-            },
-        });
-        console.log("Notificación enviada");
     };
 
     const updateBalance = async () => {
