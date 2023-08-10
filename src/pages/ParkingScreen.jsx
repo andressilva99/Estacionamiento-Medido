@@ -94,7 +94,7 @@ const ParkingScreen = ({ navigation }) => {
                     patent: vehicle.vehiculo.patente,
                     color: vehicle.vehiculo.color.nombre,
                     idVehicle: vehicle.vehiculo.idVehiculo,
-                    parked: false,
+                    parked: vehicle.vehiculo.estacionado,
                 });
             });
         }
