@@ -23,12 +23,13 @@ const InputControlled = ({
     inputFocus,
 }) => {
     const [changeText, setChangeText] = useState(false);
-    
+
     return (
         <NativeBaseProvider>
             <Controller
                 control={control}
                 name={name}
+                defaultValue={defaultValue}
                 rules={rules}
                 render={({
                     field: { value, onChange, onBlur },
@@ -37,8 +38,10 @@ const InputControlled = ({
                     <View>
                         <Input
                             keyboardType={keyboardType}
-                            value={changeText ? value : defaultValue}
-                            onChangeText={changeText ? onChange : () => {onChange; setChangeText(true)}}
+                            value={value}
+                            onChangeText={(text) => {
+                                onChange(text);
+                            }}
                             onBlur={onBlur}
                             placeholder={placeholder}
                             secureTextEntry={secureTextEntry}
@@ -71,7 +74,6 @@ const InputControlled = ({
 export default InputControlled;
 
 const styles = ScaledSheet.create({
-
     input: {
         minHeight: "45@ms",
         backgroundColor: "white",
@@ -80,10 +82,10 @@ const styles = ScaledSheet.create({
     },
     error: {
         color: "red",
-        fontSize: "15@ms"
+        fontSize: "15@ms",
     },
     iconError: {
         color: "red",
         fontSize: "24@ms",
-    }
+    },
 });

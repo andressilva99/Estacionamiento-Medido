@@ -59,7 +59,6 @@ const PatentCustom = ({
         setInterval(repeatFunction, 5000); // 60000 ms = 1 minuto
     }, []);
 
-
     const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
         useState(false);
     const cancelRefAlertNoticeFunction = useRef(null);
