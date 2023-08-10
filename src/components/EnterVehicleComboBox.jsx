@@ -30,7 +30,7 @@ const EnterVehicleComboBox = ({
                             clearOnFocus={false}
                             closeOnBlur={true}
                             onSelectItem={setElement}
-                            dataSet={elem ? listElement : []}
+                            dataSet={listElement}
                             onChangeText={setElem}
                             showChevron={false}
                             onBlur={onBlur}
@@ -46,6 +46,9 @@ const EnterVehicleComboBox = ({
                                 styles.suggestionsListTextStyle
                             }
                             onClear={onClear}
+                            textInputProps={{
+                                autoFocus: true,
+                            }}
                         ></AutocompleteDropdown>
                     </Stack>
                 </HStack>
