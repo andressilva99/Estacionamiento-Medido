@@ -76,6 +76,10 @@ const ProfileScreen = ({ navigation }) => {
         await logOut();
     };
 
+    useEffect(() => {
+        console.log(`Hola estoy ${isDisabled}`);
+    }, []);
+
     const logOut = async () => {
         let logOutUser = true;
         loggedUser.user.vehicles.forEach((vehicle) => {

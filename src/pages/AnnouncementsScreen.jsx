@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
+    Button,
     HStack,
     NativeBaseProvider,
     Stack,
@@ -13,6 +14,8 @@ import { Feather } from "@expo/vector-icons";
 import loggedUser from "../objects/user";
 import constants from "../constants/constants";
 import { findTickets } from "../functions/findTickets";
+import AlertNotice from "../components/Alerts/AlertNotice";
+import { useRef } from "react";
 
 const AnnouncementsScreen = ({ navigation }) => {
     const [haveTickets, setHaveTickets] = useState(false);
@@ -20,6 +23,11 @@ const AnnouncementsScreen = ({ navigation }) => {
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
+
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     useEffect(() => {
         const FindTickets = () => {
@@ -92,6 +100,12 @@ const AnnouncementsScreen = ({ navigation }) => {
         FindTickets();
     }, []);
 
+    const payTicket = async () => {
+        //Función para pagar ticket
+        setMessageAlertNotice("Lo sentimos, esta función está en desarrollo.");
+        setIsOpenAlertNotice(true);
+    };
+
     return (
         <NativeBaseProvider>
             <StatusBar></StatusBar>
@@ -103,7 +117,10 @@ const AnnouncementsScreen = ({ navigation }) => {
                 safeAreaTop={true}
             >
                 <HStack>
-                    <HeaderPage onPress={handleButtonPressMenu} navigation={navigation}></HeaderPage>
+                    <HeaderPage
+                        onPress={handleButtonPressMenu}
+                        navigation={navigation}
+                    ></HeaderPage>
                 </HStack>
                 <Stack flexDirection="row" style={styles.containerProfile}>
                     <Feather
@@ -117,110 +134,109 @@ const AnnouncementsScreen = ({ navigation }) => {
                     <>
                         <VStack space="sm">
                             <HStack>
-                                <Stack
-                                    style={[
-                                        styles.tableContainer,
-                                        styles.tableContainerLeft,
-                                    ]}
-                                >
-                                    <Text style={styles.textTableHeader}>
-                                        Nº
-                                    </Text>
-                                </Stack>
-                                <Stack
-                                    style={[
-                                        styles.tableContainer,
-                                        styles.tableContainerCenter,
-                                    ]}
-                                >
-                                    <Text style={styles.textTableHeader}>
-                                        Patente
-                                    </Text>
-                                </Stack>
-                                <Stack
-                                    style={[
-                                        styles.tableContainer,
-                                        styles.tableContainerCenter,
-                                    ]}
-                                >
-                                    <Text style={styles.textTableHeader}>
-                                        Fecha
-                                    </Text>
-                                </Stack>
-                                <Stack
-                                    style={[
-                                        styles.tableContainer,
-                                        styles.tableContainerRight,
-                                    ]}
-                                >
-                                    <Text style={styles.textTableHeader}>
-                                        Importe
-                                    </Text>
-                                </Stack>
+                                <HStack flex={1}>
+                                    <Stack
+                                        style={[
+                                            styles.tableContainer,
+                                            styles.tableContainerLeft,
+                                        ]}
+                                    >
+                                        <Text style={styles.textTableHeader}>
+                                            Nº
+                                        </Text>
+                                    </Stack>
+                                    <Stack
+                                        style={[
+                                            styles.tableContainer,
+                                            styles.tableContainerCenter,
+                                        ]}
+                                    >
+                                        <Text style={styles.textTableHeader}>
+                                            Patente
+                                        </Text>
+                                    </Stack>
+                                    <Stack
+                                        style={[
+                                            styles.tableContainer,
+                                            styles.tableContainerRight,
+                                        ]}
+                                    >
+                                        <Text style={styles.textTableHeader}>
+                                            Fecha
+                                        </Text>
+                                    </Stack>
+                                </HStack>
+                                <Stack flex={0.3}></Stack>
                             </HStack>
                             <ScrollView
                                 style={styles.scrollView}
                                 showsVerticalScrollIndicator={false}
                             >
-                                <VStack space="sm">
+                                <VStack space="sm" minW="99%">
                                     {loggedUser.user.tickets.map(
                                         (ticket, index) => (
-                                            <HStack minW="99%" key={index}>
-                                                <Stack
-                                                    style={[
-                                                        styles.tableContainer,
-                                                        styles.tableContainerLeft,
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={
-                                                            styles.textTableItems
-                                                        }
+                                            <HStack key={index}>
+                                                <HStack flex={1}>
+                                                    <Stack
+                                                        style={[
+                                                            styles.tableContainer,
+                                                            styles.tableContainerLeft,
+                                                        ]}
                                                     >
-                                                        {ticket.id}
-                                                    </Text>
-                                                </Stack>
-                                                <Stack
-                                                    style={[
-                                                        styles.tableContainer,
-                                                        styles.tableContainerCenter,
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={
-                                                            styles.textTableItems
-                                                        }
+                                                        <Text
+                                                            style={
+                                                                styles.textTableItems
+                                                            }
+                                                        >
+                                                            {ticket.id}
+                                                        </Text>
+                                                    </Stack>
+                                                    <Stack
+                                                        style={[
+                                                            styles.tableContainer,
+                                                            styles.tableContainerCenter,
+                                                        ]}
                                                     >
-                                                        {ticket.patent}
-                                                    </Text>
-                                                </Stack>
-                                                <Stack
-                                                    style={[
-                                                        styles.tableContainer,
-                                                        styles.tableContainerCenter,
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={
-                                                            styles.textTableItems
-                                                        }
+                                                        <Text
+                                                            style={
+                                                                styles.textTableItems
+                                                            }
+                                                        >
+                                                            {ticket.patent}
+                                                        </Text>
+                                                    </Stack>
+                                                    <Stack
+                                                        style={[
+                                                            styles.tableContainer,
+                                                            styles.tableContainerRight,
+                                                        ]}
                                                     >
-                                                        {ticket.date}
-                                                    </Text>
-                                                </Stack>
-                                                <Stack
-                                                    style={[
-                                                        styles.tableContainer,
-                                                        styles.tableContainerRight,
-                                                    ]}
-                                                >
-                                                    <Text
+                                                        <Text
+                                                            style={
+                                                                styles.textTableItems
+                                                            }
+                                                        >
+                                                            {ticket.date}
+                                                        </Text>
+                                                    </Stack>
+                                                </HStack>
+                                                <Stack flex={0.3}>
+                                                    <Button
                                                         style={
-                                                            styles.textTableItems
+                                                            styles.buttonPayTicket
                                                         }
+                                                        onPress={() => {
+                                                            payTicket();
+                                                        }}
                                                     >
-                                                        {ticket.amount}
-                                                    </Text>
+                                                        <Text
+                                                            style={
+                                                                styles.textButtonPayTicket
+                                                            }
+                                                        >
+                                                            Pagar
+                                                        </Text>
+                                                    </Button>
                                                 </Stack>
                                             </HStack>
                                         )
@@ -237,6 +253,12 @@ const AnnouncementsScreen = ({ navigation }) => {
                     </Stack>
                 )}
             </VStack>
+            <AlertNotice
+                isOpen={isOpenAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}
+            ></AlertNotice>
         </NativeBaseProvider>
     );
 };
@@ -283,12 +305,14 @@ const styles = ScaledSheet.create({
         borderBottomLeftRadius: "30@ms",
         borderTopLeftRadius: "30@ms",
         borderRightWidth: 0,
+        height: "45@ms",
     },
     tableContainerRight: {
         borderWidth: "1@ms",
         borderRadius: 0,
         borderBottomRightRadius: "30@ms",
         borderTopRightRadius: "30@ms",
+        height: "45@ms",
     },
     textTableHeader: {
         fontSize: "16@ms",
@@ -307,11 +331,21 @@ const styles = ScaledSheet.create({
         alignItems: "center",
         flex: 1,
         borderColor: "#d3d3d3",
-        paddingVertical: "3%",
+        height: "45@ms",
     },
     tableContainerCenter: {
         borderRadius: 0,
         borderWidth: "1@ms",
         borderRightWidth: 0,
+        height: "45@ms",
+    },
+    buttonPayTicket: {
+        borderRadius: "30@ms",
+        backgroundColor: "#17974c",
+        height: "45@ms",
+    },
+    textButtonPayTicket: {
+        color: "white",
+        fontWeight: "bold",
     },
 });

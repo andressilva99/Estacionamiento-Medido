@@ -9,6 +9,7 @@ import {
     Stack,
     VStack,
     Image,
+    Spinner,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -94,7 +95,7 @@ const ParkingScreen = ({ navigation }) => {
                     patent: vehicle.vehiculo.patente,
                     color: vehicle.vehiculo.color.nombre,
                     idVehicle: vehicle.vehiculo.idVehiculo,
-                    parked: false,
+                    parked: vehicle.vehiculo.estacionado,
                 });
             });
         }
@@ -199,23 +200,30 @@ const ParkingScreen = ({ navigation }) => {
                         Vehículos Registrados
                     </Text>
                 </HStack>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    {loggedUser.user.vehicles
-                        ? loggedUser.user.vehicles.map((vehicle, index) => (
-                              <PatentCustom
-                                  patent={vehicle.patent}
-                                  idVehicle={vehicle.idVehicle}
-                                  idButtonStart="start"
-                                  idButtonStop="stop"
-                                  key={vehicle.idVehicle}
-                                  idUser={loggedUser.user.idUser}
-                                  parked={vehicle.parked}
-                                  position={index}
-                                  setRefresh={refreshParkingScreen}
-                              ></PatentCustom>
-                          ))
-                        : null}
-                </ScrollView>
+                {loading ? (
+                    <HStack space={"sm"} minWidth={"85%"} justifyContent={"center"} alignItems={"center"}>
+                        <Text style={styles.textUpdateInfo}>Actualizando información</Text>
+                        <Spinner color={"#3f60af"} size={"lg"}></Spinner>
+                    </HStack>
+                ) : (
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {loggedUser.user.vehicles
+                            ? loggedUser.user.vehicles.map((vehicle, index) => (
+                                  <PatentCustom
+                                      patent={vehicle.patent}
+                                      idVehicle={vehicle.idVehicle}
+                                      idButtonStart="start"
+                                      idButtonStop="stop"
+                                      key={vehicle.idVehicle}
+                                      idUser={loggedUser.user.idUser}
+                                      parked={vehicle.parked}
+                                      position={index}
+                                      setRefresh={refreshParkingScreen}
+                                  ></PatentCustom>
+                              ))
+                            : null}
+                    </ScrollView>
+                )}
             </VStack>
         </NativeBaseProvider>
     );
@@ -302,4 +310,9 @@ const styles = ScaledSheet.create({
         color: "#3f60af",
         fontSize: "35@ms",
     },
+    textUpdateInfo: {
+        color: "#3f60af",
+        fontSize: "18@ms",
+        fontWeight: "bold",
+    }
 });

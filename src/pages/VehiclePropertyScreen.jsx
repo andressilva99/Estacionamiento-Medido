@@ -15,8 +15,8 @@ const VehiclePropertyScreen = ({ navigation, route }) => {
     const selectedItem = (elem) => {
         if (type == "mark") {
             if (elem != null) {
-                newEnterVehicle.model = null
-                newEnterVehicle.color = null
+                newEnterVehicle.model = null;
+                newEnterVehicle.color = null;
                 newEnterVehicle.mark = elem;
                 console.log("Yo me guardo primero");
                 console.log(newEnterVehicle.mark);
@@ -25,7 +25,7 @@ const VehiclePropertyScreen = ({ navigation, route }) => {
             }
         } else if (type == "model") {
             if (elem != null) {
-                newEnterVehicle.color = null
+                newEnterVehicle.color = null;
                 newEnterVehicle.model = elem;
                 console.log("Yo me guardo primero");
                 console.log(newEnterVehicle.model);
@@ -45,8 +45,12 @@ const VehiclePropertyScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <VStack height={height} alignItems={"center"} space={"lg"}>
-                <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
+            <VStack height={height} alignItems={"center"}>
+                <HStack>
+                    <HeaderButtonGoBack
+                        navigation={navigation}
+                    ></HeaderButtonGoBack>
+                </HStack>
                 <Stack style={styles.container}>
                     <Text>*Nota: Escriba y seleccione</Text>
                 </Stack>
@@ -69,7 +73,7 @@ export default VehiclePropertyScreen;
 
 const styles = ScaledSheet.create({
     container: {
-        marginTop: "35@ms",
         maxWidth: "90%",
+        marginBottom: "15@ms"
     },
 });
