@@ -86,11 +86,10 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
     };
 
     return (
-        <>
+        <Stack key={index}>
             <HStack
                 style={styles.containerPatent}
                 marginBottom="5%"
-                key={index}
             >
                 <Spacer></Spacer>
                 <Text style={styles.textPatent}>{patent}</Text>
@@ -122,7 +121,7 @@ const DeletePatentModule = ({ patent, id, index, refreshScreen }) => {
                 message={messageAlertNotice}
                 cancelRef={cancelRefAlertNotice}
             ></AlertNotice>
-        </>
+        </Stack>
     );
 };
 

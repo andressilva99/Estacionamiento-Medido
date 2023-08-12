@@ -22,12 +22,19 @@ const { height } = Dimensions.get("screen");
 const SplashScreen = () => {
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
             >
-                <VStack height={height} alignItems={"center"}>
+                <VStack
+                    height={height}
+                    alignItems={"center"}
+                    safeAreaTop={true}
+                >
                     <Spacer></Spacer>
                     <Stack>
                         <Image

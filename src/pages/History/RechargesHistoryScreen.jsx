@@ -133,12 +133,16 @@ const RechargesHistoryScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <VStack
                 height={height}
                 alignItems={"center"}
                 style={styles.backgroundContainer}
                 space="sm"
+                safeAreaTop={true}
             >
                 <HStack>
                     <HeaderPage

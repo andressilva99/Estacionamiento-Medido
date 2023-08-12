@@ -141,7 +141,7 @@ const LogInScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar barStyle={"default"} backgroundColor={"black"}></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
@@ -151,12 +151,8 @@ const LogInScreen = ({ navigation, route }) => {
                     height={height}
                     alignItems="center"
                     safeAreaTop={true}
-                    // justifyContent="center"
+                    style={styles.container}
                 >
-                    <HeaderButtonGoBack
-                        navigation={navigation}
-                        exitApp={true}
-                    ></HeaderButtonGoBack>
                     <Image
                         source={require("../image/logIn-icon-start.png")}
                         alt="logIn-icon-start"
@@ -321,4 +317,7 @@ const styles = ScaledSheet.create({
     touchVisiblePassword: {
         flex: 0.4,
     },
+    container: {
+        paddingTop: "60@ms",
+    }
 });

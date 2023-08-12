@@ -9,6 +9,7 @@ import {
     Select,
     Spacer,
     Stack,
+    StatusBar,
 } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -264,6 +265,10 @@ const ProfileScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <Stack
                 style={styles.backgroundContainer}
                 space="sm"
@@ -490,7 +495,7 @@ const ProfileScreen = ({ navigation }) => {
                                 control={control}
                                 width="85%"
                                 rules={{
-                                    required: " Número de teléfono requerido",
+                                    // required: " Número de teléfono requerido",
                                     minLength: {
                                         value: 10,
                                         message:

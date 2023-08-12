@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
     Button,
     HStack,
@@ -26,6 +26,18 @@ const REGEX_EMAIL =
 
 const PasswordRecoveryScreen = ({ navigation }) => {
     const { control, handleSubmit } = useForm();
+
+    const inputFocus = useRef(null);
+
+    useEffect(() => {
+        handleFocus();
+    }, []);
+
+    const handleFocus = () => {
+        if (inputFocus.current) {
+            inputFocus.current.focus();
+        }
+    };
 
     const [loading, setLoading] = useState(false);
 
@@ -74,12 +86,12 @@ const PasswordRecoveryScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar barStyle={"default"} backgroundColor={"black"}></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
             >
-                <VStack space="lg" height={height} alignItems="center">
+                <VStack space="lg" height={height} alignItems="center" safeAreaTop={true}>
                     <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
                     <HStack>
                         <Text style={styles.textHeader}>
@@ -99,6 +111,7 @@ const PasswordRecoveryScreen = ({ navigation }) => {
                                     },
                             }}
                             autoComplete="email"
+                            inputFocus={inputFocus}
                         ></InputControlledCopyPaste>
                     </HStack>
                     {loading ? (

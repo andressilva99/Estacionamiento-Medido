@@ -7,6 +7,7 @@ import {
     NativeBaseProvider,
     Spacer,
     Stack,
+    StatusBar,
 } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
@@ -68,9 +69,9 @@ const EnterVehicleScreen = ({ navigation, route }) => {
 
     const handleFocus = () => {
         if (inputFocus.current) {
-          inputFocus.current.focus();
+            inputFocus.current.focus();
         }
-      };
+    };
 
     const obtainMarks = async () => {
         try {
@@ -215,49 +216,87 @@ const EnterVehicleScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <KeyboardAvoidingView>
-                {/* <ScrollView> */}
-                <Stack
-                    style={styles.backgroundContainer}
-                    space="sm"
-                    height="100%"
-                    alignItems="center"
-                    safeAreaTop={true}
-                >
-                    <HStack>
-                        <HeaderPage dissableButtonMenu={true} navigation={navigation}></HeaderPage>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
+            <Stack
+                style={styles.backgroundContainer}
+                space="sm"
+                height={height}
+                alignItems="center"
+                safeAreaTop={true}
+            >
+                <HStack>
+                    <HeaderPage
+                        dissableButtonMenu={true}
+                        navigation={navigation}
+                    ></HeaderPage>
+                </HStack>
+                <Stack flexDirection="row" style={styles.containerProfile}>
+                    <FontAwesome5 name="car" size={24} color="#3f60af" />
+                    <Text style={styles.textProfile}>
+                        Ingresar Nuevo Vehículo
+                    </Text>
+                </Stack>
+                <HStack maxW="85%">
+                    <InputControlled
+                        name="patent"
+                        control={control}
+                        autoCapitalize="characters"
+                        placeholder="Patente"
+                        rules={{
+                            required: " Patente Requerida",
+                            pattern: {
+                                value: /^[A-Z]{3}\d{3}$|^[A-Z]{2}\d{3}[A-Z]{2}$/,
+                                message:
+                                    ' La patente debe tener el formato "LLLNNN" o "LLNNNLL" (L: letra, N: número)',
+                            },
+                        }}
+                        inputFocus={inputFocus}
+                    ></InputControlled>
+                </HStack>
+                <Stack maxW={"85%"}>
+                    <Text>*Formato ej.: "ABC123", "AB123CD"</Text>
+                </Stack>
+                <HStack style={styles.containerEnabled} maxW={"85%"}>
+                    <HStack flex={2} alignItems="center">
+                        <Text style={styles.label}>Marca</Text>
+                        <Spacer></Spacer>
+                        <Text style={styles.slash}>l</Text>
                     </HStack>
-                    <Stack flexDirection="row" style={styles.containerProfile}>
-                        <FontAwesome5 name="car" size={24} color="#3f60af" />
-                        <Text style={styles.textProfile}>
-                            Ingresar Nuevo Vehículo
-                        </Text>
-                    </Stack>
-                    <HStack maxW="85%">
-                        <InputControlled
-                            name="patent"
-                            control={control}
-                            autoCapitalize="characters"
-                            placeholder="Patente"
-                            rules={{
-                                required: " Patente Requerida",
-                                pattern: {
-                                    value: /^[A-Z]{3}\d{3}$|^[A-Z]{2}\d{3}[A-Z]{2}$/,
-                                    message:
-                                        ' La patente debe tener el formato "LLLNNN" o "LLNNNLL" (L: letra, N: número)',
-                                },
+                    <Stack flex={4}>
+                        <TouchableOpacity
+                            style={styles.touchableOpacity}
+                            onPress={() => {
+                                setEnableButton(false);
+                                navigation.navigate("VehicleProperty", {
+                                    type: "mark",
+                                    listElement: listMark,
+                                    label: "Marca",
+                                    onBlur: () => {
+                                        EnableModel();
+                                    },
+                                    enable: true,
+                                    onClear: () => {
+                                        setEnableModel(false);
+                                        setEnableColor(false);
+                                    },
+                                });
                             }}
-                            inputFocus={inputFocus}
-                        ></InputControlled>
-                    </HStack>
-                    <Stack maxW={"85%"}>
-                        <Text>
-                            *Formato ej.: "ABC123", "AB123CD"
-                        </Text>
+                        >
+                            <Text style={styles.touchableOpacityLabel}>
+                                {newEnterVehicle.mark != null
+                                    ? newEnterVehicle.mark.title
+                                    : "Seleccionar Marca"}
+                            </Text>
+                        </TouchableOpacity>
                     </Stack>
+                </HStack>
+                {enableModel ? (
                     <HStack style={styles.containerEnabled} maxW={"85%"}>
                         <HStack flex={2} alignItems="center">
-                            <Text style={styles.label}>Marca</Text>
+                            <Text style={styles.label}>Modelo</Text>
                             <Spacer></Spacer>
                             <Text style={styles.slash}>l</Text>
                         </HStack>
@@ -267,179 +306,100 @@ const EnterVehicleScreen = ({ navigation, route }) => {
                                 onPress={() => {
                                     setEnableButton(false);
                                     navigation.navigate("VehicleProperty", {
-                                        type: "mark",
-                                        listElement: listMark,
-                                        label: "Marca",
+                                        type: "model",
+                                        listElement: listModel,
+                                        label: "Modelo",
                                         onBlur: () => {
-                                            EnableModel();
+                                            EnableColor();
                                         },
                                         enable: true,
                                         onClear: () => {
-                                            setEnableModel(false);
                                             setEnableColor(false);
                                         },
                                     });
                                 }}
                             >
                                 <Text style={styles.touchableOpacityLabel}>
-                                    {newEnterVehicle.mark != null
-                                        ? newEnterVehicle.mark.title
-                                        : "Seleccionar Marca"}
+                                    {newEnterVehicle.model != null
+                                        ? newEnterVehicle.model.title
+                                        : "Seleccionar Modelo"}
                                 </Text>
                             </TouchableOpacity>
                         </Stack>
                     </HStack>
-                    {enableModel ? (
-                        <HStack style={styles.containerEnabled} maxW={"85%"}>
-                            <HStack flex={2} alignItems="center">
-                                <Text style={styles.label}>Modelo</Text>
-                                <Spacer></Spacer>
-                                <Text style={styles.slash}>l</Text>
-                            </HStack>
-                            <Stack flex={4}>
-                                <TouchableOpacity
-                                    style={styles.touchableOpacity}
-                                    onPress={() => {
-                                        setEnableButton(false);
-                                        navigation.navigate("VehicleProperty", {
-                                            type: "model",
-                                            listElement: listModel,
-                                            label: "Modelo",
-                                            onBlur: () => {
-                                                EnableColor();
-                                            },
-                                            enable: true,
-                                            onClear: () => {
-                                                setEnableColor(false);
-                                            },
-                                        });
-                                    }}
-                                >
-                                    <Text style={styles.touchableOpacityLabel}>
-                                        {newEnterVehicle.model != null
-                                            ? newEnterVehicle.model.title
-                                            : "Seleccionar Modelo"}
-                                    </Text>
-                                </TouchableOpacity>
-                            </Stack>
+                ) : (
+                    <HStack style={styles.containerDisabled} maxW={"85%"}>
+                        <HStack flex={2} alignItems="center">
+                            <Text style={styles.label}>Modelo</Text>
+                            <Spacer></Spacer>
+                            <Text style={styles.slash}>l</Text>
                         </HStack>
-                    ) : (
-                        <HStack style={styles.containerDisabled} maxW={"85%"}>
-                            <HStack flex={2} alignItems="center">
-                                <Text style={styles.label}>Modelo</Text>
-                                <Spacer></Spacer>
-                                <Text style={styles.slash}>l</Text>
-                            </HStack>
-                            <Stack flex={4}></Stack>
+                        <Stack flex={4}></Stack>
+                    </HStack>
+                )}
+                {enableColor ? (
+                    <HStack style={styles.containerEnabled} maxW={"85%"}>
+                        <HStack flex={2} alignItems="center">
+                            <Text style={styles.label}>Color</Text>
+                            <Spacer></Spacer>
+                            <Text style={styles.slash}>l</Text>
                         </HStack>
-                    )}
-                    {enableColor ? (
-                        <HStack style={styles.containerEnabled} maxW={"85%"}>
-                            <HStack flex={2} alignItems="center">
-                                <Text style={styles.label}>Color</Text>
-                                <Spacer></Spacer>
-                                <Text style={styles.slash}>l</Text>
-                            </HStack>
-                            <Stack flex={4}>
-                                <TouchableOpacity
-                                    style={styles.touchableOpacity}
-                                    onPress={() => {
-                                        setEnableButton(false);
-                                        navigation.navigate("VehicleProperty", {
-                                            type: "color",
-                                            listElement: listColor,
-                                            label: "Color",
-                                            onBlur: () => {
-                                                setEnableButton(true);
-                                            },
-                                            enable: true,
-                                            onClear: () => {},
-                                        });
-                                    }}
-                                >
-                                    <Text style={styles.touchableOpacityLabel}>
-                                        {newEnterVehicle.color != null
-                                            ? newEnterVehicle.color.title
-                                            : "Seleccionar Color"}
-                                    </Text>
-                                </TouchableOpacity>
-                            </Stack>
-                        </HStack>
-                    ) : (
-                        <HStack style={styles.containerDisabled} maxW={"85%"}>
-                            <HStack flex={2} alignItems="center">
-                                <Text style={styles.label}>Color</Text>
-                                <Spacer></Spacer>
-                                <Text style={styles.slash}>l</Text>
-                            </HStack>
-                            <Stack flex={4}></Stack>
-                        </HStack>
-                    )}
-                    {/* <HStack zIndex={999} marginX="5%" maxW="85%">
-                        <EnterVehicleComboBox
-                            setElement={setMark}
-                            element={mark}
-                            listElement={listMark}
-                            label="Marca"
-                            onBlur={() => {
-                                mark ? EnableModel() : null;
-                            }}
-                            enable={true}
-                            onClear={() => {
-                                setEnableModel(false);
-                                setEnableColor(false);
-                            }}
-                        ></EnterVehicleComboBox>
-                    </HStack> */}
-                    {/* <HStack zIndex={998} marginX="5%" maxW="85%">
-                        <EnterVehicleComboBox
-                            setElement={setModel}
-                            element={model}
-                            listElement={listModel}
-                            onBlur={() => {
-                                model ? EnableColor() : null;
-                            }}
-                            label="Modelo"
-                            enable={enableModel}
-                            onClear={() => {
-                                setEnableColor(false);
-                            }}
-                        ></EnterVehicleComboBox>
-                    </HStack> */}
-                    {/* <HStack zIndex={997} marginX="5%" maxW="85%">
-                        <EnterVehicleComboBox
-                            setElement={setColor}
-                            element={color}
-                            listElement={listColor}
-                            label="Color"
-                            enable={enableColor}
-                        ></EnterVehicleComboBox>
-                    </HStack> */}
-                    {loading ? (
-                        <Button
-                            isLoading
-                            isLoadingText={
-                                <Text style={styles.textButton}>
-                                    Ingresando vehículo
+                        <Stack flex={4}>
+                            <TouchableOpacity
+                                style={styles.touchableOpacity}
+                                onPress={() => {
+                                    setEnableButton(false);
+                                    navigation.navigate("VehicleProperty", {
+                                        type: "color",
+                                        listElement: listColor,
+                                        label: "Color",
+                                        onBlur: () => {
+                                            setEnableButton(true);
+                                        },
+                                        enable: true,
+                                        onClear: () => {},
+                                    });
+                                }}
+                            >
+                                <Text style={styles.touchableOpacityLabel}>
+                                    {newEnterVehicle.color != null
+                                        ? newEnterVehicle.color.title
+                                        : "Seleccionar Color"}
                                 </Text>
-                            }
-                            style={styles.button}
-                            spinnerPlacement="end"
-                        ></Button>
-                    ) : (
-                        <Button
-                            isDisabled={!enableButton}
-                            onPress={handleSubmit(RegisterVehicle)}
-                            style={styles.button}
-                        >
+                            </TouchableOpacity>
+                        </Stack>
+                    </HStack>
+                ) : (
+                    <HStack style={styles.containerDisabled} maxW={"85%"}>
+                        <HStack flex={2} alignItems="center">
+                            <Text style={styles.label}>Color</Text>
+                            <Spacer></Spacer>
+                            <Text style={styles.slash}>l</Text>
+                        </HStack>
+                        <Stack flex={4}></Stack>
+                    </HStack>
+                )}
+                {loading ? (
+                    <Button
+                        isLoading
+                        isLoadingText={
                             <Text style={styles.textButton}>
-                                Ingresar vehículo
+                                Ingresando vehículo
                             </Text>
-                        </Button>
-                    )}
-                </Stack>
-                {/* </ScrollView> */}
-            </KeyboardAvoidingView>
+                        }
+                        style={styles.button}
+                        spinnerPlacement="end"
+                    ></Button>
+                ) : (
+                    <Button
+                        isDisabled={!enableButton}
+                        onPress={handleSubmit(RegisterVehicle)}
+                        style={styles.button}
+                    >
+                        <Text style={styles.textButton}>Ingresar vehículo</Text>
+                    </Button>
+                )}
+            </Stack>
             <AlertNotice
                 isOpen={isOpenAlertNotice}
                 onClose={onCloseAlertNotice}
