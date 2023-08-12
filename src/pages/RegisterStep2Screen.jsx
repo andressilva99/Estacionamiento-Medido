@@ -37,35 +37,35 @@ const RegisterStep2Screen = ({ route, navigation }) => {
     const { typeDocument, numberDocument, name, surname, razonSocial } =
         route.params;
 
-    const [listPhoneCompanies, setListPhoneCompanies] = useState([]);
-    const [phoneCompanie, setPhoneCompanie] = useState();
+    // const [listPhoneCompanies, setListPhoneCompanies] = useState([]);
+    // const [phoneCompanie, setPhoneCompanie] = useState();
 
-    useEffect(() => {
-        const obtainCompanies = async () => {
-            try {
-                const result = await constants.AXIOS_INST.get(
-                    "companiasTelefono"
-                );
-                const companies = result.data.mensaje.map(
-                    ({ idCompaniaTelefono, nombre }) => ({
-                        value: idCompaniaTelefono,
-                        label: nombre,
-                    })
-                );
-                setListPhoneCompanies(companies);
-            } catch (error) {
-                if (error.response) {
-                    console.log(error.response.data);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log(error);
-                }
-                return;
-            }
-        };
-        obtainCompanies();
-    }, []);
+    // useEffect(() => {
+    //     const obtainCompanies = async () => {
+    //         try {
+    //             const result = await constants.AXIOS_INST.get(
+    //                 "companiasTelefono"
+    //             );
+    //             const companies = result.data.mensaje.map(
+    //                 ({ idCompaniaTelefono, nombre }) => ({
+    //                     value: idCompaniaTelefono,
+    //                     label: nombre,
+    //                 })
+    //             );
+    //             setListPhoneCompanies(companies);
+    //         } catch (error) {
+    //             if (error.response) {
+    //                 console.log(error.response.data);
+    //             } else if (error.request) {
+    //                 console.log(error.request);
+    //             } else {
+    //                 console.log(error);
+    //             }
+    //             return;
+    //         }
+    //     };
+    //     obtainCompanies();
+    // }, []);
 
     const { control, handleSubmit, watch } = useForm();
 
@@ -75,7 +75,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
         const information = {
             usuario: {
                 idTipoDocumento: typeDocument,
-                idCompaniaTelefono: phoneCompanie,
+                // idCompaniaTelefono: phoneCompanie,
                 numeroDocumento: numberDocument.toString(),
                 nombrePersona: name.trim(),
                 apellido: surname.trim(),
@@ -96,7 +96,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                 })
                 .catch((error) => {
                     if (error.response) {
-                        console.log(error.response.data);
+                        console.error(error.response.data);
                         setMessageAlertError(error.response.data.mensaje);
                         setIsOpenAlertError(true);
                     } else if (error.request) {
@@ -116,23 +116,14 @@ const RegisterStep2Screen = ({ route, navigation }) => {
         }
     };
 
-    const [invalidPhoneCompanie, setInvalidPhoneCompanie] = useState(false);
+    // const [invalidPhoneCompanie, setInvalidPhoneCompanie] = useState(false);
 
     const SuccessfulRegistration = async (data) => {
-        if (phoneCompanie != null) {
-            if (loading) {
-                return;
-            }
-            setInvalidPhoneCompanie(false);
-            setLoading(true);
-            try {
-                await Register(data);
-            } catch (error) {
-                console.log(error);
-            }
-            setLoading(false);
-        } else {
-            setInvalidPhoneCompanie(true);
+        setLoading(true);
+        try {
+            await Register(data);
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -213,7 +204,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                 }}
                                 autoComplete="email"
                             ></InputControlledCopyPaste>
-                            <HStack flex={1} minW="85%">
+                            {/* <HStack flex={1} minW="85%">
                                 <Stack style={styles.containerPhoneCompanie}>
                                     <Text style={styles.textPhoneCompanie}>
                                         Compañía teléfono
@@ -249,7 +240,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                                         {" Seleccione compañía de teléfono"}
                                     </Text>
                                 </Stack>
-                            ) : null}
+                            ) : null} */}
                             <InputControlled
                                 keyboardType="numeric"
                                 name="phone"
