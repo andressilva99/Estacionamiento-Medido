@@ -21,6 +21,8 @@ import AlertError from "../../components/Alerts/AlertError";
 import InputDateInitial from "../../components/InputDateInitial";
 import InputDateEnd from "../../components/InputDateEnd";
 import AlertNotice from "../../components/Alerts/AlertNotice";
+import InputDateInitialIOS from "../../components/Inputs Date iOS/InputDateInitialIOS";
+import InputDateEndIOS from "../../components/Inputs Date iOS/InputDateEndIOS";
 
 const { height } = Dimensions.get("screen");
 
@@ -291,16 +293,30 @@ const ParkingHistoryScreen = ({ navigation }) => {
                 ) : (
                     <>
                         <HStack maxW="85%">
-                            <InputDateInitial
-                                text="Desde"
-                                setDateSent={setDateInitial}
-                            ></InputDateInitial>
+                        {Platform.OS === "android" ? (
+                                <InputDateInitial
+                                    text="Desde"
+                                    setDateSent={setDateInitial}
+                                ></InputDateInitial>
+                            ) : (
+                                <InputDateInitialIOS
+                                    text={"Desde"}
+                                    setDateSent={setDateInitial}
+                                ></InputDateInitialIOS>
+                            )}
                         </HStack>
                         <HStack maxW="85%">
-                            <InputDateEnd
-                                text="Hasta"
-                                setDateSent={setDateEnd}
-                            ></InputDateEnd>
+                        {Platform.OS === "android" ? (
+                                <InputDateEnd
+                                    text="Hasta"
+                                    setDateSent={setDateEnd}
+                                ></InputDateEnd>
+                            ) : (
+                                <InputDateEndIOS
+                                    text="Hasta"
+                                    setDateSent={setDateEnd}
+                                ></InputDateEndIOS>
+                            )}
                         </HStack>
                         <Stack style={styles.select}>
                             <Select
