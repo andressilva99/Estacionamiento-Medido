@@ -10,6 +10,7 @@ import {
     VStack,
     Image,
     Spinner,
+    StatusBar,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -37,6 +38,18 @@ const ParkingScreen = ({ navigation }) => {
         };
         verifyBalanceNegative();
     }, [refresh]);
+
+    useEffect(() => {
+        const verifyChangePass = async () => {
+            await new Promise((resolve) => {
+                setTimeout(resolve, 2000);
+            });
+            if (loggedUser.user.changePass == 1) {
+                navigation.navigate("ChangePassword");
+            }
+        };
+        verifyChangePass();
+    }, []);
 
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu", { refreshParkingScreen });
@@ -105,6 +118,10 @@ const ParkingScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <VStack
                 space="sm"
                 height="100%"
@@ -116,7 +133,7 @@ const ParkingScreen = ({ navigation }) => {
                     <HeaderPage
                         onPress={handleButtonPressMenu}
                         navigation={navigation}
-                        exitApp={true}
+                        dissableButtonGoBack={true}
                     ></HeaderPage>
                 </HStack>
                 <HStack>
@@ -201,8 +218,15 @@ const ParkingScreen = ({ navigation }) => {
                     </Text>
                 </HStack>
                 {loading ? (
-                    <HStack space={"sm"} minWidth={"85%"} justifyContent={"center"} alignItems={"center"}>
-                        <Text style={styles.textUpdateInfo}>Actualizando información</Text>
+                    <HStack
+                        space={"sm"}
+                        minWidth={"85%"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                    >
+                        <Text style={styles.textUpdateInfo}>
+                            Actualizando información
+                        </Text>
                         <Spinner color={"#3f60af"} size={"lg"}></Spinner>
                     </HStack>
                 ) : (
@@ -314,5 +338,5 @@ const styles = ScaledSheet.create({
         color: "#3f60af",
         fontSize: "18@ms",
         fontWeight: "bold",
-    }
+    },
 });

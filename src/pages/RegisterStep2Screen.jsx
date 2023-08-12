@@ -148,7 +148,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar barStyle={"default"} backgroundColor={"black"}></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"

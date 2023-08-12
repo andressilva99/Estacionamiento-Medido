@@ -37,7 +37,10 @@ const DeletePatentScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <Stack
                 style={styles.backgroundContainer}
                 space="sm"

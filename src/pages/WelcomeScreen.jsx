@@ -1,7 +1,6 @@
 import {
     Dimensions,
     ImageBackground,
-    StatusBar,
     StyleSheet,
     Text,
     View,
@@ -15,6 +14,7 @@ import {
     Spacer,
     Stack,
     VStack,
+    StatusBar,
 } from "native-base";
 import constants from "../constants/constants";
 import loggedUser from "../objects/user";
@@ -58,7 +58,7 @@ const WelcomeScreen = ({ navigation, route }) => {
         };
 
         await constants.AXIOS_INST.post("usuario/logIn", logIn)
-            .then(async (response) => {
+            .then((response) => {
                 const data = response.data.mensaje;
                 console.log(data);
                 FillUserData(data);
@@ -78,11 +78,6 @@ const WelcomeScreen = ({ navigation, route }) => {
                     console.log(error);
                 }
                 return;
-            })
-            .finally(async () => {
-                if (loggedUser.user.changePass == 1) {
-                    navigation.navigate("ChangePassword");
-                }
             });
         setLoading(false);
     };
@@ -107,7 +102,7 @@ const WelcomeScreen = ({ navigation, route }) => {
                 });
             });
         }
-        saveUserInformation();
+        await saveUserInformation();
         setCurrentData(true);
     };
 
@@ -118,7 +113,10 @@ const WelcomeScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
@@ -129,10 +127,6 @@ const WelcomeScreen = ({ navigation, route }) => {
                     safeAreaTop={true}
                     alignItems="center"
                 >
-                    <HeaderButtonGoBack
-                        navigation={navigation}
-                        exitApp={true}
-                    ></HeaderButtonGoBack>
                     <Stack alignItems="center" flex={0.5}>
                         <Spacer></Spacer>
                         <Text style={styles.text}>Bienvenido</Text>
@@ -214,13 +208,13 @@ const styles = ScaledSheet.create({
         borderRadius: "30@ms",
         backgroundColor: "#04467C",
         minWidth: "50%",
-        height: "45@ms",
+        height: "55@ms",
     },
     buttonLogOut: {
         borderRadius: "30@ms",
         backgroundColor: "#8c0606",
         minWidth: "50%",
-        height: "45@ms",
+        height: "55@ms",
     },
     buttonText: {
         fontSize: "20@ms",

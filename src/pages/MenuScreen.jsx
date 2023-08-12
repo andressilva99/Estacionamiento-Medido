@@ -97,115 +97,146 @@ const MenuScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
             >
-                <HeaderButtonGoBack navigation={navigation}></HeaderButtonGoBack>
-                <ScrollView
-                    height={height}
-                    showsVerticalScrollIndicator={false}
-                >
-                    <VStack style={styles.backgroundContainer} space="sm">
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Menú"}
-                                icon={constants.MENU_ICON}
-                                styleTouchable={{ backgroundColor: "#009FE3" }}
-                                iconRight={true}
-                                styleText={styles.textMenu}
-                                disabled={true}
-                            ></PressableCustom>
-                        </HStack>
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Estacionamiento Medido"}
-                                icon={constants.PARKING_ICON}
-                                styleTouchable={{ backgroundColor: "#086EC1" }}
-                                onPress={handleButtonPress}
-                                id={"Parking"}
-                            ></PressableCustom>
-                        </HStack>
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Perfil"}
-                                icon={constants.PROFILE_ICON}
-                                styleTouchable={{ backgroundColor: "#05509C" }}
-                                onPress={handleButtonPress}
-                                id={"Profile"}
-                            ></PressableCustom>
-                        </HStack>
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Historial"}
-                                icon={constants.HISTORY_ICON}
-                                styleTouchable={{ backgroundColor: "#009FE3" }}
-                                onPress={() => setSubMenu(!subMenu)}
-                                id={"History"}
-                            ></PressableCustom>
-                        </HStack>
-                        {subMenu ? (
-                            <>
-                                <HStack style={styles.containerPressable}>
-                                    <PressableCustom
-                                        text={"Estacionamientos"}
-                                        icon={constants.PARKING_HISTORY_ICON}
-                                        styleTouchable={styles.touchableSubMenu}
-                                        onPress={handleButtonPress}
-                                        id={"ParkingHistory"}
-                                    ></PressableCustom>
-                                </HStack>
-                                <HStack style={styles.containerPressable}>
-                                    <PressableCustom
-                                        text={"Recargas"}
-                                        icon={constants.RECHARGES_ICON}
-                                        styleTouchable={styles.touchableSubMenu}
-                                        onPress={handleButtonPress}
-                                        id={"RechargesHistory"}
-                                    ></PressableCustom>
-                                </HStack>
-                                <HStack style={styles.containerPressable}>
-                                    <PressableCustom
-                                        text={"Movimientos"}
-                                        icon={constants.MOVEMENTS_ICON}
-                                        styleTouchable={styles.touchableSubMenu}
-                                        onPress={handleButtonPress}
-                                        id={"MovementsHistory"}
-                                    ></PressableCustom>
-                                </HStack>
-                                <HStack style={styles.containerPressable}>
-                                    <PressableCustom
-                                        text={"Avisos"}
-                                        icon={constants.NOTICE_ICON}
-                                        styleTouchable={styles.touchableSubMenu}
-                                        onPress={handleButtonPress}
-                                        id={"AnnouncementsHistory"}
-                                    ></PressableCustom>
-                                </HStack>
-                            </>
-                        ) : null}
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Pago en línea"}
-                                icon={constants.CREDIT_CARD_ICON}
-                                styleTouchable={{ backgroundColor: "#086EC1" }}
-                                //En desarrollo
-                                onPress={handleButtonPress}
-                                id={"prueba"}
-                                disabled={true}
-                            ></PressableCustom>
-                        </HStack>
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Avisos"}
-                                icon={constants.NOTICE_ICON}
-                                styleTouchable={{ backgroundColor: "#05509C" }}
-                                onPress={handleButtonPress}
-                                id={"Announcements"}
-                            ></PressableCustom>
-                        </HStack>
-                        {/* <HStack style={styles.containerPressable}>
+                <VStack safeAreaTop={true}>
+                    <HeaderButtonGoBack
+                        navigation={navigation}
+                    ></HeaderButtonGoBack>
+                    <ScrollView
+                        height={height}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <VStack
+                            style={styles.backgroundContainer}
+                            space="sm"
+                        >
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Menú"}
+                                    icon={constants.MENU_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#009FE3",
+                                    }}
+                                    iconRight={true}
+                                    styleText={styles.textMenu}
+                                    disabled={true}
+                                ></PressableCustom>
+                            </HStack>
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Estacionamiento Medido"}
+                                    icon={constants.PARKING_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#086EC1",
+                                    }}
+                                    onPress={handleButtonPress}
+                                    id={"Parking"}
+                                ></PressableCustom>
+                            </HStack>
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Perfil"}
+                                    icon={constants.PROFILE_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#05509C",
+                                    }}
+                                    onPress={handleButtonPress}
+                                    id={"Profile"}
+                                ></PressableCustom>
+                            </HStack>
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Historial"}
+                                    icon={constants.HISTORY_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#009FE3",
+                                    }}
+                                    onPress={() => setSubMenu(!subMenu)}
+                                    id={"History"}
+                                ></PressableCustom>
+                            </HStack>
+                            {subMenu ? (
+                                <>
+                                    <HStack style={styles.containerPressable}>
+                                        <PressableCustom
+                                            text={"Estacionamientos"}
+                                            icon={
+                                                constants.PARKING_HISTORY_ICON
+                                            }
+                                            styleTouchable={
+                                                styles.touchableSubMenu
+                                            }
+                                            onPress={handleButtonPress}
+                                            id={"ParkingHistory"}
+                                        ></PressableCustom>
+                                    </HStack>
+                                    <HStack style={styles.containerPressable}>
+                                        <PressableCustom
+                                            text={"Recargas"}
+                                            icon={constants.RECHARGES_ICON}
+                                            styleTouchable={
+                                                styles.touchableSubMenu
+                                            }
+                                            onPress={handleButtonPress}
+                                            id={"RechargesHistory"}
+                                        ></PressableCustom>
+                                    </HStack>
+                                    <HStack style={styles.containerPressable}>
+                                        <PressableCustom
+                                            text={"Movimientos"}
+                                            icon={constants.MOVEMENTS_ICON}
+                                            styleTouchable={
+                                                styles.touchableSubMenu
+                                            }
+                                            onPress={handleButtonPress}
+                                            id={"MovementsHistory"}
+                                        ></PressableCustom>
+                                    </HStack>
+                                    <HStack style={styles.containerPressable}>
+                                        <PressableCustom
+                                            text={"Avisos"}
+                                            icon={constants.NOTICE_ICON}
+                                            styleTouchable={
+                                                styles.touchableSubMenu
+                                            }
+                                            onPress={handleButtonPress}
+                                            id={"AnnouncementsHistory"}
+                                        ></PressableCustom>
+                                    </HStack>
+                                </>
+                            ) : null}
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Pago en línea"}
+                                    icon={constants.CREDIT_CARD_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#086EC1",
+                                    }}
+                                    //En desarrollo
+                                    onPress={handleButtonPress}
+                                    id={"prueba"}
+                                    disabled={true}
+                                ></PressableCustom>
+                            </HStack>
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Avisos"}
+                                    icon={constants.NOTICE_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#05509C",
+                                    }}
+                                    onPress={handleButtonPress}
+                                    id={"Announcements"}
+                                ></PressableCustom>
+                            </HStack>
+                            {/* <HStack style={styles.containerPressable}>
                             <PressableCustom
                                 text={"Mapas"}
                                 icon={constants.MAP_ICON}
@@ -214,42 +245,49 @@ const MenuScreen = ({ navigation, route }) => {
                                 disabled={true}
                             ></PressableCustom>
                         </HStack> */}
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Acerca de"}
-                                icon={constants.INFORMATION_ICON}
-                                styleTouchable={{ backgroundColor: "#009FE3" }}
-                                onPress={handleButtonPress}
-                                id={"Information"}
-                            ></PressableCustom>
-                        </HStack>
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Eliminar patente"}
-                                icon={constants.DELETE_PATENT_ICON}
-                                styleTouchable={{ backgroundColor: "#086EC1" }}
-                                onPress={handleButtonPress}
-                                id={"DeletePatent"}
-                            ></PressableCustom>
-                        </HStack>
-                        <HStack style={styles.containerPressable}>
-                            <PressableCustom
-                                text={"Cerrar sesión"}
-                                icon={constants.CLOSE_ICON}
-                                styleTouchable={{ backgroundColor: "#05509C" }}
-                                onPress={handleButtonPress}
-                                id={"logOut"}
-                            ></PressableCustom>
-                        </HStack>
-                        <Image
-                            source={constants.LOGO}
-                            alt="logo-app"
-                            resizeMode="contain"
-                            style={styles.imageLogo}
-                        ></Image>
-                        <Spacer></Spacer>
-                    </VStack>
-                </ScrollView>
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Acerca de"}
+                                    icon={constants.INFORMATION_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#009FE3",
+                                    }}
+                                    onPress={handleButtonPress}
+                                    id={"Information"}
+                                ></PressableCustom>
+                            </HStack>
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Eliminar patente"}
+                                    icon={constants.DELETE_PATENT_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#086EC1",
+                                    }}
+                                    onPress={handleButtonPress}
+                                    id={"DeletePatent"}
+                                ></PressableCustom>
+                            </HStack>
+                            <HStack style={styles.containerPressable}>
+                                <PressableCustom
+                                    text={"Cerrar sesión"}
+                                    icon={constants.CLOSE_ICON}
+                                    styleTouchable={{
+                                        backgroundColor: "#05509C",
+                                    }}
+                                    onPress={handleButtonPress}
+                                    id={"logOut"}
+                                ></PressableCustom>
+                            </HStack>
+                            <Image
+                                source={constants.LOGO}
+                                alt="logo-app"
+                                resizeMode="contain"
+                                style={styles.imageLogo}
+                            ></Image>
+                            <Spacer></Spacer>
+                        </VStack>
+                    </ScrollView>
+                </VStack>
             </ImageBackground>
             <AlertNoticeFunction
                 isOpen={isOpenAlertNoticeFunction}
