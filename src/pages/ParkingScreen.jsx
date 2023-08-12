@@ -10,6 +10,7 @@ import {
     VStack,
     Image,
     Spinner,
+    StatusBar,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -117,6 +118,10 @@ const ParkingScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <VStack
                 space="sm"
                 height="100%"
@@ -128,7 +133,7 @@ const ParkingScreen = ({ navigation }) => {
                     <HeaderPage
                         onPress={handleButtonPressMenu}
                         navigation={navigation}
-                        exitApp={true}
+                        dissableButtonGoBack={true}
                     ></HeaderPage>
                 </HStack>
                 <HStack>

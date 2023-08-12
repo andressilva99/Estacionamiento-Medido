@@ -108,7 +108,10 @@ const AnnouncementsScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <VStack
                 space="sm"
                 height="100%"

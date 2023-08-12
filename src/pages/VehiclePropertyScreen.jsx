@@ -1,6 +1,12 @@
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { HStack, NativeBaseProvider, Stack, VStack } from "native-base";
+import {
+    HStack,
+    NativeBaseProvider,
+    Stack,
+    StatusBar,
+    VStack,
+} from "native-base";
 import EnterVehicleComboBox from "../components/EnterVehicleComboBox";
 import { ScaledSheet } from "react-native-size-matters";
 import { newEnterVehicle } from "../objects/newEnterVehicle";
@@ -45,7 +51,11 @@ const VehiclePropertyScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <VStack height={height} alignItems={"center"}>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
+            <VStack height={height} alignItems={"center"} safeAreaTop={true}>
                 <HStack>
                     <HeaderButtonGoBack
                         navigation={navigation}
@@ -74,6 +84,6 @@ export default VehiclePropertyScreen;
 const styles = ScaledSheet.create({
     container: {
         maxWidth: "90%",
-        marginBottom: "15@ms"
+        marginBottom: "15@ms",
     },
 });

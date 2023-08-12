@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React from "react";
 import { ScaledSheet } from "react-native-size-matters";
-import { HStack, NativeBaseProvider, Stack, VStack } from "native-base";
+import { HStack, NativeBaseProvider, Stack, StatusBar, VStack } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import HeaderPage from "../components/HeaderPage";
 
@@ -34,6 +34,10 @@ const InformationScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <Stack
                 space="sm"
                 height={height}
