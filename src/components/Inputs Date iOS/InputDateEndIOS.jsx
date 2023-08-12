@@ -46,6 +46,8 @@ const InputDateEndIOS = ({ text, setDateSent }) => {
                         setOpen(false);
                     }}
                     locale="es"
+                    confirmText="Aceptar"
+                    cancelText="Cancelar"
                 />
             </Stack>
         </NativeBaseProvider>

@@ -50,6 +50,8 @@ const InputDateInitialIOS = ({ text, setDateSent }) => {
                         setOpen(false);
                     }}
                     locale="es"
+                    confirmText="Aceptar"
+                    cancelText="Cancelar"
                 />
             </Stack>
         </NativeBaseProvider>
