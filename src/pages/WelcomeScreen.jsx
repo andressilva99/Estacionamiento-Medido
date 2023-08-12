@@ -58,7 +58,7 @@ const WelcomeScreen = ({ navigation, route }) => {
         };
 
         await constants.AXIOS_INST.post("usuario/logIn", logIn)
-            .then(async (response) => {
+            .then((response) => {
                 const data = response.data.mensaje;
                 console.log(data);
                 FillUserData(data);
@@ -79,11 +79,6 @@ const WelcomeScreen = ({ navigation, route }) => {
                 }
                 return;
             })
-            .finally(async () => {
-                if (loggedUser.user.changePass == 1) {
-                    navigation.navigate("ChangePassword");
-                }
-            });
         setLoading(false);
     };
 
@@ -107,7 +102,7 @@ const WelcomeScreen = ({ navigation, route }) => {
                 });
             });
         }
-        saveUserInformation();
+        await saveUserInformation();
         setCurrentData(true);
     };
 
