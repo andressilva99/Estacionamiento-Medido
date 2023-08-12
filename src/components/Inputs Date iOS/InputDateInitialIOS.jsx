@@ -36,15 +36,6 @@ const InputDateInitialIOS = ({ text, setDateSent }) => {
                 </TouchableOpacity>
             </HStack>
             <Stack>
-                {/* {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={date}
-                        mode={mode}
-                        is24Hour={true}
-                        onChange={onChange}
-                    />
-                )} */}
                 <DatePicker
                     modal
                     mode="date"
