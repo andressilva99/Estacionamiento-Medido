@@ -86,11 +86,6 @@ const LogInScreen = ({ navigation, route }) => {
                     }
                     return;
                 })
-                .finally(async () => {
-                    if (loggedUser.user.changePass == 1) {
-                        navigation.navigate("ChangePassword");
-                    }
-                });
         } else {
             setErrorMessage("Correo y/o Contraseña no ingresados");
             setIsOpen(true);
@@ -107,7 +102,7 @@ const LogInScreen = ({ navigation, route }) => {
         navigation.navigate("PasswordRecovery");
     };
 
-    const FillUserData = (data) => {
+    const FillUserData = async (data) => {
         const token = data.token;
         const userData = data.usuario;
 
@@ -139,7 +134,7 @@ const LogInScreen = ({ navigation, route }) => {
                 });
             });
         }
-        saveUserInformation();
+        await saveUserInformation();
         setLogged(true);
         setCurrentData(true);
     };

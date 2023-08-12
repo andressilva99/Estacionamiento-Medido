@@ -38,6 +38,18 @@ const ParkingScreen = ({ navigation }) => {
         verifyBalanceNegative();
     }, [refresh]);
 
+    useEffect(() => {
+        const verifyChangePass = async () => {
+            await new Promise((resolve) => {
+                setTimeout(resolve, 2000);
+            });
+            if (loggedUser.user.changePass == 1) {
+                navigation.navigate("ChangePassword");
+            }
+        };
+        verifyChangePass();
+    }, []);
+
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu", { refreshParkingScreen });
     };
@@ -201,8 +213,15 @@ const ParkingScreen = ({ navigation }) => {
                     </Text>
                 </HStack>
                 {loading ? (
-                    <HStack space={"sm"} minWidth={"85%"} justifyContent={"center"} alignItems={"center"}>
-                        <Text style={styles.textUpdateInfo}>Actualizando información</Text>
+                    <HStack
+                        space={"sm"}
+                        minWidth={"85%"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                    >
+                        <Text style={styles.textUpdateInfo}>
+                            Actualizando información
+                        </Text>
                         <Spinner color={"#3f60af"} size={"lg"}></Spinner>
                     </HStack>
                 ) : (
@@ -314,5 +333,5 @@ const styles = ScaledSheet.create({
         color: "#3f60af",
         fontSize: "18@ms",
         fontWeight: "bold",
-    }
+    },
 });
