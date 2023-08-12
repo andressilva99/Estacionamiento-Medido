@@ -71,6 +71,7 @@ ios/Podfile.lock
 ios/build/*
 ios/EstacionamientoMedidoSanFrancisco/*
 ios/EstacionamientoMedidoSanFrancisco.xcodeproj/*
+ios/EstacionamientoMedidoSanFrancisco.xcworkspace/*
 ios/Podfile.properties.json
 
 # Temporary files created by Metro to check the health of the file watcher
