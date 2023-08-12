@@ -58,6 +58,7 @@ const InputDateInitialIOS = ({ text, setDateSent }) => {
                     onCancel={() => {
                         setOpen(false);
                     }}
+                    locale="es"
                 />
             </Stack>
         </NativeBaseProvider>
