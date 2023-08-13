@@ -244,7 +244,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
                             <InputControlled
                                 keyboardType="numeric"
                                 name="phone"
-                                placeholder="Número teléfono"
+                                placeholder="Número teléfono (opcional)"
                                 control={control}
                                 width="85%"
                                 rules={{
