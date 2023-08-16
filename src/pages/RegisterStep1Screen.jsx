@@ -55,27 +55,25 @@ const RegisterStep1Screen = ({ navigation }) => {
 
     const NextStep = (data) => {
         const { numberDocument, name, surname, razonSocial } = data;
-        if (typeDocument != null) {
-            setInvalidTypeDocument(false);
-            try {
-                navigation.navigate("Register2", {
-                    typeDocument,
-                    numberDocument,
-                    name,
-                    surname,
-                    razonSocial,
-                });
-            } catch (e) {
-                Alert.alert("Error", e.message);
-            }
-        } else {
-            setInvalidTypeDocument(true);
+        try {
+            navigation.navigate("Register2", {
+                typeDocument,
+                numberDocument,
+                name,
+                surname,
+                razonSocial,
+            });
+        } catch (e) {
+            Alert.alert("Error", e.message);
         }
     };
 
     return (
         <NativeBaseProvider>
-            <StatusBar barStyle={"default"} backgroundColor={"black"}></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
@@ -139,21 +137,29 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     </Text>
                                 </Stack>
                             ) : null}
-                            <InputControlled
-                                keyboardType="numeric"
-                                name="numberDocument"
-                                placeholder="Número de Documento"
-                                control={control}
-                                width="85%"
-                                rules={{
-                                    required: " Número de Documento requerido",
-                                    pattern: {
-                                        value: /^[0-9]{7,11}$/,
-                                        message:
-                                            " El número de documento debe contener 7 u 11 dígitos numéricos",
-                                    },
-                                }}
-                            ></InputControlled>
+                            <HStack>
+                                <InputControlled
+                                    keyboardType="numeric"
+                                    name="numberDocument"
+                                    placeholder="Nro. de Documento (opcional)"
+                                    control={control}
+                                    width="85%"
+                                    rules={{
+                                        pattern: {
+                                            value: /^[0-9]{7,11}$/,
+                                            message:
+                                                " El número de documento debe contener 7 u 11 dígitos numéricos",
+                                        },
+                                    }}
+                                ></InputControlled>
+                            </HStack>
+                            <Stack>
+                                <Text>
+                                    *Nota: Para poder acreditar el saldo del
+                                    sistema anterior se necesitará un Nro. de
+                                    DNI/CUIT
+                                </Text>
+                            </Stack>
                             <InputControlled
                                 name="name"
                                 placeholder="Nombre"
@@ -209,7 +215,6 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     control={control}
                                     width="85%"
                                     rules={{
-                                        required: " Razón Social requerida",
                                         pattern: {
                                             value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
                                             message:
