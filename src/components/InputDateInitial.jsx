@@ -14,7 +14,7 @@ import { AntDesign } from "@expo/vector-icons";
 const InputDateInitial = ({text, setDateSent}) => {
     const [date, setDate] = useState(() => {
         const currentDate = new Date();
-        currentDate.setDate(currentDate.getDay() - 15);
+        currentDate.setDate(currentDate.getDate() - 15);
         return currentDate;
       });
     const [mode, setMode] = useState("date");

@@ -111,7 +111,7 @@ const RechargesHistoryScreen = ({ navigation }) => {
         response.data.mensaje.forEach((recharge) => {
             const dateString = recharge.fecha;
             const dateObject = new Date(dateString);
-            const day = dateObject.getDate();
+            const day = dateObject.getDay();
             const month = dateObject.getMonth() + 1;
             const year = dateObject.getFullYear();
             const formattedDate = `${day}-${month}-${year}`;

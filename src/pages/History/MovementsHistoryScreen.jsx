@@ -119,7 +119,7 @@ const MovementsHistoryScreen = ({ navigation }) => {
             if (movement != null) {
                 const dateString = movement.fecha;
                 const dateObject = new Date(dateString);
-                const day = dateObject.getDate();
+                const day = dateObject.getDay();
                 const month = dateObject.getMonth() + 1;
                 const year = dateObject.getFullYear();
                 const formattedDate = `${day}-${month}-${year}`;

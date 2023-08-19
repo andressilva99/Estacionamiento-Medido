@@ -11,7 +11,7 @@ import DatePicker from "react-native-date-picker";
 const InputDateInitialIOS = ({ text, setDateSent }) => {
     const [date, setDate] = useState(() => {
         const currentDate = new Date();
-        currentDate.setDate(currentDate.getDay() - 15);
+        currentDate.setDate(currentDate.getDate() - 15);
         return currentDate;
     });
     const [open, setOpen] = useState(false);
