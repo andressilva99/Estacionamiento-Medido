@@ -29,7 +29,7 @@ const { height } = Dimensions.get("screen");
 const ParkingHistoryScreen = ({ navigation }) => {
     const [dateInitial, setDateInitial] = useState(() => {
         const currentDate = new Date();
-        currentDate.setDate(currentDate.getDay() - 15);
+        currentDate.setDate(currentDate.getDay() - constants.PREVIOUS_DAYS);
         return currentDate;
     });
     const [dateEnd, setDateEnd] = useState(new Date());
@@ -117,10 +117,10 @@ const ParkingHistoryScreen = ({ navigation }) => {
         response.data.mensaje.forEach((parking) => {
             if (parking != null) {
                 const dateString = parking.fecha;
-                const dateObject = new Date(dateString);
-                const day = dateObject.getDay();
-                const month = dateObject.getMonth() + 1;
-                const year = dateObject.getFullYear();
+                
+                const day = dateString.slice(8, 10);
+                const month = dateString.slice(5, 7);
+                const year = dateString.slice(0, 4);
                 const formattedDate = `${day}-${month}-${year}`;
 
                 const hourInitString = parking.horaInicio;
