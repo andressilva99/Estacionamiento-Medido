@@ -76,7 +76,7 @@ const RegisterStep2Screen = ({ route, navigation }) => {
             usuario: {
                 idTipoDocumento: typeDocument,
                 // idCompaniaTelefono: phoneCompanie,
-                numeroDocumento: numberDocument.toString(),
+                numeroDocumento: numberDocument ? numberDocument.toString() : null,
                 nombrePersona: name.trim(),
                 apellido: surname.trim(),
                 razonSocial: razonSocial ? razonSocial.trim() : null,

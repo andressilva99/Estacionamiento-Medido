@@ -57,7 +57,7 @@ const AnnouncementsScreen = ({ navigation }) => {
                                             const dateObject = new Date(
                                                 dateString
                                             );
-                                            const day = dateObject.getDate();
+                                            const day = dateObject.getDay();
                                             const month =
                                                 dateObject.getMonth() + 1;
                                             const year =

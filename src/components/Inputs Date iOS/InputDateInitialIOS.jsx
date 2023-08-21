@@ -7,11 +7,12 @@ import { TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { AntDesign } from "@expo/vector-icons";
 import DatePicker from "react-native-date-picker";
+import constants from "../../constants/constants";
 
 const InputDateInitialIOS = ({ text, setDateSent }) => {
     const [date, setDate] = useState(() => {
         const currentDate = new Date();
-        currentDate.setDate(currentDate.getDay() - 15);
+        currentDate.setDate(currentDate.getDate() - constants.PREVIOUS_DAYS);
         return currentDate;
     });
     const [open, setOpen] = useState(false);
