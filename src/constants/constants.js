@@ -25,6 +25,7 @@ const MOVEMENTS_ICON = require("../image/Icon/Movements-Icon.png");
 const DELETE_ACOUNT_ICON = require("../image/Icon/Delete-Acount-Icon.png");
 const TIME_OUT = 40000;
 const LINK_DELETE_ACOUNT = "https://estacionamientotest.sanfrancisco.gov.ar/api/usuario/eliminar";
+const PREVIOUS_DAYS = 15
 
 export default {
     AXIOS_INST,
@@ -48,4 +49,5 @@ export default {
     TIME_OUT,
     LINK_DELETE_ACOUNT,
     DELETE_ACOUNT_ICON,
+    PREVIOUS_DAYS,
 };

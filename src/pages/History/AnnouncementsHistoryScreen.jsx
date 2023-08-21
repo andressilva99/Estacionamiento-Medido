@@ -37,7 +37,7 @@ const { height } = Dimensions.get("screen");
 const AnnouncementsHistoryScreen = ({ navigation }) => {
     const [dateInitial, setDateInitial] = useState(() => {
         const currentDate = new Date();
-        currentDate.setDate(currentDate.getDay() - 15);
+        currentDate.setDate(currentDate.getDay() - constants.PREVIOUS_DAYS);
         return currentDate;
     });
     const [dateEnd, setDateEnd] = useState(new Date());
@@ -124,11 +124,12 @@ const AnnouncementsHistoryScreen = ({ navigation }) => {
         response.data.mensaje.forEach((announcement) => {
             if (announcement != null) {
                 const dateString = announcement.fecha;
-                const dateObject = new Date(dateString);
-                const day = dateObject.getDate();
-                const month = dateObject.getMonth() + 1;
-                const year = dateObject.getFullYear();
+                
+                const day = dateString.slice(8, 10);
+                const month = dateString.slice(5, 7);
+                const year = dateString.slice(0, 4);
                 const formattedDate = `${day}-${month}-${year}`;
+                
                 list.push({
                     date: formattedDate,
                     amount: announcement.importe,
