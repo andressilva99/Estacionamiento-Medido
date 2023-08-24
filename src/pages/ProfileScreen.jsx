@@ -82,55 +82,40 @@ const ProfileScreen = ({ navigation }) => {
     }, []);
 
     const logOut = async () => {
-        let logOutUser = true;
-        loggedUser.user.vehicles.forEach((vehicle) => {
-            if (vehicle.parked) {
-                logOutUser = false;
+        await constants
+            .AXIOS_INST({
+                method: "post",
+                url: "usuario/logOut",
+                headers: {
+                    Authorization: `bearer ${loggedUser.user.token}`,
+                },
+                data: {
+                    usuario: {
+                        idUsuario: loggedUser.user.idUser,
+                    },
+                },
+            })
+            .then((resp) => {
+                deleteUserData();
+                setLogged(false);
+                setSubMenu(false);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setMessageAlertError(
+                        "No se ha obtenido respuesta, intente nuevamente"
+                    );
+                    setIsOpenAlertError(true);
+                } else {
+                    console.log(error);
+                }
                 return;
-            }
-        });
-        if (logOutUser) {
-            await constants
-                .AXIOS_INST({
-                    method: "post",
-                    url: "usuario/logOut",
-                    headers: {
-                        Authorization: `bearer ${loggedUser.user.token}`,
-                    },
-                    data: {
-                        usuario: {
-                            idUsuario: loggedUser.user.idUser,
-                        },
-                    },
-                })
-                .then((resp) => {
-                    deleteUserData();
-                    setLogged(false);
-                    setSubMenu(false);
-                })
-                .catch((error) => {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        setMessageAlertError(error.response.data.mensaje);
-                        setIsOpenAlertError(true);
-                    } else if (error.request) {
-                        console.log(error.request);
-                        setMessageAlertError(
-                            "No se ha obtenido respuesta, intente nuevamente"
-                        );
-                        setIsOpenAlertError(true);
-                    } else {
-                        console.log(error);
-                    }
-                    return;
-                });
-        } else {
-            onCloseAlertNoticeFunction();
-            setMessageAlertError(
-                "No se puede cerrar sesión con un vehículo estacionado"
-            );
-            setIsOpenAlertError(true);
-        }
+            });
     };
 
     const obtainDocuments = async () => {
