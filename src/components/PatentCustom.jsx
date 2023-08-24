@@ -1,22 +1,17 @@
 import {
     ImageBackground,
-    StyleSheet,
     Text,
     TouchableOpacity,
-    View,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Button,
     Center,
     Flex,
     HStack,
-    NativeBaseProvider,
     Spacer,
     Stack,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
 import constants from "../constants/constants";
@@ -42,21 +37,6 @@ const PatentCustom = ({
     useEffect(() => {
         setButtonStart(!parked);
         setButtonStop(parked);
-        const repeatFunction = async () => {
-            const now = new Date();
-            if ((now.getHours() >= 20 || now.getHours() <= 7) && parked) {
-                setButtonStart(true);
-                setButtonStop(false);
-                loggedUser.user.vehicles[position].parked = buttonStop;
-                saveUserInformation();
-                parked = false;
-                setRefresh(true);
-            }
-        };
-
-        repeatFunction();
-
-        setInterval(repeatFunction, 5000); // 60000 ms = 1 minuto
     }, []);
 
     const [isOpenAlertNoticeFunction, setIsOpenAlertNoticeFunction] =
@@ -69,7 +49,6 @@ const PatentCustom = ({
     const cancelRefAlertNotice = useRef(null);
     const onCloseAlertNotice = () => {
         setIsOpenAlertNotice(!isOpenAlertNotice);
-        // saveUserInformation();
         setRefresh(true);
     };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
@@ -135,8 +114,8 @@ const PatentCustom = ({
                     },
                 })
                 .then((response) => {
-                    setMessageAlertNotice("Estacionamiento Activado");
-                    setIsOpenAlertNotice(true);
+                    console.log(response)
+                    setMessageAlertNotice(response.data.mensaje);
                     setButtonStart(false);
                     setButtonStop(true);
                 })
@@ -157,8 +136,6 @@ const PatentCustom = ({
                     return;
                 }).finally(()=>{
                     loggedUser.user.vehicles[position].parked = buttonStart;
-                    console.log(loggedUser.user.vehicles[position])
-                    // saveUserInformation();
                 })
         } else {
             await constants.AXIOS_INST.put(
@@ -167,7 +144,7 @@ const PatentCustom = ({
                 config
             )
                 .then(async (response) => {
-                    setMessageAlertNotice("Estacionamiento Desactivado");
+                    setMessageAlertNotice(response.data.mensaje);
                     setIsOpenAlertNotice(true);
                     setButtonStart(true);
                     setButtonStop(false);
