@@ -13,6 +13,7 @@ import {
     Button,
     HStack,
     Image,
+    Input,
     NativeBaseProvider,
     Stack,
     StatusBar,
@@ -33,6 +34,8 @@ import { findTickets } from "../functions/findTickets";
 import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
+
+const noToken = "No se generó un token"
 
 const LogInScreen = ({ navigation, route }) => {
     const { control, handleSubmit } = useForm();
@@ -159,6 +162,11 @@ const LogInScreen = ({ navigation, route }) => {
                     safeAreaTop={true}
                     style={styles.container}
                 >
+                    {viewToken == 5 ? (
+                        <>
+                            <Input defaultValue={loggedUser.user.tokenNotification ? loggedUser.user.tokenNotification : noToken}></Input>
+                        </>
+                    ) : null}
                     <Image
                         source={require("../image/logIn-icon-start.png")}
                         alt="logIn-icon-start"
@@ -256,9 +264,6 @@ const LogInScreen = ({ navigation, route }) => {
                     <Button onPress={Register} style={styles.button}>
                         <Text style={styles.textButton}>Registrarse</Text>
                     </Button>
-                    {viewToken == 5 ? (
-                        <Text>{loggedUser.user.tokenNotification}</Text>
-                    ) : null}
                     <TouchableOpacity
                         onPress={() => {
                             if (viewToken <= 5) {
