@@ -6,6 +6,7 @@ import {
     Touchable,
     TouchableOpacity,
     TextInput,
+    TouchableHighlight,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -37,6 +38,8 @@ const LogInScreen = ({ navigation, route }) => {
     const { control, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
     const { setLogged, setCurrentData } = route.params;
+
+    const [viewToken, setViewToken] = useState(0);
 
     const [isOpen, setIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
@@ -85,7 +88,7 @@ const LogInScreen = ({ navigation, route }) => {
                         console.log(error);
                     }
                     return;
-                })
+                });
         } else {
             setErrorMessage("Correo y/o Contraseña no ingresados");
             setIsOpen(true);
@@ -141,7 +144,10 @@ const LogInScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar barStyle={"default"} backgroundColor={"black"}></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
@@ -250,12 +256,27 @@ const LogInScreen = ({ navigation, route }) => {
                     <Button onPress={Register} style={styles.button}>
                         <Text style={styles.textButton}>Registrarse</Text>
                     </Button>
-                    <Image
-                        source={constants.LOGO}
-                        alt="logo-app"
-                        resizeMode="contain"
-                        style={styles.imageLogo}
-                    ></Image>
+                    {viewToken == 5 ? (
+                        <Text>{loggedUser.user.tokenNotification}</Text>
+                    ) : null}
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (viewToken <= 5) {
+                                setViewToken(viewToken+1);
+                            } else {
+                                setViewToken(0);
+                            }
+                        }}
+                        touchSoundDisabled
+                        activeOpacity={1}
+                    >
+                        <Image
+                            source={constants.LOGO}
+                            alt="logo-app"
+                            resizeMode="contain"
+                            style={styles.imageLogo}
+                        ></Image>
+                    </TouchableOpacity>
                 </VStack>
             </ImageBackground>
             <AlertError
@@ -319,5 +340,5 @@ const styles = ScaledSheet.create({
     },
     container: {
         paddingTop: "60@ms",
-    }
+    },
 });
