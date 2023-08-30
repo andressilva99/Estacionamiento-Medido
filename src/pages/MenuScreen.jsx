@@ -35,11 +35,18 @@ const MenuScreen = ({ navigation, route }) => {
     const [messageAlertError, setMessageAlertError] = useState();
 
     const handleButtonPress = (id) => {
-        if (id == "logOut") {
-            setIsOpenAlertNoticeFunction(true);
-        } else {
-            navigation.navigate(id, { refreshParkingScreen });
-            setSubMenu(false);
+        switch (id) {
+            case "logOut":
+                setIsOpenAlertNoticeFunction(true);
+                break;
+            case "PaymentLink":
+                Linking.openURL(loggedUser.user.paymentLink);
+                console.log(loggedUser.user.paymentLink);
+                break;
+            default:
+                navigation.navigate(id, { refreshParkingScreen });
+                setSubMenu(false);
+                break;
         }
     };
 
@@ -201,10 +208,8 @@ const MenuScreen = ({ navigation, route }) => {
                                     styleTouchable={{
                                         backgroundColor: "#086EC1",
                                     }}
-                                    //En desarrollo
                                     onPress={handleButtonPress}
-                                    id={"prueba"}
-                                    disabled={true}
+                                    id={"PaymentLink"}
                                 ></PressableCustom>
                             </HStack>
                             <HStack style={styles.containerPressable}>

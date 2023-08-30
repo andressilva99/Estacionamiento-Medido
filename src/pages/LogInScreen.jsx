@@ -111,8 +111,10 @@ const LogInScreen = ({ navigation, route }) => {
     const FillUserData = async (data) => {
         const token = data.token;
         const userData = data.usuario;
+        const url = data.urlPago;
 
         loggedUser.user.idUser = userData.idUsuario;
+        loggedUser.user.paymentLink = url;
         loggedUser.user.changePass = userData.cambiarClave;
         loggedUser.user.documentNumber = userData.numeroDocumento;
         loggedUser.user.email = userData.email;

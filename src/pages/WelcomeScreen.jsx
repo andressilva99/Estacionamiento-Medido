@@ -84,8 +84,10 @@ const WelcomeScreen = ({ navigation, route }) => {
 
     const FillUserData = async (data) => {
         const token = data.token;
+        const url = data.urlPago;
 
         loggedUser.user.token = token;
+        loggedUser.user.paymentLink = url;
         loggedUser.user.typeDocument.name = data.usuario.tipo_documento.nombre;
         loggedUser.user.balance = data.usuario.saldo;
         loggedUser.user.vehicles = [];
