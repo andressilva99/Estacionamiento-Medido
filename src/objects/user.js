@@ -22,6 +22,7 @@ const user = {
     tokenNotification: undefined,
     enableParking: true,
     changePass: 0,
+    paymentLink: "",
 };
 
 export default {
