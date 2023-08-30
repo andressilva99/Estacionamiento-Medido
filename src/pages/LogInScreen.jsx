@@ -6,12 +6,14 @@ import {
     Touchable,
     TouchableOpacity,
     TextInput,
+    TouchableHighlight,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
     Button,
     HStack,
     Image,
+    Input,
     NativeBaseProvider,
     Stack,
     StatusBar,
@@ -33,10 +35,14 @@ import HeaderButtonGoBack from "../components/HeaderButtonGoBack";
 
 const { height } = Dimensions.get("screen");
 
+const noToken = "No se generó un token"
+
 const LogInScreen = ({ navigation, route }) => {
     const { control, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
     const { setLogged, setCurrentData } = route.params;
+
+    const [viewToken, setViewToken] = useState(0);
 
     const [isOpen, setIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
@@ -85,7 +91,7 @@ const LogInScreen = ({ navigation, route }) => {
                         console.log(error);
                     }
                     return;
-                })
+                });
         } else {
             setErrorMessage("Correo y/o Contraseña no ingresados");
             setIsOpen(true);
@@ -141,7 +147,10 @@ const LogInScreen = ({ navigation, route }) => {
 
     return (
         <NativeBaseProvider>
-            <StatusBar barStyle={"default"} backgroundColor={"black"}></StatusBar>
+            <StatusBar
+                barStyle={"default"}
+                backgroundColor={"black"}
+            ></StatusBar>
             <ImageBackground
                 source={constants.BACKGROUND_INIT}
                 resizeMode="stretch"
@@ -153,6 +162,11 @@ const LogInScreen = ({ navigation, route }) => {
                     safeAreaTop={true}
                     style={styles.container}
                 >
+                    {viewToken == 5 ? (
+                        <>
+                            <Input defaultValue={loggedUser.user.tokenNotification ? loggedUser.user.tokenNotification : noToken}></Input>
+                        </>
+                    ) : null}
                     <Image
                         source={require("../image/logIn-icon-start.png")}
                         alt="logIn-icon-start"
@@ -250,12 +264,24 @@ const LogInScreen = ({ navigation, route }) => {
                     <Button onPress={Register} style={styles.button}>
                         <Text style={styles.textButton}>Registrarse</Text>
                     </Button>
-                    <Image
-                        source={constants.LOGO}
-                        alt="logo-app"
-                        resizeMode="contain"
-                        style={styles.imageLogo}
-                    ></Image>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (viewToken <= 5) {
+                                setViewToken(viewToken+1);
+                            } else {
+                                setViewToken(0);
+                            }
+                        }}
+                        touchSoundDisabled
+                        activeOpacity={1}
+                    >
+                        <Image
+                            source={constants.LOGO}
+                            alt="logo-app"
+                            resizeMode="contain"
+                            style={styles.imageLogo}
+                        ></Image>
+                    </TouchableOpacity>
                 </VStack>
             </ImageBackground>
             <AlertError
@@ -319,5 +345,5 @@ const styles = ScaledSheet.create({
     },
     container: {
         paddingTop: "60@ms",
-    }
+    },
 });
