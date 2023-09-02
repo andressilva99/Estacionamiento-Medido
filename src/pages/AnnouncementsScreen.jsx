@@ -54,19 +54,17 @@ const AnnouncementsScreen = ({ navigation }) => {
                                     listTickets.forEach((ticket) => {
                                         if (ticket.estado == 0) {
                                             const dateString = ticket.fecha;
-                                            const dateObject = new Date(
-                                                dateString
+                                            const day = dateString.slice(8, 10);
+                                            const month = dateString.slice(
+                                                5,
+                                                7
                                             );
-                                            const day = dateObject.getDay();
-                                            const month =
-                                                dateObject.getMonth() + 1;
-                                            const year =
-                                                dateObject.getFullYear();
+                                            const year = dateString.slice(0, 4);
                                             const timeString = dateString.slice(
                                                 11,
                                                 16
                                             );
-                                            const formattedDate = `${day}-${month}-${year} ${timeString}`;
+                                            const formattedDate = `${day}-${month}-${year}\n${timeString}`;
                                             loggedUser.user.tickets.push({
                                                 id: ticket.idTicket,
                                                 patent: vehicle.patent,
