@@ -5,6 +5,7 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
+    Button,
     Center,
     Flex,
     HStack,
@@ -20,6 +21,8 @@ import AlertNoticeFunction from "./Alerts/AlertNoticeFunction";
 import AlertNotice from "./Alerts/AlertNotice";
 import AlertError from "./Alerts/AlertError";
 import { saveUserInformation } from "../functions/saveUserInformation";
+import SetUpExit from "./Modals Schedule Exit/SetUpExit";
+import EditExit from "./Modals Schedule Exit/EditExit";
 
 const PatentCustom = ({
     patent,
@@ -57,6 +60,19 @@ const PatentCustom = ({
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const cancelRefModal = useRef(null);
+
+    const [modalVisibleE, setModalVisibleE] = useState(false);
+    const cancelRefModalE = useRef(null);
+
+    const handleClick = () => {
+        setModalVisible(!modalVisible);
+      };
+    const handleClickE = () => {
+        setModalVisibleE(!modalVisibleE);
+      };
 
     const config = {
         headers: {
@@ -249,6 +265,22 @@ const PatentCustom = ({
                             }
                         />
                     </TouchableOpacity>
+                </HStack>
+                <HStack style={styles.containerParking} marginTop={1}>
+                    <Text>Salida</Text>
+                    <Spacer></Spacer>
+                    <Text>--:--</Text>
+                    <Spacer></Spacer>
+                    <Button onPress={()=> handleClick()}>Programar</Button>
+                    <SetUpExit isOpen={modalVisible} onClose={setModalVisible} patent={patent} cancelRef={cancelRefModal}></SetUpExit>
+                </HStack>
+                <HStack style={styles.containerParking} marginTop={1}>
+                <Text>Salida</Text>
+                    <Spacer></Spacer>
+                    <Text>18:00</Text>
+                    <Spacer></Spacer>
+                    <Button onPress={()=> handleClickE()}>Editar</Button>
+                    <EditExit isOpen={modalVisibleE} onClose={setModalVisibleE} patent={patent}></EditExit>
                 </HStack>
             </Flex>
             {buttonStart ? (
