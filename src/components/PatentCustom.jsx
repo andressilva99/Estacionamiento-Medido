@@ -272,7 +272,7 @@ const PatentCustom = ({
                     <Text>--:--</Text>
                     <Spacer></Spacer>
                     <Button onPress={()=> handleClick()}>Programar</Button>
-                    <SetUpExit isOpen={modalVisible} onClose={setModalVisible} patent={patent} cancelRef={cancelRefModal}></SetUpExit>
+                    <SetUpExit isOpen={modalVisible} onClose={setModalVisible} patent={patent} cancelRef={cancelRefModal} refresh={modalVisible}></SetUpExit>
                 </HStack>
                 <HStack style={styles.containerParking} marginTop={1}>
                 <Text>Salida</Text>
