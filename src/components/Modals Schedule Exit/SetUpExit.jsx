@@ -14,12 +14,29 @@ import { ScaledSheet } from "react-native-size-matters";
 import { useEffect } from "react";
 import constants from "../../constants/constants";
 import loggedUser from "../../objects/user";
+import AlertError from "../Alerts/AlertError";
+import AlertNotice from "../Alerts/AlertNotice";
+import { useRef } from "react";
 
-const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh }) => {
+const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit }) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState("time");
     const [show, setShow] = useState(false);
     const [dateSelected, setDateSelected] = useState(null);
+
+    const [isOpenAlertError, setIsOpenAlertError] = useState(false);
+    const cancelRefAlertError = useRef(null);
+    const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
+    const [messageAlertError, setMessageAlertError] = useState();
+
+    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
+    const cancelRefAlertNotice = useRef(null);
+    const onCloseAlertNotice = () => {
+        setHourExit(dateSelected);
+        setIsOpenAlertNotice(!isOpenAlertNotice);
+        onClose();
+    };
+    const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     useEffect(() => {
         setDateSelected(null);
@@ -50,27 +67,34 @@ const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh }) => {
     };
 
     const setUpExit = async () => {
-        const hourEnd = formattHourEnd();
-        await constants
-            .AXIOS_INST({
-                method: "put",
-                url: "estacionamiento/programar/activar",
-                headers: {
-                    Authorization: `bearer ${loggedUser.user.token}`,
-                },
-                data: {
-                    estacionamiento: {
-                        patente: patent,
-                        horaFin: hourEnd,
+        if (dateSelected) {
+            const hourEnd = formattHourEnd();
+            await constants
+                .AXIOS_INST({
+                    method: "put",
+                    url: "estacionamiento/programar/activar",
+                    headers: {
+                        Authorization: `bearer ${loggedUser.user.token}`,
                     },
-                },
-            })
-            .then((response) => {
-                //Alerta de exito
-            })
-            .catch((error) => {
-                //Alerta de error
-            });
+                    data: {
+                        estacionamiento: {
+                            patente: patent,
+                            horaFin: hourEnd,
+                        },
+                    },
+                })
+                .then((response) => {
+                    setMessageAlertNotice(response.data.mensaje);
+                    setIsOpenAlertNotice(true);
+                })
+                .catch((error) => {
+                    setMessageAlertError(error.response.data.mensaje);
+                    setIsOpenAlertError(true);
+                });
+        } else {
+            setMessageAlertError("Hora de salida no definida");
+            setIsOpenAlertError(true);
+        }
     };
 
     const formattHourEnd = () => {
@@ -88,73 +112,89 @@ const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh }) => {
     };
 
     return (
-        <AlertDialog
-            isOpen={isOpen}
-            onClose={() => {
-                onClose();
-            }}
-            leastDestructiveRef={cancelRef}
-        >
-            <AlertDialog.Content>
-                <AlertDialog.CloseButton></AlertDialog.CloseButton>
-                <AlertDialog.Header>
-                    <Text style={styles.textHeader}>Programar Salida</Text>
-                </AlertDialog.Header>
-                <AlertDialog.Body>
-                    <VStack space={"md"}>
-                        <Text style={styles.textTitle}>Patente: {patent}</Text>
-                        <HStack style={styles.containerTime} space={"2xl"}>
-                            {dateSelected ? (
-                                <Text style={styles.textTime}>
-                                    {dateSelected
-                                        .getHours()
-                                        .toString()
-                                        .padStart(2, "0") +
-                                        " : " +
-                                        dateSelected
-                                            .getMinutes()
+        <>
+            <AlertDialog
+                isOpen={isOpen}
+                onClose={() => {
+                    onClose();
+                }}
+                leastDestructiveRef={cancelRef}
+            >
+                <AlertDialog.Content>
+                    <AlertDialog.CloseButton></AlertDialog.CloseButton>
+                    <AlertDialog.Header>
+                        <Text style={styles.textHeader}>Programar Salida</Text>
+                    </AlertDialog.Header>
+                    <AlertDialog.Body>
+                        <VStack space={"md"}>
+                            <Text style={styles.textTitle}>
+                                Patente: {patent}
+                            </Text>
+                            <HStack style={styles.containerTime} space={"2xl"}>
+                                {dateSelected ? (
+                                    <Text style={styles.textTime}>
+                                        {dateSelected
+                                            .getHours()
                                             .toString()
-                                            .padStart(2, "0")}
-                                </Text>
-                            ) : (
-                                <Text style={styles.textTime}>-- : --</Text>
+                                            .padStart(2, "0") +
+                                            " : " +
+                                            dateSelected
+                                                .getMinutes()
+                                                .toString()
+                                                .padStart(2, "0")}
+                                    </Text>
+                                ) : (
+                                    <Text style={styles.textTime}>-- : --</Text>
+                                )}
+                                <Button
+                                    onPress={() => {
+                                        showDatepicker();
+                                    }}
+                                    style={styles.buttonSetTime}
+                                >
+                                    <Text style={styles.textButton}>
+                                        Definir Hora
+                                    </Text>
+                                </Button>
+                            </HStack>
+                            {show && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={date}
+                                    mode={mode}
+                                    is24Hour={true}
+                                    onChange={onChange}
+                                />
                             )}
-                            <Button
-                                onPress={() => {
-                                    showDatepicker();
-                                }}
-                                style={styles.buttonSetTime}
-                            >
-                                <Text style={styles.textButton}>
-                                    Definir Hora
-                                </Text>
-                            </Button>
-                        </HStack>
-                        {show && (
-                            <DateTimePicker
-                                testID="dateTimePicker"
-                                value={date}
-                                mode={mode}
-                                is24Hour={true}
-                                onChange={onChange}
-                            />
-                        )}
-                    </VStack>
-                </AlertDialog.Body>
-                <AlertDialog.Footer>
-                    <Spacer></Spacer>
-                    <Button
-                        onPress={() => {
-                            setUpExit();
-                        }}
-                        style={styles.buttonAcept}
-                        flex={0.7}
-                    >
-                        <Text style={styles.textButton}>Aceptar</Text>
-                    </Button>
-                </AlertDialog.Footer>
-            </AlertDialog.Content>
-        </AlertDialog>
+                        </VStack>
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                        <Spacer></Spacer>
+                        <Button
+                            onPress={() => {
+                                setUpExit();
+                            }}
+                            style={styles.buttonAcept}
+                            flex={0.7}
+                        >
+                            <Text style={styles.textButton}>Aceptar</Text>
+                        </Button>
+                    </AlertDialog.Footer>
+                </AlertDialog.Content>
+            </AlertDialog>
+            <AlertError
+                isOpen={isOpenAlertError}
+                cancelRef={cancelRefAlertError}
+                onClose={onCloseAlertError}
+                message={messageAlertError}
+            ></AlertError>
+            <AlertNotice
+                isOpen={isOpenAlertNotice}
+                cancelRef={cancelRefAlertNotice}
+                onClose={onCloseAlertNotice}
+                message={messageAlertNotice}
+            ></AlertNotice>
+        </>
     );
 };
 

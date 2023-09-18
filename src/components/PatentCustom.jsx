@@ -258,51 +258,68 @@ const PatentCustom = ({
                         />
                     </TouchableOpacity>
                 </HStack>
-                <HStack style={styles.containerParking} marginTop={1}>
-                    <Stack style={styles.containerTextProgram}>
-                        <Text style={styles.textProgram}>Salida</Text>
-                    </Stack>
-                    <Stack style={styles.containerTextProgram}>
-                        <Text style={styles.textProgram}>-- : --</Text>
-                    </Stack>
-                    <Button
-                        onPress={() => handleClick()}
-                        style={styles.buttonProgram}
-                    >
-                        <Text style={[styles.textProgram, { color: "white" }]}>
-                            Programar
-                        </Text>
-                    </Button>
-                    <SetUpExit
-                        isOpen={modalVisible}
-                        onClose={setModalVisible}
-                        patent={patent}
-                        cancelRef={cancelRefModal}
-                        refresh={modalVisible}
-                    ></SetUpExit>
-                </HStack>
-                <HStack style={styles.containerParking} marginTop={1}>
-                    <Stack style={styles.containerTextProgram}>
-                        <Text style={styles.textProgram}>Salida</Text>
-                    </Stack>
-                    <Stack style={styles.containerTextProgram}>
-                        <Text style={styles.textProgram}>18 : 00</Text>
-                    </Stack>
-
-                    <Button
-                        onPress={() => handleClickE()}
-                        style={styles.buttonProgram}
-                    >
-                        <Text style={[styles.textProgram, { color: "white" }]}>
-                            Editar
-                        </Text>
-                    </Button>
-                    <EditExit
-                        isOpen={modalVisibleE}
-                        onClose={setModalVisibleE}
-                        patent={patent}
-                    ></EditExit>
-                </HStack>
+                {hourExit ? (
+                    <HStack style={styles.containerParking} marginTop={1}>
+                        <Stack style={styles.containerTextProgram}>
+                            <Text style={styles.textProgram}>Salida</Text>
+                        </Stack>
+                        <Stack style={styles.containerTextProgram}>
+                            <Text style={styles.textProgram}>
+                                {hourExit
+                                    .getHours()
+                                    .toString()
+                                    .padStart(2, "0") +
+                                    " : " +
+                                    hourExit
+                                        .getMinutes()
+                                        .toString()
+                                        .padStart(2, "0")}
+                            </Text>
+                        </Stack>
+                        <Button
+                            onPress={() => handleClickE()}
+                            style={styles.buttonProgram}
+                        >
+                            <Text
+                                style={[styles.textProgram, { color: "white" }]}
+                            >
+                                Editar
+                            </Text>
+                        </Button>
+                        <EditExit
+                            isOpen={modalVisibleE}
+                            onClose={setModalVisibleE}
+                            patent={patent}
+                        ></EditExit>
+                    </HStack>
+                ) : (
+                    <HStack style={styles.containerParking} marginTop={1}>
+                        <Stack style={styles.containerTextProgram}>
+                            <Text style={styles.textProgram}>Salida</Text>
+                        </Stack>
+                        <Stack style={styles.containerTextProgram}>
+                            <Text style={styles.textProgram}>-- : --</Text>
+                        </Stack>
+                        <Button
+                            onPress={() => handleClick()}
+                            style={styles.buttonProgram}
+                        >
+                            <Text
+                                style={[styles.textProgram, { color: "white" }]}
+                            >
+                                Programar
+                            </Text>
+                        </Button>
+                        <SetUpExit
+                            isOpen={modalVisible}
+                            onClose={setModalVisible}
+                            patent={patent}
+                            cancelRef={cancelRefModal}
+                            refresh={modalVisible}
+                            setHourExit={setHourExit}
+                        ></SetUpExit>
+                    </HStack>
+                )}
             </Flex>
             {buttonStart ? (
                 <AlertNoticeFunction
