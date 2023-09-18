@@ -1,17 +1,6 @@
-import {
-    ImageBackground,
-    Text,
-    TouchableOpacity,
-} from "react-native";
+import { ImageBackground, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import {
-    Button,
-    Center,
-    Flex,
-    HStack,
-    Spacer,
-    Stack,
-} from "native-base";
+import { Button, Center, Flex, HStack, Spacer, Stack } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
@@ -67,12 +56,14 @@ const PatentCustom = ({
     const [modalVisibleE, setModalVisibleE] = useState(false);
     const cancelRefModalE = useRef(null);
 
+    const [hourExit, setHourExit] = useState(null);
+
     const handleClick = () => {
         setModalVisible(!modalVisible);
-      };
+    };
     const handleClickE = () => {
         setModalVisibleE(!modalVisibleE);
-      };
+    };
 
     const config = {
         headers: {
@@ -130,7 +121,7 @@ const PatentCustom = ({
                     },
                 })
                 .then((response) => {
-                    console.log(response)
+                    console.log(response);
                     setMessageAlertNotice(response.data.mensaje);
                     setButtonStart(false);
                     setButtonStop(true);
@@ -150,9 +141,10 @@ const PatentCustom = ({
                         console.log(error);
                     }
                     return;
-                }).finally(()=>{
-                    loggedUser.user.vehicles[position].parked = buttonStart;
                 })
+                .finally(() => {
+                    loggedUser.user.vehicles[position].parked = buttonStart;
+                });
         } else {
             await constants.AXIOS_INST.put(
                 "estacionamiento/desactivar",
@@ -183,7 +175,7 @@ const PatentCustom = ({
                         console.log(error);
                     }
                     return;
-                })
+                });
         }
     };
 
@@ -267,20 +259,49 @@ const PatentCustom = ({
                     </TouchableOpacity>
                 </HStack>
                 <HStack style={styles.containerParking} marginTop={1}>
-                    <Text>Salida</Text>
-                    <Spacer></Spacer>
-                    <Text>--:--</Text>
-                    <Spacer></Spacer>
-                    <Button onPress={()=> handleClick()}>Programar</Button>
-                    <SetUpExit isOpen={modalVisible} onClose={setModalVisible} patent={patent} cancelRef={cancelRefModal} refresh={modalVisible}></SetUpExit>
+                    <Stack style={styles.containerTextProgram}>
+                        <Text style={styles.textProgram}>Salida</Text>
+                    </Stack>
+                    <Stack style={styles.containerTextProgram}>
+                        <Text style={styles.textProgram}>-- : --</Text>
+                    </Stack>
+                    <Button
+                        onPress={() => handleClick()}
+                        style={styles.buttonProgram}
+                    >
+                        <Text style={[styles.textProgram, { color: "white" }]}>
+                            Programar
+                        </Text>
+                    </Button>
+                    <SetUpExit
+                        isOpen={modalVisible}
+                        onClose={setModalVisible}
+                        patent={patent}
+                        cancelRef={cancelRefModal}
+                        refresh={modalVisible}
+                    ></SetUpExit>
                 </HStack>
                 <HStack style={styles.containerParking} marginTop={1}>
-                <Text>Salida</Text>
-                    <Spacer></Spacer>
-                    <Text>18:00</Text>
-                    <Spacer></Spacer>
-                    <Button onPress={()=> handleClickE()}>Editar</Button>
-                    <EditExit isOpen={modalVisibleE} onClose={setModalVisibleE} patent={patent}></EditExit>
+                    <Stack style={styles.containerTextProgram}>
+                        <Text style={styles.textProgram}>Salida</Text>
+                    </Stack>
+                    <Stack style={styles.containerTextProgram}>
+                        <Text style={styles.textProgram}>18 : 00</Text>
+                    </Stack>
+
+                    <Button
+                        onPress={() => handleClickE()}
+                        style={styles.buttonProgram}
+                    >
+                        <Text style={[styles.textProgram, { color: "white" }]}>
+                            Editar
+                        </Text>
+                    </Button>
+                    <EditExit
+                        isOpen={modalVisibleE}
+                        onClose={setModalVisibleE}
+                        patent={patent}
+                    ></EditExit>
                 </HStack>
             </Flex>
             {buttonStart ? (
@@ -335,6 +356,7 @@ const styles = ScaledSheet.create({
         paddingHorizontal: "20@ms",
         backgroundColor: "#dbdcde",
         alignItems: "center",
+        justifyContent: "center",
     },
     playButtonActivate: {
         height: "60%",
@@ -381,5 +403,19 @@ const styles = ScaledSheet.create({
     iconDesactivate: {
         color: "#414141",
         fontSize: "30@ms",
+    },
+    buttonProgram: {
+        backgroundColor: "#3f60af",
+        flex: 1,
+        borderRadius: "30@ms",
+    },
+    containerTextProgram: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    textProgram: {
+        fontWeight: "bold",
+        fontSize: "14@ms",
     },
 });

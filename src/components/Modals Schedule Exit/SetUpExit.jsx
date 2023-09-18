@@ -29,7 +29,7 @@ const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh }) => {
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setShow(false);
-        setDateSelected(currentDate);
+        event.type == "set" ? setDateSelected(currentDate) : null;
     };
 
     const showMode = (currentMode) => {
