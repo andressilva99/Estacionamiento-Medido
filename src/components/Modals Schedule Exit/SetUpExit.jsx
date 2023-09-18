@@ -69,6 +69,7 @@ const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit })
     const setUpExit = async () => {
         if (dateSelected) {
             const hourEnd = formattHourEnd();
+            console.log(hourEnd);
             await constants
                 .AXIOS_INST({
                     method: "put",

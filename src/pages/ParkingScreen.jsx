@@ -102,6 +102,7 @@ const ParkingScreen = ({ navigation }) => {
         loggedUser.user.vehicles = [];
         if (data.usuario_vehiculo != undefined) {
             data.usuario_vehiculo.forEach((vehicle) => {
+                console.log(vehicle);
                 loggedUser.user.vehicles.push({
                     mark: vehicle.vehiculo.marca.nombre,
                     model: vehicle.vehiculo.modelo.nombre,
@@ -272,11 +273,11 @@ const styles = ScaledSheet.create({
     },
     containerUser: {
         minHeight: "45@ms",
-        minWidth: "60%",
         borderRadius: "30@ms",
         paddingLeft: "20@ms",
         paddingRight: "20@ms",
         backgroundColor: "#c4e5f8",
+        flex: 1,
     },
     containerBalance: {
         minHeight: "45@ms",
@@ -338,7 +339,7 @@ const styles = ScaledSheet.create({
         color: "red",
     },
     buttonRefresh: {
-        minWidth: "80@ms",
+        flex: 0.3,
     },
     iconRefresh: {
         color: "#3f60af",
