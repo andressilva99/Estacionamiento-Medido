@@ -1,5 +1,5 @@
-import { ScrollView, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import { AppState, ScrollView, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import {
     Button,
@@ -28,6 +28,29 @@ const ParkingScreen = ({ navigation }) => {
     const [refresh, setRefresh] = useState(false);
 
     const [loading, setLoading] = useState(false);
+
+    const appState = useRef(AppState.currentState);
+
+    useEffect(() => {
+        const subscription = AppState.addEventListener(
+            "change",
+            (nextAppState) => {
+                if (
+                    appState.current.match(/inactive|background/) &&
+                    nextAppState === "active"
+                ) {
+                    refreshData();
+                }
+
+                appState.current = nextAppState;
+                console.log("AppState", appState.current);
+            }
+        );
+
+        return () => {
+            subscription.remove();
+        };
+    }, []);
 
     useEffect(() => {
         const verifyBalanceNegative = () => {
@@ -139,125 +162,134 @@ const ParkingScreen = ({ navigation }) => {
                 </HStack>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <VStack space="sm">
-                    <HStack>
-                        <VStack style={styles.containerUser}>
-                            <Text
-                                style={styles.textName}
-                            >{`${loggedUser.user.lastName}, ${loggedUser.user.firstName}`}</Text>
-                            <Text style={styles.textAccount}>
-                                Cuenta Nro: {loggedUser.user.idUser}
-                            </Text>
-                        </VStack>
-                        {loading ? (
-                            <Button
-                                variant={"ghost"}
-                                style={styles.buttonRefresh}
-                                isLoading
-                                spinnerPlacement="start"
-                                _spinner={{ color: "#3f60af", size: "lg" }}
-                            ></Button>
-                        ) : (
-                            <Button
-                                variant={"ghost"}
-                                style={styles.buttonRefresh}
-                                onPress={refreshData}
-                            >
-                                <FontAwesome
-                                    name="refresh"
-                                    style={styles.iconRefresh}
-                                />
-                            </Button>
-                        )}
-                    </HStack>
-                    <HStack style={styles.containerBalance}>
-                        <AntDesign
-                            name="wallet"
-                            style={[
-                                styles.icon,
-                                { color: "#17974c" },
-                                isBalanceNegative
-                                    ? styles.textBalanceNegative
-                                    : null,
-                            ]}
-                        />
-                        <Text
-                            style={[
-                                styles.textBalance,
-                                isBalanceNegative
-                                    ? styles.textBalanceNegative
-                                    : null,
-                            ]}
-                        >
-                            Saldo: $ {loggedUser.user.balance}
-                        </Text>
-                    </HStack>
-                    <Stack>
-                        <Button
-                            startIcon={
-                                <FontAwesome5 name="car" style={styles.icon} />
-                            }
-                            style={styles.enterVehicleButton}
-                            onPress={() => {
-                                newEnterVehicle.color = null;
-                                newEnterVehicle.model = null;
-                                newEnterVehicle.mark = null;
-                                navigation.navigate("EnterVehicle", {
-                                    refreshParkingScreen,
-                                });
-                            }}
-                        >
-                            <Text style={styles.textEnterVehicle}>
-                                Ingresar Nuevo Vehículo
-                            </Text>
-                        </Button>
-                    </Stack>
-                    <HStack space="md" style={styles.parking}>
-                        <FontAwesome5
-                            name="car"
-                            style={[styles.icon, { color: "#3f60af" }]}
-                        />
-                        <Text style={styles.textParkingVehicle}>
-                            Vehículos Registrados
-                        </Text>
-                    </HStack>
-                    {loading ? (
-                        <HStack
-                            space={"sm"}
-                            minWidth={"85%"}
-                            justifyContent={"center"}
-                            alignItems={"center"}
-                        >
-                            <Text style={styles.textUpdateInfo}>
-                                Actualizando información
-                            </Text>
-                            <Spinner color={"#3f60af"} size={"lg"}></Spinner>
+                        <HStack>
+                            <VStack style={styles.containerUser}>
+                                <Text
+                                    style={styles.textName}
+                                >{`${loggedUser.user.lastName}, ${loggedUser.user.firstName}`}</Text>
+                                <Text style={styles.textAccount}>
+                                    Cuenta Nro: {loggedUser.user.idUser}
+                                </Text>
+                            </VStack>
+                            {loading ? (
+                                <Button
+                                    variant={"ghost"}
+                                    style={styles.buttonRefresh}
+                                    isLoading
+                                    spinnerPlacement="start"
+                                    _spinner={{ color: "#3f60af", size: "lg" }}
+                                ></Button>
+                            ) : (
+                                <Button
+                                    variant={"ghost"}
+                                    style={styles.buttonRefresh}
+                                    onPress={refreshData}
+                                >
+                                    <FontAwesome
+                                        name="refresh"
+                                        style={styles.iconRefresh}
+                                    />
+                                </Button>
+                            )}
                         </HStack>
-                    ) : (
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            scrollEnabled={false}
-                        >
-                            {loggedUser.user.vehicles
-                                ? loggedUser.user.vehicles.map(
-                                      (vehicle, index) => (
-                                          <PatentCustom
-                                              patent={vehicle.patent}
-                                              idVehicle={vehicle.idVehicle}
-                                              idButtonStart="start"
-                                              idButtonStop="stop"
-                                              key={vehicle.idVehicle}
-                                              idUser={loggedUser.user.idUser}
-                                              parked={vehicle.parked}
-                                              position={index}
-                                              setRefresh={refreshParkingScreen}
-                                          ></PatentCustom>
+                        <HStack style={styles.containerBalance}>
+                            <AntDesign
+                                name="wallet"
+                                style={[
+                                    styles.icon,
+                                    { color: "#17974c" },
+                                    isBalanceNegative
+                                        ? styles.textBalanceNegative
+                                        : null,
+                                ]}
+                            />
+                            <Text
+                                style={[
+                                    styles.textBalance,
+                                    isBalanceNegative
+                                        ? styles.textBalanceNegative
+                                        : null,
+                                ]}
+                            >
+                                Saldo: $ {loggedUser.user.balance}
+                            </Text>
+                        </HStack>
+                        <Stack>
+                            <Button
+                                startIcon={
+                                    <FontAwesome5
+                                        name="car"
+                                        style={styles.icon}
+                                    />
+                                }
+                                style={styles.enterVehicleButton}
+                                onPress={() => {
+                                    newEnterVehicle.color = null;
+                                    newEnterVehicle.model = null;
+                                    newEnterVehicle.mark = null;
+                                    navigation.navigate("EnterVehicle", {
+                                        refreshParkingScreen,
+                                    });
+                                }}
+                            >
+                                <Text style={styles.textEnterVehicle}>
+                                    Ingresar Nuevo Vehículo
+                                </Text>
+                            </Button>
+                        </Stack>
+                        <HStack space="md" style={styles.parking}>
+                            <FontAwesome5
+                                name="car"
+                                style={[styles.icon, { color: "#3f60af" }]}
+                            />
+                            <Text style={styles.textParkingVehicle}>
+                                Vehículos Registrados
+                            </Text>
+                        </HStack>
+                        {loading ? (
+                            <HStack
+                                space={"sm"}
+                                minWidth={"85%"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                            >
+                                <Text style={styles.textUpdateInfo}>
+                                    Actualizando información
+                                </Text>
+                                <Spinner
+                                    color={"#3f60af"}
+                                    size={"lg"}
+                                ></Spinner>
+                            </HStack>
+                        ) : (
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                                scrollEnabled={false}
+                            >
+                                {loggedUser.user.vehicles
+                                    ? loggedUser.user.vehicles.map(
+                                          (vehicle, index) => (
+                                              <PatentCustom
+                                                  patent={vehicle.patent}
+                                                  idVehicle={vehicle.idVehicle}
+                                                  idButtonStart="start"
+                                                  idButtonStop="stop"
+                                                  key={vehicle.idVehicle}
+                                                  idUser={
+                                                      loggedUser.user.idUser
+                                                  }
+                                                  parked={vehicle.parked}
+                                                  position={index}
+                                                  setRefresh={
+                                                      refreshParkingScreen
+                                                  }
+                                              ></PatentCustom>
+                                          )
                                       )
-                                  )
-                                : null}
-                        </ScrollView>
-                    )}
+                                    : null}
+                            </ScrollView>
+                        )}
                     </VStack>
-                    
                 </ScrollView>
             </VStack>
         </NativeBaseProvider>
