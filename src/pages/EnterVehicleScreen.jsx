@@ -66,6 +66,8 @@ const EnterVehicleScreen = ({ navigation, route }) => {
 
   const [find, setFind] = useState(false);
 
+  const [vehicleFind, setVehicleFind] = useState(false);
+
   const config = {
     headers: {
       Authorization: `bearer ${loggedUser.user.token}`,
@@ -213,6 +215,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
         }
         return;
       });
+    setVehicleFind(true);
     setFind(false);
   };
 
@@ -360,7 +363,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
             <Text style={styles.textObtainData}>Obteniendo datos</Text>
             <Spinner color={"#515ba3"} size={"lg"}></Spinner>
           </HStack>
-        ) : (
+        ) : vehicleFind ? (
           <VStack space={"sm"}>
             <HStack style={styles.containerEnabled} maxW={"85%"}>
               <HStack flex={2} alignItems="center">
@@ -501,7 +504,7 @@ const EnterVehicleScreen = ({ navigation, route }) => {
               </Button>
             )}
           </VStack>
-        )}
+        ) : null}
       </Stack>
       <AlertNotice
         isOpen={isOpenAlertNotice}
