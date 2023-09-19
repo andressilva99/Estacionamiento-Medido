@@ -144,9 +144,9 @@ const EditExit = ({
         const day = dateSelected.getDate();
         const hours = dateSelected.getHours();
         const minutes = dateSelected.getMinutes();
-        const formattHour = `${day}-${month
+        const formattHour = `${month
             .toString()
-            .padStart(2, "0")}-${year} ${hours
+            .padStart(2, "0")}-${day}-${year} ${hours
             .toString()
             .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
         return formattHour;
