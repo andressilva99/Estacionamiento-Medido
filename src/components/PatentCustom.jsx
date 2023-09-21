@@ -12,7 +12,6 @@ import AlertError from "./Alerts/AlertError";
 import { saveUserInformation } from "../functions/saveUserInformation";
 import SetUpExit from "./Modals Schedule Exit/SetUpExit";
 import EditExit from "./Modals Schedule Exit/EditExit";
-import { set } from "react-hook-form";
 
 const PatentCustom = ({
     patent,
@@ -28,7 +27,7 @@ const PatentCustom = ({
     const [buttonStart, setButtonStart] = useState(true);
     const [buttonStop, setButtonStop] = useState(false);
 
-    const [hourExit, setHourExit] = useState(()=>{
+    const [hourExit, setHourExit] = useState(() => {
         console.log(hourExitProgrammed);
         if (hourExitProgrammed) {
             return new Date(hourExitProgrammed);
@@ -280,8 +279,10 @@ const PatentCustom = ({
                                 </Text>
                             </Stack>
                             <Button
-                                onPress={() => {console.log("Aprete el boton de editar")
-                                setModalVisibleEdit(true)}}
+                                onPress={() => {
+                                    console.log("Aprete el boton de editar");
+                                    setModalVisibleEdit(true);
+                                }}
                                 style={styles.buttonProgram}
                             >
                                 <Text
@@ -295,10 +296,9 @@ const PatentCustom = ({
                             </Button>
                             <EditExit
                                 isOpen={modalVisibleEdit}
-                                onClose={()=> setModalVisibleEdit(false)}
+                                onClose={() => setModalVisibleEdit(false)}
                                 patent={patent}
                                 cancelRef={cancelRefModalEdit}
-                                // refresh={modalVisibleEdit}
                                 setHourExit={setHourExit}
                                 hourExit={hourExit}
                                 setModalVisible={setModalVisibleEdit}
@@ -313,8 +313,10 @@ const PatentCustom = ({
                                 <Text style={styles.textProgram}>-- : --</Text>
                             </Stack>
                             <Button
-                                onPress={() => {console.log("Aprete el boton de programar")
-                                    setModalVisibleSetUp(true)}}
+                                onPress={() => {
+                                    console.log("Aprete el boton de programar");
+                                    setModalVisibleSetUp(true);
+                                }}
                                 style={styles.buttonProgram}
                             >
                                 <Text
@@ -328,10 +330,9 @@ const PatentCustom = ({
                             </Button>
                             <SetUpExit
                                 isOpen={modalVisibleSetUp}
-                                onClose={()=> setModalVisibleSetUp(false)}
+                                onClose={() => setModalVisibleSetUp(false)}
                                 patent={patent}
                                 cancelRef={cancelRefModalSetUp}
-                                // refresh={modalVisibleSetUp}
                                 setHourExit={setHourExit}
                                 setModalVisible={setModalVisibleSetUp}
                             ></SetUpExit>

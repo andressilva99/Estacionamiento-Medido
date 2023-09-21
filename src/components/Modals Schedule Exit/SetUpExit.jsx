@@ -1,15 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, Text } from "react-native";
 import React from "react";
-import {
-    AlertDialog,
-    Button,
-    HStack,
-    Modal,
-    Spacer,
-    VStack,
-} from "native-base";
+import { AlertDialog, Button, HStack, Spacer, VStack } from "native-base";
 import { useState } from "react";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import {
+    DateTimePickerAndroid,
+    DateTimePicker,
+} from "@react-native-community/datetimepicker";
 import { ScaledSheet } from "react-native-size-matters";
 import { useEffect } from "react";
 import constants from "../../constants/constants";
@@ -17,8 +13,17 @@ import loggedUser from "../../objects/user";
 import AlertError from "../Alerts/AlertError";
 import AlertNotice from "../Alerts/AlertNotice";
 import { useRef } from "react";
+import DatePicker from "react-native-date-picker";
 
-const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit, setModalVisible }) => {
+const SetUpExit = ({
+    isOpen,
+    onClose,
+    patent,
+    cancelRef,
+    refresh,
+    setHourExit,
+    setModalVisible,
+}) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState("time");
     const [show, setShow] = useState(false);
@@ -116,7 +121,7 @@ const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit, s
         <>
             <AlertDialog
                 isOpen={isOpen}
-                onClose={()=> setModalVisible(false)}
+                onClose={() => setModalVisible(false)}
                 leastDestructiveRef={cancelRef}
             >
                 <AlertDialog.Content>
@@ -156,13 +161,32 @@ const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit, s
                                     </Text>
                                 </Button>
                             </HStack>
-                            {show && (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date}
-                                    mode={mode}
-                                    is24Hour={true}
-                                    onChange={onChange}
+                            {Platform.OS === "android" ? (
+                                show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date}
+                                        mode={mode}
+                                        is24Hour={true}
+                                        onChange={onChange}
+                                    />
+                                )
+                            ) : (
+                                <DatePicker
+                                    modal
+                                    mode="time"
+                                    open={open}
+                                    date={date}
+                                    onConfirm={(hourExit) => {
+                                        setOpen(false);
+                                        setDateSelected(hourExit);
+                                    }}
+                                    onCancel={() => {
+                                        setOpen(false);
+                                    }}
+                                    locale="es"
+                                    confirmText="Aceptar"
+                                    cancelText="Cancelar"
                                 />
                             )}
                         </VStack>

@@ -1,16 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, Text } from "react-native";
 import React from "react";
-import {
-    AlertDialog,
-    Button,
-    HStack,
-    Modal,
-    Spacer,
-    Stack,
-    VStack,
-} from "native-base";
+import { AlertDialog, Button, HStack, Stack, VStack } from "native-base";
 import { useState } from "react";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import {
+    DateTimePickerAndroid,
+    DateTimePicker,
+} from "@react-native-community/datetimepicker";
 import { ScaledSheet } from "react-native-size-matters";
 import { useEffect } from "react";
 import constants from "../../constants/constants";
@@ -18,6 +13,7 @@ import loggedUser from "../../objects/user";
 import AlertError from "../Alerts/AlertError";
 import AlertNotice from "../Alerts/AlertNotice";
 import { useRef } from "react";
+import DatePicker from "react-native-date-picker";
 
 const EditExit = ({
     isOpen,
@@ -34,6 +30,8 @@ const EditExit = ({
     const [show, setShow] = useState(false);
     const [dateSelected, setDateSelected] = useState(null);
 
+    const [open, setOpen] = useState(false);
+
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
@@ -47,7 +45,8 @@ const EditExit = ({
     };
     const [messageAlertNoticeEdit, setMessageAlertNoticeEdit] = useState();
 
-    const [isOpenAlertNoticeDelete, setIsOpenAlertNoticeDelete] = useState(false);
+    const [isOpenAlertNoticeDelete, setIsOpenAlertNoticeDelete] =
+        useState(false);
     const cancelRefAlertNoticeDelete = useRef(null);
     const onCloseAlertNoticeDelete = () => {
         setIsOpenAlertNoticeDelete(!isOpenAlertNoticeDelete);
@@ -165,7 +164,7 @@ const EditExit = ({
         <>
             <AlertDialog
                 isOpen={isOpen}
-                onClose={()=> setModalVisible(false)}
+                onClose={() => setModalVisible(false)}
                 leastDestructiveRef={cancelRef}
             >
                 <AlertDialog.Content>
@@ -215,13 +214,32 @@ const EditExit = ({
                                     </Text>
                                 </Button>
                             </HStack>
-                            {show && (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date}
-                                    mode={mode}
-                                    is24Hour={true}
-                                    onChange={onChange}
+                            {Platform.OS === "android" ? (
+                                show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date}
+                                        mode={mode}
+                                        is24Hour={true}
+                                        onChange={onChange}
+                                    />
+                                )
+                            ) : (
+                                <DatePicker
+                                    modal
+                                    mode="time"
+                                    open={open}
+                                    date={date}
+                                    onConfirm={(hourExit) => {
+                                        setOpen(false);
+                                        setDateSelected(hourExit);
+                                    }}
+                                    onCancel={() => {
+                                        setOpen(false);
+                                    }}
+                                    locale="es"
+                                    confirmText="Aceptar"
+                                    cancelText="Cancelar"
                                 />
                             )}
                         </VStack>
@@ -244,7 +262,7 @@ const EditExit = ({
                             style={styles.buttonAcept}
                             flex={0.7}
                         >
-                            <Text style={styles.textButton}>Editar</Text>
+                            <Text style={styles.textButton}>Aceptar</Text>
                         </Button>
                     </AlertDialog.Footer>
                 </AlertDialog.Content>
