@@ -27,6 +27,7 @@ const EditExit = ({
     refresh,
     hourExit,
     setHourExit,
+    setModalVisible,
 }) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState("time");
@@ -38,13 +39,22 @@ const EditExit = ({
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
 
-    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
-    const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => {
-        setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [isOpenAlertNoticeEdit, setIsOpenAlertNoticeEdit] = useState(false);
+    const cancelRefAlertNoticeEdit = useRef(null);
+    const onCloseAlertNoticeEdit = () => {
+        setIsOpenAlertNoticeEdit(!isOpenAlertNoticeEdit);
         onClose();
     };
-    const [messageAlertNotice, setMessageAlertNotice] = useState();
+    const [messageAlertNoticeEdit, setMessageAlertNoticeEdit] = useState();
+
+    const [isOpenAlertNoticeDelete, setIsOpenAlertNoticeDelete] = useState(false);
+    const cancelRefAlertNoticeDelete = useRef(null);
+    const onCloseAlertNoticeDelete = () => {
+        setIsOpenAlertNoticeDelete(!isOpenAlertNoticeDelete);
+        setHourExit(null);
+        onClose();
+    };
+    const [messageAlertNoticeDelete, setMessageAlertNoticeDelete] = useState();
 
     useEffect(() => {
         setDateSelected(null);
@@ -102,8 +112,8 @@ const EditExit = ({
             })
             .then((response) => {
                 setHourExit(dateSelected);
-                setMessageAlertNotice(response.data.mensaje);
-                setIsOpenAlertNotice(true);
+                setMessageAlertNoticeEdit(response.data.mensaje);
+                setIsOpenAlertNoticeEdit(true);
             })
             .catch((error) => {
                 setMessageAlertError(error.response.data.mensaje);
@@ -127,9 +137,8 @@ const EditExit = ({
             })
             .then((response) => {
                 if (showInfo) {
-                    setHourExit(null);
-                    setMessageAlertNotice(response.data.mensaje);
-                    setIsOpenAlertNotice(true);
+                    setMessageAlertNoticeDelete(response.data.mensaje);
+                    setIsOpenAlertNoticeDelete(true);
                 }
             })
             .catch((error) => {
@@ -156,7 +165,7 @@ const EditExit = ({
         <>
             <AlertDialog
                 isOpen={isOpen}
-                onClose={onClose}
+                onClose={()=> setModalVisible(false)}
                 leastDestructiveRef={cancelRef}
             >
                 <AlertDialog.Content>
@@ -247,10 +256,16 @@ const EditExit = ({
                 message={messageAlertError}
             ></AlertError>
             <AlertNotice
-                isOpen={isOpenAlertNotice}
-                cancelRef={cancelRefAlertNotice}
-                onClose={onCloseAlertNotice}
-                message={messageAlertNotice}
+                isOpen={isOpenAlertNoticeEdit}
+                cancelRef={cancelRefAlertNoticeEdit}
+                onClose={onCloseAlertNoticeEdit}
+                message={messageAlertNoticeEdit}
+            ></AlertNotice>
+            <AlertNotice
+                isOpen={isOpenAlertNoticeDelete}
+                cancelRef={cancelRefAlertNoticeDelete}
+                onClose={onCloseAlertNoticeDelete}
+                message={messageAlertNoticeDelete}
             ></AlertNotice>
         </>
     );

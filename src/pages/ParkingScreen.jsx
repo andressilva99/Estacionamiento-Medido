@@ -110,6 +110,7 @@ const ParkingScreen = ({ navigation }) => {
                     color: vehicle.vehiculo.color.nombre,
                     idVehicle: vehicle.vehiculo.idVehiculo,
                     parked: vehicle.vehiculo.estacionado,
+                    exitProgrammed: vehicle.vehiculo.salidaProgramada,
                 });
             });
         }
@@ -250,6 +251,7 @@ const ParkingScreen = ({ navigation }) => {
                                               parked={vehicle.parked}
                                               position={index}
                                               setRefresh={refreshParkingScreen}
+                                              hourExitProgrammed={vehicle.exitProgrammed}
                                           ></PatentCustom>
                                       )
                                   )

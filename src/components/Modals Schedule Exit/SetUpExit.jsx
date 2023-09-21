@@ -18,7 +18,7 @@ import AlertError from "../Alerts/AlertError";
 import AlertNotice from "../Alerts/AlertNotice";
 import { useRef } from "react";
 
-const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit }) => {
+const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit, setModalVisible }) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState("time");
     const [show, setShow] = useState(false);
@@ -116,9 +116,7 @@ const SetUpExit = ({ isOpen, onClose, patent, cancelRef, refresh, setHourExit })
         <>
             <AlertDialog
                 isOpen={isOpen}
-                onClose={() => {
-                    onClose();
-                }}
+                onClose={()=> setModalVisible(false)}
                 leastDestructiveRef={cancelRef}
             >
                 <AlertDialog.Content>

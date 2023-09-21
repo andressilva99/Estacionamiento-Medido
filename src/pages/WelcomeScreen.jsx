@@ -101,6 +101,7 @@ const WelcomeScreen = ({ navigation, route }) => {
                     color: vehicle.vehiculo.color.nombre,
                     idVehicle: vehicle.vehiculo.idVehiculo,
                     parked: vehicle.vehiculo.estacionado,
+                    exitProgrammed: vehicle.vehiculo.salidaProgramada,
                 });
             });
         }

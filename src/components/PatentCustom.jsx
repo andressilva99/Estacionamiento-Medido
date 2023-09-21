@@ -12,6 +12,7 @@ import AlertError from "./Alerts/AlertError";
 import { saveUserInformation } from "../functions/saveUserInformation";
 import SetUpExit from "./Modals Schedule Exit/SetUpExit";
 import EditExit from "./Modals Schedule Exit/EditExit";
+import { set } from "react-hook-form";
 
 const PatentCustom = ({
     patent,
@@ -22,9 +23,19 @@ const PatentCustom = ({
     parked,
     position,
     setRefresh,
+    hourExitProgrammed,
 }) => {
     const [buttonStart, setButtonStart] = useState(true);
     const [buttonStop, setButtonStop] = useState(false);
+
+    const [hourExit, setHourExit] = useState(()=>{
+        console.log(hourExitProgrammed);
+        if (hourExitProgrammed) {
+            return new Date(hourExitProgrammed);
+        } else {
+            return null;
+        }
+    });
 
     useEffect(() => {
         setButtonStart(!parked);
@@ -40,7 +51,7 @@ const PatentCustom = ({
     const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
     const cancelRefAlertNotice = useRef(null);
     const onCloseAlertNotice = () => {
-        setIsOpenAlertNotice(!isOpenAlertNotice);
+        setIsOpenAlertNotice(false);
         setRefresh(true);
     };
     const [messageAlertNotice, setMessageAlertNotice] = useState();
@@ -50,20 +61,11 @@ const PatentCustom = ({
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const cancelRefModal = useRef(null);
+    const [modalVisibleSetUp, setModalVisibleSetUp] = useState(false);
+    const cancelRefModalSetUp = useRef(null);
 
-    const [modalVisibleE, setModalVisibleE] = useState(false);
-    const cancelRefModalE = useRef(null);
-
-    const [hourExit, setHourExit] = useState(null);
-
-    const handleClick = () => {
-        setModalVisible(!modalVisible);
-    };
-    const handleClickE = () => {
-        setModalVisibleE(!modalVisibleE);
-    };
+    const [modalVisibleEdit, setModalVisibleEdit] = useState(false);
+    const cancelRefModalEdit = useRef(null);
 
     const config = {
         headers: {
@@ -258,68 +260,84 @@ const PatentCustom = ({
                         />
                     </TouchableOpacity>
                 </HStack>
-                {hourExit ? (
-                    <HStack style={styles.containerParking} marginTop={1}>
-                        <Stack style={styles.containerTextProgram}>
-                            <Text style={styles.textProgram}>Salida</Text>
-                        </Stack>
-                        <Stack style={styles.containerTextProgram}>
-                            <Text style={styles.textProgram}>
-                                {hourExit
-                                    .getHours()
-                                    .toString()
-                                    .padStart(2, "0") +
-                                    " : " +
-                                    hourExit
-                                        .getMinutes()
+                {buttonStop ? (
+                    hourExit ? (
+                        <HStack style={styles.containerParking} marginTop={1}>
+                            <Stack style={styles.containerTextProgram}>
+                                <Text style={styles.textProgram}>Salida</Text>
+                            </Stack>
+                            <Stack style={styles.containerTextProgram}>
+                                <Text style={styles.textProgram}>
+                                    {hourExit
+                                        .getHours()
                                         .toString()
-                                        .padStart(2, "0")}
-                            </Text>
-                        </Stack>
-                        <Button
-                            onPress={() => handleClickE()}
-                            style={styles.buttonProgram}
-                        >
-                            <Text
-                                style={[styles.textProgram, { color: "white" }]}
+                                        .padStart(2, "0") +
+                                        " : " +
+                                        hourExit
+                                            .getMinutes()
+                                            .toString()
+                                            .padStart(2, "0")}
+                                </Text>
+                            </Stack>
+                            <Button
+                                onPress={() => {console.log("Aprete el boton de editar")
+                                setModalVisibleEdit(true)}}
+                                style={styles.buttonProgram}
                             >
-                                Editar
-                            </Text>
-                        </Button>
-                        <EditExit
-                            isOpen={modalVisibleE}
-                            onClose={setModalVisibleE}
-                            patent={patent}
-                        ></EditExit>
-                    </HStack>
-                ) : (
-                    <HStack style={styles.containerParking} marginTop={1}>
-                        <Stack style={styles.containerTextProgram}>
-                            <Text style={styles.textProgram}>Salida</Text>
-                        </Stack>
-                        <Stack style={styles.containerTextProgram}>
-                            <Text style={styles.textProgram}>-- : --</Text>
-                        </Stack>
-                        <Button
-                            onPress={() => handleClick()}
-                            style={styles.buttonProgram}
-                        >
-                            <Text
-                                style={[styles.textProgram, { color: "white" }]}
+                                <Text
+                                    style={[
+                                        styles.textProgram,
+                                        { color: "white" },
+                                    ]}
+                                >
+                                    Editar
+                                </Text>
+                            </Button>
+                            <EditExit
+                                isOpen={modalVisibleEdit}
+                                onClose={()=> setModalVisibleEdit(false)}
+                                patent={patent}
+                                cancelRef={cancelRefModalEdit}
+                                // refresh={modalVisibleEdit}
+                                setHourExit={setHourExit}
+                                hourExit={hourExit}
+                                setModalVisible={setModalVisibleEdit}
+                            ></EditExit>
+                        </HStack>
+                    ) : (
+                        <HStack style={styles.containerParking} marginTop={1}>
+                            <Stack style={styles.containerTextProgram}>
+                                <Text style={styles.textProgram}>Salida</Text>
+                            </Stack>
+                            <Stack style={styles.containerTextProgram}>
+                                <Text style={styles.textProgram}>-- : --</Text>
+                            </Stack>
+                            <Button
+                                onPress={() => {console.log("Aprete el boton de programar")
+                                    setModalVisibleSetUp(true)}}
+                                style={styles.buttonProgram}
                             >
-                                Programar
-                            </Text>
-                        </Button>
-                        <SetUpExit
-                            isOpen={modalVisible}
-                            onClose={setModalVisible}
-                            patent={patent}
-                            cancelRef={cancelRefModal}
-                            refresh={modalVisible}
-                            setHourExit={setHourExit}
-                        ></SetUpExit>
-                    </HStack>
-                )}
+                                <Text
+                                    style={[
+                                        styles.textProgram,
+                                        { color: "white" },
+                                    ]}
+                                >
+                                    Programar
+                                </Text>
+                            </Button>
+                            <SetUpExit
+                                isOpen={modalVisibleSetUp}
+                                onClose={()=> setModalVisibleSetUp(false)}
+                                patent={patent}
+                                cancelRef={cancelRefModalSetUp}
+                                // refresh={modalVisibleSetUp}
+                                setHourExit={setHourExit}
+                                setModalVisible={setModalVisibleSetUp}
+                            ></SetUpExit>
+                        </HStack>
+                    )
+                ) : null}
             </Flex>
             {buttonStart ? (
                 <AlertNoticeFunction
