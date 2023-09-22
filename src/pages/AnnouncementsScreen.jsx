@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
     Button,
@@ -23,11 +23,6 @@ const AnnouncementsScreen = ({ navigation }) => {
     const handleButtonPressMenu = () => {
         navigation.navigate("Menu");
     };
-
-    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
-    const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => setIsOpenAlertNotice(!isOpenAlertNotice);
-    const [messageAlertNotice, setMessageAlertNotice] = useState();
 
     useEffect(() => {
         const FindTickets = () => {
@@ -99,9 +94,7 @@ const AnnouncementsScreen = ({ navigation }) => {
     }, []);
 
     const payTicket = async () => {
-        //Función para pagar ticket
-        setMessageAlertNotice("Lo sentimos, esta función está en desarrollo.");
-        setIsOpenAlertNotice(true);
+        Linking.openURL(loggedUser.user.paymentLink);
     };
 
     return (
@@ -254,12 +247,6 @@ const AnnouncementsScreen = ({ navigation }) => {
                     </Stack>
                 )}
             </VStack>
-            <AlertNotice
-                isOpen={isOpenAlertNotice}
-                cancelRef={cancelRefAlertNotice}
-                onClose={onCloseAlertNotice}
-                message={messageAlertNotice}
-            ></AlertNotice>
         </NativeBaseProvider>
     );
 };

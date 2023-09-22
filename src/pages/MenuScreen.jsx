@@ -41,7 +41,6 @@ const MenuScreen = ({ navigation, route }) => {
                 break;
             case "PaymentLink":
                 Linking.openURL(loggedUser.user.paymentLink);
-                console.log(loggedUser.user.paymentLink);
                 break;
             default:
                 navigation.navigate(id, { refreshParkingScreen });
