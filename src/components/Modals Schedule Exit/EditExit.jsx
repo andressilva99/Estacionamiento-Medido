@@ -205,7 +205,11 @@ const EditExit = ({
                                 )}
                                 <Button
                                     onPress={() => {
-                                        showDatepicker();
+                                        if (Platform.OS === "android") {
+                                            showDatepicker();
+                                        } else {
+                                            setOpen(true);
+                                        }
                                     }}
                                     style={styles.buttonSetTime}
                                 >
