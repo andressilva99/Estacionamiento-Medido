@@ -1,16 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, Text } from "react-native";
 import React from "react";
-import {
-    AlertDialog,
-    Button,
-    HStack,
-    Modal,
-    Spacer,
-    Stack,
-    VStack,
-} from "native-base";
+import { AlertDialog, Button, HStack, Stack, VStack } from "native-base";
 import { useState } from "react";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import {
+    DateTimePickerAndroid,
+    DateTimePicker,
+} from "@react-native-community/datetimepicker";
 import { ScaledSheet } from "react-native-size-matters";
 import { useEffect } from "react";
 import constants from "../../constants/constants";
@@ -18,6 +13,7 @@ import loggedUser from "../../objects/user";
 import AlertError from "../Alerts/AlertError";
 import AlertNotice from "../Alerts/AlertNotice";
 import { useRef } from "react";
+import DatePicker from "react-native-date-picker";
 
 const EditExit = ({
     isOpen,
@@ -27,24 +23,37 @@ const EditExit = ({
     refresh,
     hourExit,
     setHourExit,
+    setModalVisible,
 }) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState("time");
     const [show, setShow] = useState(false);
     const [dateSelected, setDateSelected] = useState(null);
 
+    const [open, setOpen] = useState(false);
+
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
     const [messageAlertError, setMessageAlertError] = useState();
 
-    const [isOpenAlertNotice, setIsOpenAlertNotice] = useState(false);
-    const cancelRefAlertNotice = useRef(null);
-    const onCloseAlertNotice = () => {
-        setIsOpenAlertNotice(!isOpenAlertNotice);
+    const [isOpenAlertNoticeEdit, setIsOpenAlertNoticeEdit] = useState(false);
+    const cancelRefAlertNoticeEdit = useRef(null);
+    const onCloseAlertNoticeEdit = () => {
+        setIsOpenAlertNoticeEdit(!isOpenAlertNoticeEdit);
         onClose();
     };
-    const [messageAlertNotice, setMessageAlertNotice] = useState();
+    const [messageAlertNoticeEdit, setMessageAlertNoticeEdit] = useState();
+
+    const [isOpenAlertNoticeDelete, setIsOpenAlertNoticeDelete] =
+        useState(false);
+    const cancelRefAlertNoticeDelete = useRef(null);
+    const onCloseAlertNoticeDelete = () => {
+        setIsOpenAlertNoticeDelete(!isOpenAlertNoticeDelete);
+        setHourExit(null);
+        onClose();
+    };
+    const [messageAlertNoticeDelete, setMessageAlertNoticeDelete] = useState();
 
     useEffect(() => {
         setDateSelected(null);
@@ -102,8 +111,8 @@ const EditExit = ({
             })
             .then((response) => {
                 setHourExit(dateSelected);
-                setMessageAlertNotice(response.data.mensaje);
-                setIsOpenAlertNotice(true);
+                setMessageAlertNoticeEdit(response.data.mensaje);
+                setIsOpenAlertNoticeEdit(true);
             })
             .catch((error) => {
                 setMessageAlertError(error.response.data.mensaje);
@@ -127,9 +136,8 @@ const EditExit = ({
             })
             .then((response) => {
                 if (showInfo) {
-                    setHourExit(null);
-                    setMessageAlertNotice(response.data.mensaje);
-                    setIsOpenAlertNotice(true);
+                    setMessageAlertNoticeDelete(response.data.mensaje);
+                    setIsOpenAlertNoticeDelete(true);
                 }
             })
             .catch((error) => {
@@ -144,9 +152,9 @@ const EditExit = ({
         const day = dateSelected.getDate();
         const hours = dateSelected.getHours();
         const minutes = dateSelected.getMinutes();
-        const formattHour = `${day}-${month
+        const formattHour = `${month
             .toString()
-            .padStart(2, "0")}-${year} ${hours
+            .padStart(2, "0")}-${day}-${year} ${hours
             .toString()
             .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
         return formattHour;
@@ -156,7 +164,7 @@ const EditExit = ({
         <>
             <AlertDialog
                 isOpen={isOpen}
-                onClose={onClose}
+                onClose={() => setModalVisible(false)}
                 leastDestructiveRef={cancelRef}
             >
                 <AlertDialog.Content>
@@ -206,13 +214,32 @@ const EditExit = ({
                                     </Text>
                                 </Button>
                             </HStack>
-                            {show && (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date}
-                                    mode={mode}
-                                    is24Hour={true}
-                                    onChange={onChange}
+                            {Platform.OS === "android" ? (
+                                show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date}
+                                        mode={mode}
+                                        is24Hour={true}
+                                        onChange={onChange}
+                                    />
+                                )
+                            ) : (
+                                <DatePicker
+                                    modal
+                                    mode="time"
+                                    open={open}
+                                    date={date}
+                                    onConfirm={(hourExit) => {
+                                        setOpen(false);
+                                        setDateSelected(hourExit);
+                                    }}
+                                    onCancel={() => {
+                                        setOpen(false);
+                                    }}
+                                    locale="es"
+                                    confirmText="Aceptar"
+                                    cancelText="Cancelar"
                                 />
                             )}
                         </VStack>
@@ -235,7 +262,7 @@ const EditExit = ({
                             style={styles.buttonAcept}
                             flex={0.7}
                         >
-                            <Text style={styles.textButton}>Editar</Text>
+                            <Text style={styles.textButton}>Aceptar</Text>
                         </Button>
                     </AlertDialog.Footer>
                 </AlertDialog.Content>
@@ -247,10 +274,16 @@ const EditExit = ({
                 message={messageAlertError}
             ></AlertError>
             <AlertNotice
-                isOpen={isOpenAlertNotice}
-                cancelRef={cancelRefAlertNotice}
-                onClose={onCloseAlertNotice}
-                message={messageAlertNotice}
+                isOpen={isOpenAlertNoticeEdit}
+                cancelRef={cancelRefAlertNoticeEdit}
+                onClose={onCloseAlertNoticeEdit}
+                message={messageAlertNoticeEdit}
+            ></AlertNotice>
+            <AlertNotice
+                isOpen={isOpenAlertNoticeDelete}
+                cancelRef={cancelRefAlertNoticeDelete}
+                onClose={onCloseAlertNoticeDelete}
+                message={messageAlertNoticeDelete}
             ></AlertNotice>
         </>
     );
