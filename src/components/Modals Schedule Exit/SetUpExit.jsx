@@ -29,6 +29,8 @@ const SetUpExit = ({
     const [show, setShow] = useState(false);
     const [dateSelected, setDateSelected] = useState(null);
 
+    const [open, setOpen] = useState(false);
+
     const [isOpenAlertError, setIsOpenAlertError] = useState(false);
     const cancelRefAlertError = useRef(null);
     const onCloseAlertError = () => setIsOpenAlertError(!isOpenAlertError);
@@ -152,7 +154,11 @@ const SetUpExit = ({
                                 )}
                                 <Button
                                     onPress={() => {
-                                        showDatepicker();
+                                        if (Platform.OS === "android") {
+                                            showDatepicker();
+                                        } else {
+                                            setOpen(true);
+                                        }
                                     }}
                                     style={styles.buttonSetTime}
                                 >
