@@ -124,6 +124,7 @@ const PatentCustom = ({
                 .then((response) => {
                     console.log(response);
                     setMessageAlertNotice(response.data.mensaje);
+                    setIsOpenAlertNotice(true);
                     setButtonStart(false);
                     setButtonStop(true);
                 })
