@@ -215,6 +215,7 @@ const RegisterStep1Screen = ({ navigation }) => {
                                     control={control}
                                     width="85%"
                                     rules={{
+                                        required: " Razón Social requerida",
                                         pattern: {
                                             value: /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+$/,
                                             message:
