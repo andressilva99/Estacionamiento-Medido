@@ -160,6 +160,12 @@ const EditExit = ({
         return formattHour;
     };
 
+    const setProgrammedExitTime = (defectTime) => {
+        const time = new Date(date);
+        time.setMinutes(time.getMinutes() + defectTime);
+        setDateSelected(time);
+    }
+
     return (
         <>
             <AlertDialog
@@ -218,11 +224,11 @@ const EditExit = ({
                                     </Text>
                                 </Button>
                             </HStack>
-                            <HStack>
-                                <Button></Button>
-                                <Button></Button>
-                                <Button></Button>
-                            </HStack>
+                            <VStack space={3}>
+                                <Button flex={3} style={styles.buttonsProgramedExit} onPress={() => setProgrammedExitTime(constants.PROGRAMMED_EXIT_FIRST_OPTION)}><Text style={styles.textButtonsProgrammedExit}>En 30 Minutos</Text></Button>
+                                <Button flex={3} style={styles.buttonsProgramedExit} onPress={() => setProgrammedExitTime(constants.PROGRAMMED_EXIT_SECOND_OPTION)}><Text style={styles.textButtonsProgrammedExit}>En 1 Hora</Text></Button>
+                                <Button flex={3} style={styles.buttonsProgramedExit} onPress={() => setProgrammedExitTime(constants.PROGRAMMED_EXIT_THIRD_OPTION)}><Text style={styles.textButtonsProgrammedExit}>En 2 Horas</Text></Button>
+                            </VStack>
                             {Platform.OS === "android" ? (
                                 show && (
                                     <DateTimePicker
@@ -335,5 +341,14 @@ const styles = ScaledSheet.create({
     containerTime: {
         alignItems: "center",
         justifyContent: "center",
+    },
+    textButtonsProgrammedExit:{
+        fontSize: "14@ms",
+        color: "white",
+        fontWeight: "bold"
+    },
+    buttonsProgramedExit:{
+        borderRadius: "30@ms",
+        backgroundColor: "#009FE3"
     },
 });
