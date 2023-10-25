@@ -218,6 +218,11 @@ const EditExit = ({
                                     </Text>
                                 </Button>
                             </HStack>
+                            <HStack>
+                                <Button></Button>
+                                <Button></Button>
+                                <Button></Button>
+                            </HStack>
                             {Platform.OS === "android" ? (
                                 show && (
                                     <DateTimePicker
