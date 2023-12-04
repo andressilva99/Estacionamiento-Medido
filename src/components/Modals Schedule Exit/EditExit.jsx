@@ -111,6 +111,7 @@ const EditExit = ({
             })
             .then((response) => {
                 setHourExit(dateSelected);
+                setDate(dateSelected);
                 setMessageAlertNoticeEdit(response.data.mensaje);
                 setIsOpenAlertNoticeEdit(true);
             })
