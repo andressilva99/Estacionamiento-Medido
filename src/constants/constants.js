@@ -24,8 +24,10 @@ const RECHARGES_ICON = require("../image/Icon/Recharges-Icon.png");
 const MOVEMENTS_ICON = require("../image/Icon/Movements-Icon.png");
 const DELETE_ACOUNT_ICON = require("../image/Icon/Delete-Acount-Icon.png");
 const TIME_OUT = 40000;
+// const LINK_DELETE_ACOUNT =
+//     "https://estacionamientotest.sanfrancisco.gov.ar/api/usuario/eliminar";
 const LINK_DELETE_ACOUNT =
-    "https://estacionamientotest.sanfrancisco.gov.ar/api/usuario/eliminar";
+    "https://estacionamiento.sanfrancisco.gov.ar/api/usuario/eliminar";
 const PREVIOUS_DAYS = 15;
 const PROGRAMMED_EXIT_FIRST_OPTION = 30;
 const PROGRAMMED_EXIT_SECOND_OPTION = 60;
