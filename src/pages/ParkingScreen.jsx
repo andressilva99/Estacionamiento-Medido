@@ -11,6 +11,7 @@ import {
     Image,
     Spinner,
     StatusBar,
+    Skeleton,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -194,74 +195,105 @@ const ParkingScreen = ({ navigation }) => {
                             )}
                         </HStack>
                         <HStack style={styles.containerBalance}>
-                            <AntDesign
-                                name="wallet"
-                                style={[
-                                    styles.icon,
-                                    { color: "#17974c" },
-                                    isBalanceNegative
-                                        ? styles.textBalanceNegative
-                                        : null,
-                                ]}
-                            />
-                            <Text
-                                style={[
-                                    styles.textBalance,
-                                    isBalanceNegative
-                                        ? styles.textBalanceNegative
-                                        : null,
-                                ]}
-                            >
-                                Saldo: $ {loggedUser.user.balance}
-                            </Text>
+                            {loading ? (
+                                <Skeleton
+                                    startColor={
+                                        isBalanceNegative ? "red" : "#17974c"
+                                    }
+                                    style={styles.skeletonBalanceComplete}
+                                ></Skeleton>
+                            ) : (
+                                <>
+                                    <AntDesign
+                                        name="wallet"
+                                        style={[
+                                            styles.icon,
+                                            { color: "#17974c" },
+                                            isBalanceNegative
+                                                ? styles.textBalanceNegative
+                                                : null,
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            styles.textBalance,
+                                            isBalanceNegative
+                                                ? styles.textBalanceNegative
+                                                : null,
+                                        ]}
+                                    >
+                                        Saldo: $ {loggedUser.user.balance}
+                                    </Text>
+                                </>
+                            )}
                         </HStack>
                         <Stack>
-                            <Button
-                                startIcon={
-                                    <FontAwesome5
-                                        name="car"
-                                        style={styles.icon}
-                                    />
-                                }
-                                style={styles.enterVehicleButton}
-                                onPress={() => {
-                                    newEnterVehicle.color = null;
-                                    newEnterVehicle.model = null;
-                                    newEnterVehicle.mark = null;
-                                    navigation.navigate("EnterVehicle", {
-                                        refreshParkingScreen,
-                                    });
-                                }}
-                            >
-                                <Text style={styles.textEnterVehicle}>
-                                    Ingresar Nuevo Vehículo
-                                </Text>
-                            </Button>
+                            {loading ? (
+                                <Skeleton
+                                    style={styles.skeletonButtonRegisterVehicle}
+                                    startColor={"#77b5dc"}
+                                ></Skeleton>
+                            ) : (
+                                <Button
+                                    startIcon={
+                                        <FontAwesome5
+                                            name="car"
+                                            style={styles.icon}
+                                        />
+                                    }
+                                    style={styles.enterVehicleButton}
+                                    onPress={() => {
+                                        newEnterVehicle.color = null;
+                                        newEnterVehicle.model = null;
+                                        newEnterVehicle.mark = null;
+                                        navigation.navigate("EnterVehicle", {
+                                            refreshParkingScreen,
+                                        });
+                                    }}
+                                >
+                                    <Text style={styles.textEnterVehicle}>
+                                        Ingresar Nuevo Vehículo
+                                    </Text>
+                                </Button>
+                            )}
                         </Stack>
                         <HStack space="md" style={styles.parking}>
-                            <FontAwesome5
-                                name="car"
-                                style={[styles.icon, { color: "#3f60af" }]}
-                            />
-                            <Text style={styles.textParkingVehicle}>
-                                Vehículos Registrados
-                            </Text>
+                            {loading ? (
+                                <Skeleton
+                                    style={styles.skeletonTextVehicles}
+                                    startColor={"#3f60af"}
+                                ></Skeleton>
+                            ) : (
+                                <>
+                                    <FontAwesome5
+                                        name="car"
+                                        style={[
+                                            styles.icon,
+                                            { color: "#3f60af" },
+                                        ]}
+                                    />
+                                    <Text style={styles.textParkingVehicle}>
+                                        Vehículos Registrados
+                                    </Text>
+                                </>
+                            )}
                         </HStack>
                         {loading ? (
-                            <HStack
+                            <VStack
                                 space={"sm"}
                                 minWidth={"85%"}
                                 justifyContent={"center"}
                                 alignItems={"center"}
                             >
-                                <Text style={styles.textUpdateInfo}>
-                                    Actualizando información
-                                </Text>
-                                <Spinner
-                                    color={"#3f60af"}
-                                    size={"lg"}
-                                ></Spinner>
-                            </HStack>
+                                <Skeleton
+                                    style={styles.skeletonPattent}
+                                    startColor={"gray.300"}
+                                ></Skeleton>
+                                <Skeleton
+                                    style={styles.skeletonButtons}
+                                    startColor={"gray.300"}
+                                ></Skeleton>
+                            </VStack>
                         ) : (
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -385,5 +417,36 @@ const styles = ScaledSheet.create({
         color: "#3f60af",
         fontSize: "18@ms",
         fontWeight: "bold",
+    },
+    skeletonPattent: {
+        height: "90@ms",
+        width: "75%",
+        borderRadius: "15@ms",
+    },
+    skeletonButtons: {
+        minHeight: "50@ms",
+        minWidth: "85%",
+        borderRadius: "30@ms",
+    },
+    skeletonBalance: {
+        borderRadius: "30@ms",
+        width: "130@ms",
+        height: "25@ms",
+        marginLeft: 15,
+    },
+    skeletonTextVehicles: {
+        width: "75%",
+        height: "25@ms",
+        borderRadius: "30@ms",
+    },
+    skeletonButtonRegisterVehicle: {
+        minHeight: "45@ms",
+        minWidth: "85%",
+        borderRadius: "30@ms",
+    },
+    skeletonBalanceComplete: {
+        width: "70%",
+        height: "25@ms",
+        borderRadius: "30@ms",
     },
 });
