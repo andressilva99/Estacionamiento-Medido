@@ -13,12 +13,12 @@
       },
       "android": {
         "buildType": "apk",
-        "image": "ubuntu-20.04-jdk-11-ndk-21.4.7075529"
+        "image": "ubuntu-20.04-jdk-11-ndk-r19c"
       }
     },
     "production": {
       "android": {
-        "image": "ubuntu-20.04-jdk-11-ndk-21.4.7075529"
+        "image": "ubuntu-20.04-jdk-11-ndk-r19c"
       }
     }
   },
